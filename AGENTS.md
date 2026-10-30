@@ -12,17 +12,17 @@ Execute the [skill and plugin discovery protocol](SKILL_DISCOVERY_PROTOCOL.md).
 
 ## Windows shell
 
-On **Windows execution hosts only**, follow [WINDOWS_SHELL_POLICY.md](.agents/plugins/sdd-manager/assets/WINDOWS_SHELL_POLICY.md): CMD syntax, unavailable PowerShell/pwsh, temporary files for script text and shell operations, and the documented tool probe/recovery. This repository policy is independent of the plugin.
+On **Windows execution hosts only**, follow [WINDOWS_SHELL_POLICY.md](docs/dev/policies/WINDOWS_SHELL_POLICY.md): CMD syntax, unavailable PowerShell/pwsh, temporary files for script text and shell operations, and the documented tool probe/recovery. This repository policy is independent of the plugin.
 
 ## Browser development
 
-When developing or testing browser-based applications or browser extensions, follow [BROWSER_DEV_POLICY.md](.agents/plugins/sdd-manager/assets/BROWSER_DEV_POLICY.md). Prioritize Chromium and include Firefox by default; project documents may specify other choices. Use dedicated, isolated environments.
+When developing or testing browser-based applications or browser extensions, follow [BROWSER_DEV_POLICY.md](docs/dev/policies/BROWSER_DEV_POLICY.md). Prioritize Chromium and include Firefox by default; project documents may specify other choices. Use dedicated, isolated environments.
 
 ## Environment diagnostics
 
-When Playwright is selected, follow [Playwright environment guidance](.agents/plugins/sdd-manager/assets/playwright.md) before dependent setup and execution, and when provisioning or browser runtime blocks required checks.
+When Playwright is selected, follow [Playwright environment guidance](docs/dev/policies/playwright.md) before dependent setup and execution, and when provisioning or browser runtime blocks required checks.
 
-When a Vite-served module worker fails to start, especially from a linked Windows checkout or with an HTML entry response, follow [Vite worker-loading diagnostics](.agents/plugins/sdd-manager/assets/vite-worker-loading.md). Diagnose the loading stage before applying a workaround; this guidance does not apply to every SQLite or worker failure.
+When a Vite-served module worker fails to start, especially from a linked Windows checkout or with an HTML entry response, follow [Vite worker-loading diagnostics](docs/dev/policies/vite-worker-loading.md). Diagnose the loading stage before applying a workaround; this guidance does not apply to every SQLite or worker failure.
 
 ## Workflow continuity
 
@@ -49,3 +49,9 @@ Follow `sdd-manage`'s preparation and phase-activation workflows for required tr
 ## Project guidance
 
 Maintain project-specific navigation and validated setup/check commands here as they become established. Do not invent commands, paths, requirements or completion claims.
+
+## Application and development navigation
+
+The application delivery target is one root index.html with embedded application code. See [PROJECT](docs/dev/PROJECT.md), [ARCHITECTURE](docs/dev/ARCHITECTURE.md), [DECOMPOSITION](docs/dev/DECOMPOSITION.md), [SPEC](docs/dev/SPEC.md), [PLAN](docs/dev/PLAN.md) and [layout](docs/dev/layout.md). Preparation progress remains in docs/dev/DOCS_TASKS.md and its control/evidence in docs/dev/DOCS_PREPARATION.md. Once created, docs/dev/TASKS.md owns executable product work.
+
+The selected development verification runner is pytest with Playwright's Python API; pure JavaScript rules can be exercised through an isolated Node VM driven by pytest. These are development facilities, not application runtime requirements. Exact dependency pins and working setup/check commands must be established and documented during implementation. No browser installation is required for document-only preparation. Preserve Chromium headless-shell and Firefox coverage under the policies above; unavailable native/full-browser evidence is reported separately.
