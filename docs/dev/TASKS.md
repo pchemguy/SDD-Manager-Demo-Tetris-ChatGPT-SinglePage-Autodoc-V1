@@ -105,7 +105,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 
 ## Phase 3 — Conditional ghost
 
-- [ ] Phase 3 — Conditional ghost
+- [x] Phase 3 — Conditional ghost
     - [x] Milestone 3.1 — Dynamic ghost delivery
         - [x] T-018 — Integrate midline-based ghost visibility
             Verified: `python tools/check.py -q` - 27 passed in 11.12s. Observed RED: a straddling O projection remained visible. Dynamic mode now requires every projected cell at row 10 or below; modern hold/Space and real ghost pixels also pass in both browsers.
