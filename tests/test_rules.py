@@ -49,3 +49,21 @@ def test_midline_ghost_all_cells(js):
     assert js("ghostVisible({}, {type:'O',rot:0,x:4,y:9})") is False
     assert js("ghostVisible({}, {type:'O',rot:0,x:4,y:10})") is True
     assert js("ghostVisible({}, {type:'I',rot:1,x:3,y:7})") is False
+
+
+def test_bonus_award_cap_and_spending(js):
+    assert js("typeof Game.prototype.activate==='undefined'?null:(()=>{const g=new Game(()=>0.5);g.start();g.bonuses=3;g.p={type:'I',rot:1,x:3,y:16};for(let y=16;y<20;y++)g.board[y]=Array.from({length:10},(_,x)=>x===5?0:'J');g.lock();const cap=g.bonuses;g.activate();g.activate();return [cap,g.bonuses,g.p.penetrator]})()") == [3,2,True]
+
+
+def test_penetrator_transit_and_deepest_landing(js):
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:6,penetrator:true};for(let x=0;x<8;x++)g.board[8][x]='J';const land=g.landing().y;g.act(0,1);return [land,g.p.y,g.board[8].filter(Boolean).length]})()") == [18,7,8]
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:0,penetrator:true};for(let y=0;y<20;y++)g.board[y][6]='J';g.act(2);return g.p.x})()") == 4
+
+
+def test_penetrator_blocks_hold_and_locks_white(js):
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.bonuses=1;g.activate();return [g.holdPiece(),g.held]})()") == [False,None]
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.config.hardDropLock='immediate';g.bonuses=1;g.activate();g.hardDrop();return [g.board.flat().filter(v=>v==='P').length,!!g.p.penetrator,g.bonuses]})()") == [4,False,0]
+
+
+def test_penetrator_drop_ghost_and_deadline_parity(js):
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:0};for(let x=0;x<8;x++){g.board[8][x]='J';g.board[13][x]='L';}g.bonuses=1;g.activate();const y=g.landing().y;g.hardDrop();const before=[y,g.p.y,g.board.flat().filter(v=>v==='P').length];g.tick(1000);return [...before,g.board.flat().filter(v=>v==='P').length,g.board[8].filter(Boolean).length,g.board[13].filter(Boolean).length]})()") == [18,18,0,4,8,8]

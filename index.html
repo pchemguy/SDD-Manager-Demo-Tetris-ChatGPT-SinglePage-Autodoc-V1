@@ -438,14 +438,14 @@ class Game {
   finish(){if(this.status==='over')return;this.status='over';this.events.push({kind:'game-over',score:this.score,generation:this.generation});}
   act(dx=0,dy=0,dr=0){if(this.status!=='running')return false;const next=transform(this.board,this.p,dx,dy,dr);if(next===this.p){if(dy>0)this.lock();return false;}this.p=next;return true;}
   soft(){if(this.act(0,1,0))this.score=addScore(this.score,1);}
-  lock(){if(this.status!=='running'||!valid(this.board,this.p.type,this.p.rot,this.p.x,this.p.y))return false;for(const [x,y] of cells(this.p.type,this.p.rot,this.p.x,this.p.y))this.board[y][x]=this.p.type;
+  lock(){if(this.status!=='running'||!valid(this.board,this.p.type,this.p.rot,this.p.x,this.p.y))return false;for(const [x,y] of cells(this.p.type,this.p.rot,this.p.x,this.p.y))this.board[y][x]=this.p.penetrator?'P':this.p.type;
     const cleared=clearRows(this.board);this.board=cleared.board;this.score=addScore(this.score,[0,100,300,500,800][cleared.count]*this.level);this.lines+=cleared.count;this.level=1+Math.floor(this.lines/10);this.spawn();return true;}
   tick(ms){if(this.status!=='running'||!Number.isFinite(ms)||ms<0)return;this.elapsed+=ms;while(this.status==='running'&&this.elapsed>=this.interval()){this.elapsed-=this.interval();this.act(0,1,0);}}
 }
 Object.assign(API,{Game,clearRows,COLORS,SHAPES});
 
 /* 3. Canvas and semantic HTML presentation */
-const VERSION='0.3.0';
+const VERSION='0.4.0';
 let ui=null;
 function notice(message){if(ui)document.getElementById('message').textContent=message;}
 function paintCells(ctx,board,piece,ghost=false,scale=30,ox=0,oy=0){
@@ -464,6 +464,7 @@ function render(){if(!ui)return;const g=ui.game,c=ui.canvas,ctx=c.getContext('2d
   const veil=document.getElementById('veil');veil.hidden=g.status==='running';document.getElementById('veil-title').textContent={idle:'MAKE YOUR MOVE',paused:'TAKE A BREATH',over:'ONE MORE TRY',running:''}[g.status];document.getElementById('veil-note').textContent=g.status==='idle'?'Start a game. Find your rhythm.':g.status==='paused'?'Press Pause/Start or Escape to return.':'Restart for a fresh board.';
   drawPreview('next-piece',g.queue?.[0]);
   drawPreview('held-piece',g.held);
+  document.getElementById('bonuses').textContent='⚡'.repeat(g.bonuses||0);document.getElementById('bonuses').setAttribute('aria-label',String(g.bonuses||0)+' penetrator bonuses');
   /* RENDER_EXTENSIONS */
 }
 function mountUI(){
@@ -474,6 +475,8 @@ document.getElementById('extras').innerHTML='<div class="preview"><figure><figca
 document.querySelector('.preview').insertAdjacentHTML('afterbegin','<figure><figcaption>HOLD</figcaption><canvas id="held-piece" width="104" height="88" aria-label="Held piece"></canvas></figure>');
  document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Hold</span><kbd>C / Shift</kbd></div>');
 document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Hard drop</span><kbd>Space</kbd></div>');
+document.getElementById('extras').insertAdjacentHTML('beforeend','<div class="bonus-label">PENETRATOR BONUSES</div><div id="bonuses" class="bonuses" aria-label="Available penetrator bonuses"></div>');
+ document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Penetrator</span><kbd>P</kbd></div>');
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -490,6 +493,7 @@ function bindControls(){
    if(e.code==='ArrowLeft')g.act(-1);else if(e.code==='ArrowRight')g.act(1);else if(e.code==='ArrowDown')g.soft();else if(e.code==='ArrowUp'||e.code==='KeyX')g.act(0,0,1);else if(e.code==='KeyZ')g.act(0,0,-1);else if(e.code==='Escape'){g.pause();ui.last=performance.now();}
    else if(['KeyC','ShiftLeft','ShiftRight'].includes(e.code))g.holdPiece();
    else if(e.code==='Space')g.hardDrop();
+   else if(e.code==='KeyP')g.activate();
    /* KEY_EXTENSIONS */
    render();
  });
@@ -506,7 +510,7 @@ function drawPreview(id,type){const c=document.getElementById(id);if(!c)return;c
 /* T011_HOLD */
 const holdStart=Game.prototype.start;Game.prototype.start=function(){this.held=null;this.holdUsed=false;holdStart.call(this);};
 const holdLock=Game.prototype.lock;Game.prototype.lock=function(){const result=holdLock.call(this);if(result)this.holdUsed=false;return result;};
-Game.prototype.holdPiece=function(){if(this.status!=='running'||this.holdUsed)return false;const type=this.p.type,held=this.held;this.held=type;this.spawn(held||undefined);this.holdUsed=true;return true;};
+Game.prototype.holdPiece=function(){if(this.status!=='running'||this.holdUsed||this.p.penetrator)return false;const type=this.p.type,held=this.held;this.held=type;this.spawn(held||undefined);this.holdUsed=true;return true;};
 /* T012_KICKS */
 const JK={ '01':[[-1,0],[-1,1],[0,-2],[-1,-2]],'10':[[1,0],[1,-1],[0,2],[1,2]],'12':[[1,0],[1,-1],[0,2],[1,2]],'21':[[-1,0],[-1,1],[0,-2],[-1,-2]],'23':[[1,0],[1,1],[0,-2],[1,-2]],'32':[[-1,0],[-1,-1],[0,2],[-1,2]],'30':[[-1,0],[-1,-1],[0,2],[-1,2]],'03':[[1,0],[1,1],[0,-2],[1,-2]]};
 const IK={'01':[[-2,0],[1,0],[-2,-1],[1,2]],'10':[[2,0],[-1,0],[2,1],[-1,-2]],'12':[[-1,0],[2,0],[-1,2],[2,-1]],'21':[[1,0],[-2,0],[1,-2],[-2,1]],'23':[[2,0],[-1,0],[2,1],[-1,-2]],'32':[[-2,0],[1,0],[-2,-1],[1,2]],'30':[[1,0],[-2,0],[1,-2],[-2,1]],'03':[[-1,0],[2,0],[-1,2],[2,-1]]};
@@ -531,6 +535,13 @@ function advanceUIClock(){const now=performance.now();ui.game.tick(now-ui.last);
 /* T018_DYNAMIC */
 let ghostMode='dynamic';
 ghostVisible=function(g,landing){if(!landing)return false;const mode=g.config?.ghost??ghostMode;return mode==='show'||mode==='dynamic'&&cells(landing.type,landing.rot,landing.x,landing.y).every(([,y])=>y>=10);};API.ghostVisible=ghostVisible;
+/* T021_BONUSES */
+const bonusStart=Game.prototype.start;Game.prototype.start=function(){this.bonuses=0;bonusStart.call(this);};
+const bonusLock=Game.prototype.lock;Game.prototype.lock=function(){const before=this.lines;const ok=bonusLock.call(this);if(ok&&this.lines-before===4)this.bonuses=Math.min(3,(this.bonuses||0)+1);return ok;};
+Game.prototype.activate=function(){if(this.status!=='running'||!this.p||this.p.penetrator||!(this.bonuses>0))return false;this.bonuses--;this.p={...this.p,penetrator:true};this.syncGround();return true;};
+/* T022_TRANSIT */
+const ordinaryLanding=findLanding;findLanding=function(board,piece){if(!piece.penetrator)return ordinaryLanding(board,piece);let best=null;for(let y=piece.y;y<20;y++)if(valid(board,piece.type,piece.rot,piece.x,y))best={...piece,y};return best;};API.findLanding=findLanding;
+Game.prototype.canPlace=function(p){return p.penetrator?cells(p.type,p.rot,p.x,p.y).every(([x,y])=>x>=0&&x<10&&y>=0&&y<20)&&!!findLanding(this.board,p):valid(this.board,p.type,p.rot,p.x,p.y);};
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();

@@ -126,27 +126,33 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 4 — Penetrator mode
 
 - [ ] Phase 4 — Penetrator mode
-    - [ ] Milestone 4.1 — Penetrator gameplay
-        - [ ] T-021 — Add bonus accounting and activation state
+    - [x] Milestone 4.1 — Penetrator gameplay
+        - [x] T-021 — Add bonus accounting and activation state
+            Verified: `python tools/check.py -q` - 28 passed in 10.33s. Observed RED for missing bonus activation. Four-line award, cap three, one immediate spend and repeated-activation rejection pass; restart resets bonuses.
             Scope: index.html reducer; tests/test_rules.py. Depends on: T-020.
             Contract/evidence: G4 four-line earn, cap three, spend once and restart reset. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-022 — Implement safe penetrator transit and landing
+        - [x] T-022 — Implement safe penetrator transit and landing
+            Verified: `python tools/check.py -q` - 29 passed in 10.58s. Observed RED at an occupied transit band. Penetrator now passes without destroying fixed cells, projects to deepest valid placement and rejects transformations with no valid future landing.
             Scope: index.html board/landing/rotation; tests/test_rules.py. Depends on: T-021.
             Contract/evidence: G4 occupancy transit, valid-future-landing invariant and overlap-safe lock. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-023 — Connect penetrator hotkey hold restriction and visuals
+        - [x] T-023 — Connect penetrator hotkey hold restriction and visuals
+            Verified: `python tools/check.py -q` - 30 passed in 12.30s. Observed RED: active penetrator could hold and locked in regular color. Hold is now disabled until lock, white cells remain white after lock, bonuses update and P activates only an eligible piece.
             Scope: index.html input/view/info; tests/test_browser.py; tests/test_rules.py. Depends on: T-022.
             Contract/evidence: G4 P activation, white active/locked piece, bonus symbols, disabled hold and next regular piece. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 4.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/4/4.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 4.2 — Penetrator integration and distribution
-        - [ ] T-024 — Unify penetrator ghost drop and grounding behavior
+    - [x] Milestone 4.2 — Penetrator integration and distribution
+        - [x] T-024 — Unify penetrator ghost drop and grounding behavior
+            Verified: `python tools/check.py -q` - 33 passed in 12.82s. Added deep-stack projection/drop/interval-lock parity and actual P/bonus/hold browser cases. Existing shared landing path already satisfies these added characterization fixtures; no fabricated RED or duplicate drop implementation.
             Scope: index.html landing/clock; tests/test_rules.py; tests/test_browser.py. Depends on: T-023.
             Contract/evidence: A4 lowest legal destination across occupied bands, projection/drop identity and both lock modes. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-025 — Package and verify penetrator delivery
+        - [x] T-025 — Package and verify penetrator delivery
+            Verified: `python tools/check.py -q` - 33 passed in 11.62s. Packaged v0.4.0 with verified deep occupied-band transit, bonus cap/spend, white locks and normal-next-piece behavior.
             Scope: README.md; RELEASE-NOTES.md; tools/package.py; tests/test_browser.py; index.html version. Depends on: T-024.
             Contract/evidence: A4 integrated fixtures, preserved fixed cells, bonus display and v0.4.0 artifact. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 4.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/4/4.2.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 4.3 — Phase review
-        - [ ] T-026 — Review test and report phase 4
+    - [x] Milestone 4.3 — Phase review
+        - [x] T-026 — Review test and report phase 4
+            Verified: `python tools/check.py -q` - 33 passed in 13.22s. Penetrator phase and prior gameplay/browser/artifact regressions pass; all delivery milestone evidence is present.
             Depends on: all delivery tasks in phase 4, completion/closure of milestones 4.1, 4.2, and their committed review evidence.
             Scope: cross-milestone code review, A4 and lock/hold/ghost regressions; settings and persistence remain deferred. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/4/PHASE-REPORT.md, HANDOFF, release v0.4.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
