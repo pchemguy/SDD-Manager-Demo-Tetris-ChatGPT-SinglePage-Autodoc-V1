@@ -131,7 +131,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 28 passed in 10.33s. Observed RED for missing bonus activation. Four-line award, cap three, one immediate spend and repeated-activation rejection pass; restart resets bonuses.
             Scope: index.html reducer; tests/test_rules.py. Depends on: T-020.
             Contract/evidence: G4 four-line earn, cap three, spend once and restart reset. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-022 — Implement safe penetrator transit and landing
+        - [x] T-022 — Implement safe penetrator transit and landing
+            Verified: `python tools/check.py -q` - 29 passed in 10.58s. Observed RED at an occupied transit band. Penetrator now passes without destroying fixed cells, projects to deepest valid placement and rejects transformations with no valid future landing.
             Scope: index.html board/landing/rotation; tests/test_rules.py. Depends on: T-021.
             Contract/evidence: G4 occupancy transit, valid-future-landing invariant and overlap-safe lock. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-023 — Connect penetrator hotkey hold restriction and visuals
