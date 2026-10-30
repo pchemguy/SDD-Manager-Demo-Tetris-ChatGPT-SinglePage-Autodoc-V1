@@ -33,3 +33,7 @@ def test_wall_and_floor_kicks(js):
 def test_shared_normal_landing(js):
     assert js("typeof findLanding==='undefined'?null:(()=>{const b=emptyBoard();b[10][3]='J';return findLanding(b,{type:'I',rot:0,x:3,y:0}).y})()") == 8
     assert js("typeof findLanding==='undefined'?null:findLanding(emptyBoard(),{type:'O',rot:0,x:4,y:0}).y") == 18
+
+
+def test_hard_drop_lands_and_scores(js):
+    assert js("typeof Game.prototype.hardDrop==='undefined'?null:(()=>{const g=new Game(()=>0.5);g.start();g.config={lockPolicy:'failed',hardDropLock:'general'};g.p={type:'O',rot:0,x:4,y:0};const p=g.landing();g.hardDrop();return [g.score,cells('O',0,p.x,p.y).every(([x,y])=>g.board[y][x]==='O')]})()") == [36,True]

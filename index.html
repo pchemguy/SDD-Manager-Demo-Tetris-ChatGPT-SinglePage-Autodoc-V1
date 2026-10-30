@@ -473,6 +473,7 @@ function mountUI(){
 document.getElementById('extras').innerHTML='<div class="preview"><figure><figcaption>NEXT</figcaption><canvas id="next-piece" width="104" height="88" aria-label="Next piece"></canvas></figure></div>';
 document.querySelector('.preview').insertAdjacentHTML('afterbegin','<figure><figcaption>HOLD</figcaption><canvas id="held-piece" width="104" height="88" aria-label="Held piece"></canvas></figure>');
  document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Hold</span><kbd>C / Shift</kbd></div>');
+document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Hard drop</span><kbd>Space</kbd></div>');
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -488,6 +489,7 @@ function bindControls(){
    if(e.repeat&&!['ArrowLeft','ArrowRight','ArrowDown'].includes(e.code))return;
    if(e.code==='ArrowLeft')g.act(-1);else if(e.code==='ArrowRight')g.act(1);else if(e.code==='ArrowDown')g.soft();else if(e.code==='ArrowUp'||e.code==='KeyX')g.act(0,0,1);else if(e.code==='KeyZ')g.act(0,0,-1);else if(e.code==='Escape'){g.pause();ui.last=performance.now();}
    else if(['KeyC','ShiftLeft','ShiftRight'].includes(e.code))g.holdPiece();
+   else if(e.code==='Space')g.hardDrop();
    /* KEY_EXTENSIONS */
    render();
  });
@@ -514,6 +516,8 @@ function findLanding(board,piece){if(!valid(board,piece.type,piece.rot,piece.x,p
 Game.prototype.landing=function(){return this.p?findLanding(this.board,this.p):null;};
 function ghostVisible(g,landing){return !!landing;}
 Object.assign(API,{findLanding});
+/* T014_DROP */
+Game.prototype.hardDrop=function(){if(this.status!=='running')return;const land=this.landing();if(!land)return;this.score=addScore(this.score,2*(land.y-this.p.y));this.p=land;this.act(0,1,0);};
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();
