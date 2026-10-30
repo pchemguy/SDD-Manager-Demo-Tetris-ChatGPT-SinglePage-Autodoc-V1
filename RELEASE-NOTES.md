@@ -1,12 +1,12 @@
-# Tetris Atelier v0.2.0
+# Tetris Atelier v0.3.0
 
 ## Changes
 
-Seven-bag randomization, hold, next preview, wall kicks, ghost projection, hard drop and full-interval grounded locking. Retains the previously delivered capabilities.
+Dynamic ghost visibility hides any projection reaching above the board midline. Retains the previously delivered capabilities.
 
 ## Installation and use
 
-Download tetris-v0.2.0.html and open it in a JavaScript-enabled browser, or serve that file with a static HTTP(S) host. No developer runtime is required by players. Verify the download with SHA256SUMS.txt. This is a standalone browser artifact, not a signed or store-distributed desktop package.
+Download tetris-v0.3.0.html and open it in a JavaScript-enabled browser, or serve that file with a static HTTP(S) host. No developer runtime is required by players. Verify the download with SHA256SUMS.txt. This is a standalone browser artifact, not a signed or store-distributed desktop package.
 
 ## Verification and limits
 
