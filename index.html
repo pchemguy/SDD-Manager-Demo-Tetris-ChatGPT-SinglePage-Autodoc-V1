@@ -488,6 +488,7 @@ document.getElementById('extras').insertAdjacentHTML('beforeend','<div class="bo
  writeSettingsCookies(ui.game.config,Object.keys(ui.restored.explicit));
  ui.results=new SessionResults();
  createLeaderboard();
+ createFileControls();
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -622,6 +623,14 @@ function parseExportJSON(text){let i=0;const whitespace=()=>{while(/[ \t\r\n]/.t
  if(text.length>2097152)throw Error('File exceeds 2 MiB.');const parsed=value(0);whitespace();if(i!==text.length)throw Error('Trailing JSON content.');return validateExport(parsed);
 }
 Object.assign(API,{EXPORT_SCHEMA,validateExport,parseExportJSON});
+
+/* T044_SAVE */
+/* Manual export captures a stable snapshot before asynchronous encoding. */
+function captureExport(){return validateExport({formatVersion:1,results:ui.results.records,settings:ui.game.config});}
+function downloadFile(content,type,name){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=name;link.hidden=true;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+async function saveCurrent(){try{advanceUIClock();render();const snapshot=captureExport(),format=document.getElementById('file-format').value;const content=format==='json'?JSON.stringify(snapshot,null,2):await encodeSQLite(snapshot);downloadFile(content,format==='json'?'application/json':'application/vnd.sqlite3','tetris-session.'+(format==='json'?'json':'sqlite'));notice('Session saved as '+(format==='json'?'JSON.':'SQLite.'));}catch(error){notice('Could not save: '+String(error.message).slice(0,240));}}
+function createFileControls(){const panel=document.getElementById('settings'),label=document.createElement('label');label.textContent='Save format';const select=document.createElement('select');select.id='file-format';select.setAttribute('aria-label','Save format');select.innerHTML='<option value="json">JSON</option>';label.append(select);panel.append(label);const controls=document.createElement('div');controls.className='file-buttons';controls.innerHTML='<button id="save-file">Save</button><button id="restore-file" disabled>Restore</button>';panel.append(controls);const input=document.createElement('input');input.id='restore-input';input.type='file';input.accept='.json,.sqlite,.db,application/json,application/vnd.sqlite3';input.hidden=true;panel.append(input);document.getElementById('save-file').addEventListener('click',saveCurrent);}
+Object.assign(API,{captureExport});
 
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;

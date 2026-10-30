@@ -100,7 +100,7 @@ def test_penetrator_key_indicator_and_hold(page):
 
 
 def test_six_labeled_settings(page):
-    assert page.locator('#settings select').count() == 6
+    assert page.locator('#settings select[id^=setting-]').count() == 6
     assert page.get_by_label('Ghost piece',exact=True).input_value() == 'show'
     assert page.get_by_label('General locking',exact=True).input_value() == 'interval'
     assert page.get_by_label('Hold piece',exact=True).input_value() == 'true'
@@ -172,3 +172,17 @@ def test_completed_history_restart_and_reload(page):
     assert page.locator('#results li').count()==1
     page.reload()
     assert page.locator('#results li').count()==0
+
+
+def test_save_json_snapshot_and_hidden_file_controls(page):
+    import json
+    assert page.get_by_role('button',name='Save',exact=True).count()==1
+    page.evaluate("Tetris.ui.results.replace([{id:'stable-1',score:42,timestamp:'2026-10-30T00:00:00.000Z'}]);Tetris.render()")
+    with page.expect_download() as received:
+        page.get_by_role('button',name='Save',exact=True).click()
+    data=json.loads(Path(received.value.path()).read_text())
+    assert data['formatVersion']==1 and data['results'][0]=={'id':'stable-1','score':42,'timestamp':'2026-10-30T00:00:00.000Z'}
+    assert len(data['settings'])==6 and isinstance(data['settings']['hold'],bool)
+    page.get_by_role('button',name='Settings',exact=True).click()
+    assert not page.get_by_role('button',name='Save',exact=True).is_visible()
+    assert not page.get_by_role('button',name='Restore',exact=True).is_visible()
