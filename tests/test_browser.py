@@ -1,4 +1,5 @@
 from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
 
 def test_board_information_and_render(page):
     assert page.locator('#board').count() == 1
@@ -240,3 +241,27 @@ def test_sqlite_restore_and_complete_invalid_content(sql_page):
     for mutation in ["UPDATE high_scores SET timestamp='2025-02-29T00:00:00.000Z'","UPDATE settings SET value='invalid' WHERE key='hold'","PRAGMA user_version=999","CREATE VIEW extra AS SELECT 1","ALTER TABLE high_scores ADD COLUMN hidden_extra TEXT GENERATED ALWAYS AS ('x') VIRTUAL"]:
         assert sql_page.evaluate("async sql=>{const SQL=await Tetris.loadSQL(),bytes=await Tetris.encodeSQLite({formatVersion:1,results:[{id:'reject-me',score:1,timestamp:'2026-10-30T00:00:00.000Z'}],settings:{...Tetris.DEFAULTS}}),db=new SQL.Database(bytes);try{db.run(sql);return await Tetris.restoreFile(new File([db.export()],'invalid.sqlite'))}finally{db.close()}}",mutation) is False
         assert sql_page.evaluate('({results:Tetris.ui.results.records,settings:Tetris.ui.game.config,cookies:document.cookie,url:location.href})')==before
+
+
+def test_transfer_parity_and_newest_restore_wins(sql_page):
+    assert sql_page.evaluate("async()=>{const data={formatVersion:1,results:[{id:'roundtrip',score:9007199254740991,timestamp:'2026-10-30T01:02:03.004Z'}],settings:{ghost:'dynamic',hardDrop:false,nextPreview:false,hardDropLock:'immediate',lockPolicy:'failed',hold:false}};const a=Tetris.parseExportJSON(JSON.stringify(data)),b=await Tetris.decodeSQLite(await Tetris.encodeSQLite(a));return JSON.stringify(a)===JSON.stringify(b)}") is True
+    assert sql_page.evaluate("async()=>{const data=id=>JSON.stringify({formatVersion:1,results:[{id,score:1,timestamp:'2026-10-30T00:00:00.000Z'}],settings:{...Tetris.DEFAULTS}});const bytes=new TextEncoder().encode(data('old'));const old={size:bytes.length,arrayBuffer:()=>new Promise(resolve=>setTimeout(()=>resolve(bytes.buffer),40))};const a=Tetris.restoreFile(old),b=Tetris.restoreFile(new File([data('new')],'new.json'));return [await a,await b,Tetris.ui.results.records[0].id]}") == [False,True,'new']
+
+
+def test_sql_dependency_failure_is_retryable(page):
+    import json
+    info=json.loads((ROOT/'.test-artifacts/sqljs-manifest.json').read_text())
+    page.route(info['url'],lambda route:route.abort())
+    assert page.evaluate('async()=>{try{await Tetris.loadSQL();return false}catch{return true}}') is True
+    assert page.evaluate('Tetris.captureExport().formatVersion')==1
+    page.get_by_role('button',name='Start/Restart',exact=True).click()
+    assert page.evaluate('Tetris.ui.game.status')=='running'
+    page.unroute(info['url'])
+    body=(ROOT/'.test-artifacts/sqljs-inline.js').read_bytes()
+    page.route(info['url'],lambda route:route.fulfill(status=200,body=body,content_type='application/javascript',headers={'access-control-allow-origin':'*'}))
+    assert page.evaluate('async()=>{const SQL=await Tetris.loadSQL(),db=new SQL.Database();try{return db.exec("SELECT 7")[0].values[0][0]}finally{db.close()}}')==7
+
+
+def test_extreme_score_remains_inside_panels(page):
+    page.evaluate("Tetris.ui.results.replace([{id:'maximum',score:Number.MAX_SAFE_INTEGER,timestamp:'2026-10-30T00:00:00.000Z'}]);Tetris.ui.game.score=Number.MAX_SAFE_INTEGER;Tetris.render()")
+    assert page.locator('#results li').evaluate('(el)=>el.scrollWidth<=el.clientWidth')

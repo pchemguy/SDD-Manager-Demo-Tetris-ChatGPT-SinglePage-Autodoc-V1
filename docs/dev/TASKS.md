@@ -281,7 +281,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Contract/evidence: F2 integrity/schema/storage types/all rows/version, complete validation and cleanup before one common commit. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 8.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/8/8.2.md and HANDOFF with this task's initial completion.
     - [ ] Milestone 8.3 — Interoperability and distribution
-        - [ ] T-049 — Verify cross-format parity and restore failure isolation
+        - [x] T-049 — Verify cross-format parity and restore failure isolation
+            Verified: `python tools/check.py -q` - 73 passed in 28.59s. Cross-format parity, newest-restore selection, retryable optional SQL loading and maximum-score wrapping pass. Independent file-persistence review found no blocking defect. The interrupted prior issue and milestone closure were read back before resuming.
             Scope: tests/test_persistence.py; tests/test_browser.py; index.html fixes. Depends on: T-048.
             Contract/evidence: A8 JSON-to-SQLite and reverse, invalid-field matrix, runtime failures and unchanged results/settings/cookies/query. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-050 — Package the complete single-page release and schema
