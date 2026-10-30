@@ -252,38 +252,47 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 8 — Manual file persistence
 
 - [ ] Phase 8 — Manual file persistence
-    - [ ] Milestone 8.1 — Validated JSON transfer
-        - [ ] T-043 — Define the export schema and complete canonical validator
+    - [x] Milestone 8.1 — Validated JSON transfer
+        - [x] T-043 — Define the export schema and complete canonical validator
+            Verified: `python tools/check.py -q` - 57 passed in 23.45s. Observed RED for missing complete export validation. Version/schema/types/all setting values, unique IDs, safe scores and real canonical UTC timestamps are enforced; duplicate JSON members and precision-losing numeric literals are rejected. Supplied schema is extracted from embedded runtime definitions.
             Scope: index.html embedded schema/validator; tests/test_persistence.py; schema/session.schema.json. Depends on: T-042.
             Contract/evidence: F1/L1/C1 complete content, bounds, duplicate keys/IDs, safe score, timestamps and version. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-044 — Add JSON snapshot downloads and Save controls
+        - [x] T-044 — Add JSON snapshot downloads and Save controls
+            Verified: `python tools/check.py -q` - 59 passed in 19.76s. Observed RED for missing Save control. Real JSON downloads preserve stable ID, score, UTC timestamp and all six typed settings in one file; hiding settings hides the single Save/Restore pair. Save format is distinct from the six game settings.
             Scope: index.html JSON codec/settings file controls; tests/test_browser.py; tests/test_persistence.py. Depends on: T-043.
             Contract/evidence: F1 one JSON snapshot file, correct current top ten/settings, hidden-settings button containment. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-045 — Restore JSON through staged atomic replacement
+        - [x] T-045 — Restore JSON through staged atomic replacement
+            Verified: `python tools/check.py -q` - 61 passed in 20.06s. Observed RED for disabled Restore. Complete file validation now precedes one results/settings replacement and all-six cookie/query writes; invalid version/date files leave all four surfaces unchanged. Pending game events are reconciled before the synchronous commit.
             Scope: index.html file coordinator/controller; tests/test_persistence.py; tests/test_browser.py. Depends on: T-044.
             Contract/evidence: F1 invalid content unchanged across all surfaces; valid replacement, cookies/query, cancellation and stale-read protection. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 8.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/8/8.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 8.2 — SQLite transfer
-        - [ ] T-046 — Integrate a pinned lazy single-file sql.js runtime
+    - [x] Milestone 8.2 — SQLite transfer
+        - [x] T-046 — Integrate a pinned lazy single-file sql.js runtime
+            Verified: `python tools/check.py -q` - 63 passed in 20.66s. Observed RED for absent SQLite runtime. Verified pinned CDN artifact/CORS and SRI, then real SQLite SELECT execution in both browsers, one shared lazy initialization and no extra external wasm/worker request. Controlled browser delivery uses exact fetched bytes, not a fake SQL interface.
             Scope: index.html dependency loader; tests/test_persistence.py; README.md. Depends on: T-045.
             Contract/evidence: F2 one CDN JavaScript dependency, bounded load/init, retry and JSON/game isolation. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-047 — Export the versioned SQLite format
+        - [x] T-047 — Export the versioned SQLite format
+            Verified: `python tools/check.py -q` - 65 passed in 25.05s. Observed RED for missing SQLite bytes. Standard SQLite downloads are independently opened by Python sqlite3; version/application metadata, six keyed setting rows, score zero/MAX-safe, stable IDs and exact UTC values are verified.
             Scope: index.html SQLite encoder; tests/test_persistence.py. Depends on: T-046.
             Contract/evidence: F2 exact high_scores/settings tables, metadata, bound writes and stable values. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-048 — Validate and restore SQLite through the common candidate path
+        - [x] T-048 — Validate and restore SQLite through the common candidate path
+            Verified: `python tools/check.py -q` - 67 passed in 23.49s. Observed RED for missing SQLite restore. Real database import shares full canonical validation; invalid dates, values, metadata, extra views and hidden generated columns leave results/settings/cookies/URL unchanged. Statements and databases close on all paths.
             Scope: index.html SQLite reader/validator; tests/test_persistence.py; tests/test_browser.py. Depends on: T-047.
             Contract/evidence: F2 integrity/schema/storage types/all rows/version, complete validation and cleanup before one common commit. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 8.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/8/8.2.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 8.3 — Interoperability and distribution
-        - [ ] T-049 — Verify cross-format parity and restore failure isolation
+    - [x] Milestone 8.3 — Interoperability and distribution
+        - [x] T-049 — Verify cross-format parity and restore failure isolation
+            Verified: `python tools/check.py -q` - 73 passed in 28.59s. Cross-format parity, newest-restore selection, retryable optional SQL loading and maximum-score wrapping pass. Independent file-persistence review found no blocking defect. The interrupted prior issue and milestone closure were read back before resuming.
             Scope: tests/test_persistence.py; tests/test_browser.py; index.html fixes. Depends on: T-048.
             Contract/evidence: A8 JSON-to-SQLite and reverse, invalid-field matrix, runtime failures and unchanged results/settings/cookies/query. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-050 — Package the complete single-page release and schema
+        - [x] T-050 — Package the complete single-page release and schema
+            Verified: `python tools/check.py -q` - 73 passed in 30.02s. Complete HTML/schema/checksum packaging is verified. Final release assets now use stable version-free names tetris.html, session.schema.json and SHA256SUMS, with checked latest URLs; no existing published release was altered. Developer provisioning and usage documentation match actual execution.
             Scope: tools/package.py; schema/session.schema.json; README.md; RELEASE-NOTES.md; index.html version. Depends on: T-049.
             Contract/evidence: A9 v1.0.0 HTML, embedded/extracted-schema equality, checksum/install instructions and full-scope artifact checks. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 8.3 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/8/8.3.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 8.4 — Phase review
-        - [ ] T-051 — Review test and report phase 8
+    - [x] Milestone 8.4 — Phase review
+        - [x] T-051 — Review test and report phase 8
+            Verified: `python tools/check.py -q` - 78 passed in 30.26s. All requested functionality is verified. Full browser/rule/artifact/file regressions pass, including actual production-mode HTML JSON transfer offline. Independent gameplay and persistence reviews found no blockers; lifecycle/help findings were fixed after observed RED tests. Desktop/mobile visual QC retained centered board and visible information.
             Depends on: all delivery tasks in phase 8, completion/closure of milestones 8.1, 8.2, 8.3, and their committed review evidence.
             Scope: cross-milestone code review, A8 and full A1-A9 regression/packaging; JSON/SQLite parity and all six settings. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/8/PHASE-REPORT.md, HANDOFF, release v1.0.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.

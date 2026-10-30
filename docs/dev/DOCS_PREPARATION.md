@@ -6,8 +6,8 @@
 - Scope: the complete single-page HTML Tetris description; one documentation pass covering all requested capability increments.
 - Approval basis: the user's OK accepts the proposed interaction choices and delivery direction. The user's subsequent k approves the published PROJECT at proposal commit 2f195000fcc605d1543c86975b35e4ab45ccca92; ARCHITECTURE through TASKS checkpoints are preapproved by autodoc mode.
 - Tracking: enabled for preparation and implementation by the retained root AGENTS.md policy. The sdd-docs-main milestone and DOCS-001 through DOCS-009 issues were created from the running package definitions, with exact body and milestone associations read back before repository writes.
-- Publication: each owned commit is pushed and exactly read back before further work. No implementation range is selected.
-- Next boundary: DOCS-008 completion is the autodoc stop. DOCS-009 package QC, documentation integration, milestone closure and implementation are not started; await explicit advance direction.
+- Publication: each owned commit is pushed and exactly read back before further work. The user selected full implementation T-001 through T-051 after package QC.
+- Preparation complete: DOCS-009 QC completion 1c6f2c3c4f313ac4dcd2121d6bdbda3bd871bc42, explicit default integration f758ae67be0ecd5137b13f18888871242a1f43bd and preparation milestone closure are verified. TASKS/HANDOFF now own implementation progress.
 - Source package: installed SDD Manager 0.15.4.
 
 ## Scope and decisions
@@ -39,7 +39,7 @@ These are confirmed product choices; precise downstream contracts are defined in
 | DOCS-006 | docs/dev/PLAN.md SHA-256 714a02dea59174ac2eff2e29f90b5a8e2cd7ee7c803dd20d6de61905cb70e0a4; docs/dev/PLAN-REVIEW-REPORT.md SHA-256 228f21a42f029c44ee65dd067a0c904917f1141b13d280b7f277b45152be24f4. Accepted under the user-selected autodoc preapproval. Scoped authoring review passed; required adjacent review report accompanies SPEC, PLAN and TASKS. Completion/checklist is atomic; publish/read back and close/read back the existing issue before dependent work. |
 | DOCS-007 | docs/dev/layout.md SHA-256 4d5a8dc871d1de0b0a7f3e4bcfa083211fb7eb6335822b778009150c15dc67d3; docs/dev/PLAN.md SHA-256 aebb6facf566297757e9da04ed8eb8aef61066da379b85d9a83ef4bbc0e192d2; docs/dev/PLAN-REVIEW-REPORT.md SHA-256 3f6feaecf066d9dd7ede4402ef503fa8087d7cb864cf6665f0478dfee0e1dfbf; AGENTS.md SHA-256 9fff55ada31f4ec46cbe821994e501808b1b54f9b200638f0843081b9edc1a41; docs/dev/policies/BROWSER_DEV_POLICY.md SHA-256 e00e33ed8911ceda92087392cb70bb451ad2e5cf6bd44b69511169d4141e7918; docs/dev/policies/WINDOWS_SHELL_POLICY.md SHA-256 da77f5ff14447abbd8419404917bd5b947ba7bf68c71b4feb72314cc4ea8b4d7; docs/dev/policies/playwright.md SHA-256 2648decb40d219204c735ac7a2e219cb40279ae4a399e00fdf6cced449df3c52; docs/dev/policies/vite-worker-loading.md SHA-256 63ce20b1c366d566b8cba223c3fa49421aa3b77c25d7f0456b0b6b4a3208d0dc. Accepted under the user-selected autodoc preapproval. Scoped authoring review passed; required adjacent review report accompanies SPEC, PLAN and TASKS. Completion/checklist is atomic; publish/read back and close/read back the existing issue before dependent work. |
 | DOCS-008 | docs/dev/TASKS.md SHA-256 5abe29059cadd9be5da24c5d009d0b368724f13526ffb0537a12326ece02cda3; docs/dev/TASKS-REVIEW-REPORT.md SHA-256 2dbc204728ab94d6bb5e4d745450565c53eca49fd16f7a7e2de09676c872fa51; docs/dev/HANDOFF.md SHA-256 5aa4fefafe3486e929174dca33609237b8835a537e50947f999d8e6ae21ba17b. Accepted under the user-selected autodoc preapproval. Scoped authoring review passed; required adjacent review report accompanies SPEC, PLAN and TASKS. Completion/checklist is atomic; publish/read back and close/read back the existing issue before dependent work. |
-| DOCS-009 | Not started; autodoc stops before package QC. |
+| DOCS-009 | Complete at 1c6f2c3c4f313ac4dcd2121d6bdbda3bd871bc42; package QC Ready, explicit integration f758ae67be0ecd5137b13f18888871242a1f43bd; issue #9 and preparation milestone #1 completed. |
 
 ## Initialization
 
@@ -51,11 +51,11 @@ These are confirmed product choices; precise downstream contracts are defined in
 - Copied scaffold CRLF endings retained byte for byte; whitespace verification uses cr-at-eol.
 - Reset: none.
 
-## Pending transitions
+## Historical autodoc checkpoint
 
 DOCS-001 through DOCS-007 commits were each published and exactly read back; corresponding issue completed closures were read back before dependent work. DOCS-008 TASKS and its scoped conformance report have passed the derivation checks; its completion commit publication and issue #8 evidence/closure require readback after this snapshot. Keep DOCS-009 unchecked, issue #9 and sdd-docs-main open. Do not run package QC or integrate documentation under the current autodoc stop.
 
-## Final pass boundary
+## Historical document-pass boundary
 
 Full requested scope is represented in PROJECT, ARCHITECTURE, DECOMPOSITION, SPEC with three contract children, PLAN, layout and TASKS. Scoped SPEC, combined PLAN/layout and TASKS reports record current review identities and outcomes. Eight implementation phases/releases contain 17 delivery milestones, 43 delivery tasks and eight dedicated phase reviews (51 product tasks total), all unchecked. This is a document-pass result, not whole-package readiness or delivered functionality.
 
@@ -63,4 +63,4 @@ Additional design precision chosen within the accepted scope includes safe event
 
 ## Authorized advance and package result
 
-The user's Do QC and full implement selects DOCS-009 and full T-001 through T-051 execution, including phase integration/releases. Package QC at 008016d29bd767e8a9b6c9b0edfc90500c93fb8f is Ready; see DOCS-QC-REPORT.md. DOCS-009 completion, report and handoff are atomic. Earlier autodoc stops are historical; no renewed document approval or implementation checkpoint is required within this selected range. Current pending effects are DOCS-009 publication/closure, explicit verified default integration and preparation milestone closure, then eligible phase activation.
+The user's Do QC and full implement selects DOCS-009 and full T-001 through T-051 execution, including phase integration/releases. Package QC at 008016d29bd767e8a9b6c9b0edfc90500c93fb8f is Ready; see DOCS-QC-REPORT.md. DOCS-009 completion, report and handoff are atomic. Earlier autodoc stops are historical; no renewed document approval or implementation checkpoint is required within this selected range. Those preparation effects are complete and verified. This record preserves the historical document pass; current implementation/release state is recorded by TASKS and HANDOFF.
