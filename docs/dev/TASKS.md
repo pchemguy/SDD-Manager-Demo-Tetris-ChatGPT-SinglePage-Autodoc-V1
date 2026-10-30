@@ -29,7 +29,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Contract/evidence: G1 injected random/clock seams, start/pause/resume/restart and stale-generation protection. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 1.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/1/1.1.md and HANDOFF with this task's initial completion.
     - [ ] Milestone 1.2 — Playable interface
-        - [ ] T-004 — Build the centered board and information view
+        - [x] T-004 — Build the centered board and information view
+            Verified: `python tools/check.py -q` - 5 passed in 3.59s. Observed RED in both real browsers because the board was absent; centered Canvas and information now render with opaque pixels, correct initial statistics and exact two gameplay buttons. Chromium shell and Firefox local-environment override passed representative provisioning cycles.
             Scope: index.html embedded CSS/Canvas/HTML; tests/test_browser.py. Depends on: T-003.
             Contract/evidence: U1 board/info placement, visible information and Canvas occupied cells. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-005 — Connect keyboard and the two gameplay buttons
