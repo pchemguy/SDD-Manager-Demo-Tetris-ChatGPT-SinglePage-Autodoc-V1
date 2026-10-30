@@ -28,7 +28,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: index.html rule integration; tests/test_rules.py. Depends on: T-002.
             Contract/evidence: G1 injected random/clock seams, start/pause/resume/restart and stale-generation protection. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 1.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/1/1.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 1.2 — Playable interface
+    - [x] Milestone 1.2 — Playable interface
         - [x] T-004 — Build the centered board and information view
             Verified: `python tools/check.py -q` - 5 passed in 3.59s. Observed RED in both real browsers because the board was absent; centered Canvas and information now render with opaque pixels, correct initial statistics and exact two gameplay buttons. Chromium shell and Firefox local-environment override passed representative provisioning cycles.
             Scope: index.html embedded CSS/Canvas/HTML; tests/test_browser.py. Depends on: T-003.
@@ -37,7 +37,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 7 passed in 4.42s. Observed RED: Start left pages idle. Actual mouse/keyboard dispatch, movement, pause freeze, resume and restart now pass. Corrected the test to inspect status text content independently of CSS uppercase presentation; its behavioral state assertions remain intact.
             Scope: index.html controller/input/help; tests/test_browser.py. Depends on: T-004.
             Contract/evidence: G1/U1 keyboard-only moves, exact button order/labels, focus handling and pause. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-006 — Exercise playable classic scenarios in Chromium and Firefox
+        - [x] T-006 — Exercise playable classic scenarios in Chromium and Firefox
+            Verified: `python tools/check.py -q` - 15 passed in 8.07s. Real Chromium/Firefox keyboard, lifecycle, game-over, opaque Canvas and 360/768/1440 centering scenarios pass. Screenshot review found clipped gameplay buttons; added failing bounds checks and fixed intrinsic grid minimums, preserving exact labels.
             Scope: tests/test_browser.py; project test configuration; index.html fixes. Depends on: T-005.
             Contract/evidence: A1/A9 actual HTML gameplay, Canvas, pause/restart, game over and responsive required panels. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 1.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/1/1.2.md and HANDOFF with this task's initial completion.
