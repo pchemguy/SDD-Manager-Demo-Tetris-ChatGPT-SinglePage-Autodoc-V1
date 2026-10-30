@@ -194,27 +194,33 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 6 — URL and cookie configuration
 
 - [ ] Phase 6 — URL and cookie configuration
-    - [ ] Milestone 6.1 — Configuration persistence
-        - [ ] T-033 — Resolve independent URL cookie and default sources
+    - [x] Milestone 6.1 — Configuration persistence
+        - [x] T-033 — Resolve independent URL cookie and default sources
+            Verified: `python tools/check.py -q` - 40 passed in 14.39s. Observed RED for missing source resolution; all 40 checks pass for independent URL/cookie/default choices, invalid first duplicate fallback and omitted-cookie retention. Corrected a test-file whitespace check before committing; no result commit was published prematurely.
             Scope: index.html browser/config adapters; tests/test_persistence.py. Depends on: T-032.
             Contract/evidence: C2 mixed-source precedence, invalid values, first duplicate, omitted parameter and unknown-key retention. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-034 — Write explicit URL values and changed cookies
+        - [x] T-034 — Write explicit URL values and changed cookies
+            Verified: `python tools/check.py -q` - 41 passed in 15.14s. Characterized strict on/off serialization and domain round trips. Explicit valid URL defaults and user changes now write/read back cookies with declared attributes; omitted values do not overwrite saved preferences. Session reload regression now verifies durability when this capability is present.
             Scope: index.html cookie adapter; tests/test_persistence.py; tests/test_browser.py. Depends on: T-033.
             Contract/evidence: C2 explicit-default writes, omission retention, correct attributes and unavailable-cookie warnings. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-035 — Update queries on setting changes without reload
+        - [x] T-035 — Update queries on setting changes without reload
+            Verified: `python tools/check.py -q` - 42 passed in 15.14s. Observed RED for missing query-update behavior. Changed keys now replace their parameters without reload/history push, retaining unrelated values and fragment. All-six explicit writes are supported for the later validated restore path.
             Scope: index.html history adapter; tests/test_persistence.py; tests/test_browser.py. Depends on: T-034.
             Contract/evidence: C2 one changed parameter, unrelated/hash retention and history failure isolation. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 6.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/6/6.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 6.2 — Reload delivery
-        - [ ] T-036 — Verify reload and browser-failure integration
+    - [x] Milestone 6.2 — Reload delivery
+        - [x] T-036 — Verify reload and browser-failure integration
+            Verified: `python tools/check.py -q` - 48 passed in 16.95s. Real-browser mixed-source/default URL writes, omitted-cookie retention, query/hash preservation, reload durability and rejected-cookie warning scenarios pass alongside prior session/configuration/gameplay checks.
             Scope: tests/test_browser.py; tests/test_persistence.py; index.html fixes. Depends on: T-035.
             Contract/evidence: A6 reload/reopen fixture matrix and file-mode graceful limits. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-037 — Package and document automatic settings persistence
+        - [x] T-037 — Package and document automatic settings persistence
+            Verified: `python tools/check.py -q` - 48 passed in 18.41s. Prepared v0.6.0 with verified independent query/cookie/default resolution, reload behavior and graceful unsupported-persistence limits.
             Scope: README.md; RELEASE-NOTES.md; tools/package.py; index.html version. Depends on: T-036.
             Contract/evidence: A6 cookie/query usage, supported HTTP mode, direct-file limitations and v0.6.0 artifact. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 6.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/6/6.2.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 6.3 — Phase review
-        - [ ] T-038 — Review test and report phase 6
+    - [x] Milestone 6.3 — Phase review
+        - [x] T-038 — Review test and report phase 6
+            Verified: `python tools/check.py -q` - 48 passed in 17.41s. URL/cookie phase passes all canonical, source, real-browser reload/error and prior artifact regressions.
             Depends on: all delivery tasks in phase 6, completion/closure of milestones 6.1, 6.2, and their committed review evidence.
             Scope: cross-milestone code review, A6 and C1 regressions; leaderboard still not persisted. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/6/PHASE-REPORT.md, HANDOFF, release v0.6.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
