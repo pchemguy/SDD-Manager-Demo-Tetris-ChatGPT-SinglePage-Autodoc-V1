@@ -58,3 +58,8 @@ def test_bonus_award_cap_and_spending(js):
 def test_penetrator_transit_and_deepest_landing(js):
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:6,penetrator:true};for(let x=0;x<8;x++)g.board[8][x]='J';const land=g.landing().y;g.act(0,1);return [land,g.p.y,g.board[8].filter(Boolean).length]})()") == [18,7,8]
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:0,penetrator:true};for(let y=0;y<20;y++)g.board[y][6]='J';g.act(2);return g.p.x})()") == 4
+
+
+def test_penetrator_blocks_hold_and_locks_white(js):
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.bonuses=1;g.activate();return [g.holdPiece(),g.held]})()") == [False,None]
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.config.hardDropLock='immediate';g.bonuses=1;g.activate();g.hardDrop();return [g.board.flat().filter(v=>v==='P').length,!!g.p.penetrator,g.bonuses]})()") == [4,False,0]

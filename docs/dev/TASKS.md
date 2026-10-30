@@ -126,7 +126,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 4 — Penetrator mode
 
 - [ ] Phase 4 — Penetrator mode
-    - [ ] Milestone 4.1 — Penetrator gameplay
+    - [x] Milestone 4.1 — Penetrator gameplay
         - [x] T-021 — Add bonus accounting and activation state
             Verified: `python tools/check.py -q` - 28 passed in 10.33s. Observed RED for missing bonus activation. Four-line award, cap three, one immediate spend and repeated-activation rejection pass; restart resets bonuses.
             Scope: index.html reducer; tests/test_rules.py. Depends on: T-020.
@@ -135,7 +135,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 29 passed in 10.58s. Observed RED at an occupied transit band. Penetrator now passes without destroying fixed cells, projects to deepest valid placement and rejects transformations with no valid future landing.
             Scope: index.html board/landing/rotation; tests/test_rules.py. Depends on: T-021.
             Contract/evidence: G4 occupancy transit, valid-future-landing invariant and overlap-safe lock. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-023 — Connect penetrator hotkey hold restriction and visuals
+        - [x] T-023 — Connect penetrator hotkey hold restriction and visuals
+            Verified: `python tools/check.py -q` - 30 passed in 12.30s. Observed RED: active penetrator could hold and locked in regular color. Hold is now disabled until lock, white cells remain white after lock, bonuses update and P activates only an eligible piece.
             Scope: index.html input/view/info; tests/test_browser.py; tests/test_rules.py. Depends on: T-022.
             Contract/evidence: G4 P activation, white active/locked piece, bonus symbols, disabled hold and next regular piece. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 4.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/4/4.1.md and HANDOFF with this task's initial completion.
