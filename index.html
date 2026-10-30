@@ -531,6 +531,10 @@ function advanceUIClock(){const now=performance.now();ui.game.tick(now-ui.last);
 /* T018_DYNAMIC */
 let ghostMode='dynamic';
 ghostVisible=function(g,landing){if(!landing)return false;const mode=g.config?.ghost??ghostMode;return mode==='show'||mode==='dynamic'&&cells(landing.type,landing.rot,landing.x,landing.y).every(([,y])=>y>=10);};API.ghostVisible=ghostVisible;
+/* T021_BONUSES */
+const bonusStart=Game.prototype.start;Game.prototype.start=function(){this.bonuses=0;bonusStart.call(this);};
+const bonusLock=Game.prototype.lock;Game.prototype.lock=function(){const before=this.lines;const ok=bonusLock.call(this);if(ok&&this.lines-before===4)this.bonuses=Math.min(3,(this.bonuses||0)+1);return ok;};
+Game.prototype.activate=function(){if(this.status!=='running'||!this.p||this.p.penetrator||!(this.bonuses>0))return false;this.bonuses--;this.p={...this.p,penetrator:true};this.syncGround();return true;};
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();

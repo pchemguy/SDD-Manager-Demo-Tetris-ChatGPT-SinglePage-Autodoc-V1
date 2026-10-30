@@ -49,3 +49,7 @@ def test_midline_ghost_all_cells(js):
     assert js("ghostVisible({}, {type:'O',rot:0,x:4,y:9})") is False
     assert js("ghostVisible({}, {type:'O',rot:0,x:4,y:10})") is True
     assert js("ghostVisible({}, {type:'I',rot:1,x:3,y:7})") is False
+
+
+def test_bonus_award_cap_and_spending(js):
+    assert js("typeof Game.prototype.activate==='undefined'?null:(()=>{const g=new Game(()=>0.5);g.start();g.bonuses=3;g.p={type:'I',rot:1,x:3,y:16};for(let y=16;y<20;y++)g.board[y]=Array.from({length:10},(_,x)=>x===5?0:'J');g.lock();const cap=g.bonuses;g.activate();g.activate();return [cap,g.bonuses,g.p.penetrator]})()") == [3,2,True]
