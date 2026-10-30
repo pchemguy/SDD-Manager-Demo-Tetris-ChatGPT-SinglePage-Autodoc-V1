@@ -87,7 +87,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Contract/evidence: G2 Space dispatch, drop distance scoring and ghost/drop parity. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 2.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/2/2.2.md and HANDOFF with this task's initial completion.
     - [ ] Milestone 2.3 — Grounded timing and distribution
-        - [ ] T-015 — Implement full-interval and immediate-drop timing policies
+        - [x] T-015 — Implement full-interval and immediate-drop timing policies
+            Verified: `python tools/check.py -q` - 24 passed in 10.39s. Observed RED for missing retained grounding deadline/lift reset and repeated drop timing. Full-interval default locks once after one active interval, lateral motion does not extend it, lifting clears it and repeat hard drop earns no extra score or delay.
             Scope: index.html active-play clock/reducer; tests/test_rules.py. Depends on: T-014.
             Contract/evidence: G2 retained grounding deadline, lift reset, pause, stale timers and terminal-drop policy. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-016 — Package and verify the modern-rule release

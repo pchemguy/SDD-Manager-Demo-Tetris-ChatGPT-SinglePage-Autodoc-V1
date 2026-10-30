@@ -37,3 +37,9 @@ def test_shared_normal_landing(js):
 
 def test_hard_drop_lands_and_scores(js):
     assert js("typeof Game.prototype.hardDrop==='undefined'?null:(()=>{const g=new Game(()=>0.5);g.start();g.config={lockPolicy:'failed',hardDropLock:'general'};g.p={type:'O',rot:0,x:4,y:0};const p=g.landing();g.hardDrop();return [g.score,cells('O',0,p.x,p.y).every(([x,y])=>g.board[y][x]==='O')]})()") == [36,True]
+
+
+def test_interval_grounding_and_immediate_drop(js):
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:18};g.tick(300);g.act(-1);g.tick(699);const before=g.board.flat().filter(Boolean).length;g.tick(1);return [before,g.board.flat().filter(Boolean).length]})()") == [0,4]
+    assert js("typeof Game.prototype.syncGround==='undefined'?null:(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:17};g.board[19][4]='J';g.syncGround();g.tick(400);g.act(1);const lifted=g.deadline===null;g.tick(100);g.act(-1);return [lifted,g.deadline]})()") == [True,1500]
+    assert js("typeof Game.prototype.syncGround==='undefined'?null:(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:0};g.hardDrop();g.tick(400);const a=g.score;g.hardDrop();const deadline=g.deadline;g.tick(600);return [a,g.score,deadline,g.board.flat().filter(Boolean).length]})()") == [36,36,1000,4]
