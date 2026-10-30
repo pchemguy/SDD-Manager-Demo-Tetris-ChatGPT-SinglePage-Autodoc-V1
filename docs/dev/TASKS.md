@@ -33,7 +33,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 5 passed in 3.59s. Observed RED in both real browsers because the board was absent; centered Canvas and information now render with opaque pixels, correct initial statistics and exact two gameplay buttons. Chromium shell and Firefox local-environment override passed representative provisioning cycles.
             Scope: index.html embedded CSS/Canvas/HTML; tests/test_browser.py. Depends on: T-003.
             Contract/evidence: U1 board/info placement, visible information and Canvas occupied cells. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-005 — Connect keyboard and the two gameplay buttons
+        - [x] T-005 — Connect keyboard and the two gameplay buttons
+            Verified: `python tools/check.py -q` - 7 passed in 4.42s. Observed RED: Start left pages idle. Actual mouse/keyboard dispatch, movement, pause freeze, resume and restart now pass. Corrected the test to inspect status text content independently of CSS uppercase presentation; its behavioral state assertions remain intact.
             Scope: index.html controller/input/help; tests/test_browser.py. Depends on: T-004.
             Contract/evidence: G1/U1 keyboard-only moves, exact button order/labels, focus handling and pause. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-006 — Exercise playable classic scenarios in Chromium and Firefox
