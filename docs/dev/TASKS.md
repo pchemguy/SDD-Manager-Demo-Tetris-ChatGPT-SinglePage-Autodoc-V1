@@ -209,7 +209,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Contract/evidence: C2 one changed parameter, unrelated/hash retention and history failure isolation. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 6.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/6/6.1.md and HANDOFF with this task's initial completion.
     - [ ] Milestone 6.2 — Reload delivery
-        - [ ] T-036 — Verify reload and browser-failure integration
+        - [x] T-036 — Verify reload and browser-failure integration
+            Verified: `python tools/check.py -q` - 48 passed in 16.95s. Real-browser mixed-source/default URL writes, omitted-cookie retention, query/hash preservation, reload durability and rejected-cookie warning scenarios pass alongside prior session/configuration/gameplay checks.
             Scope: tests/test_browser.py; tests/test_persistence.py; index.html fixes. Depends on: T-035.
             Contract/evidence: A6 reload/reopen fixture matrix and file-mode graceful limits. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-037 — Package and document automatic settings persistence

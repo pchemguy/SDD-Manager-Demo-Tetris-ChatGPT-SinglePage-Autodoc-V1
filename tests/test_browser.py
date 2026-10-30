@@ -121,3 +121,33 @@ def test_session_settings_and_panel_visibility(page):
     assert abs(page.locator('#board').bounding_box()['x']-center['x']) < 1
     page.get_by_role('button',name='Settings',exact=True).click()
     assert page.locator('#settings').is_visible()
+
+
+def test_url_cookie_precedence_reload_and_omission(page,base_url):
+    page.context.add_cookies([{'name':'tetris_ghost','value':'hide','url':base_url},{'name':'tetris_hardDrop','value':'off','url':base_url},{'name':'tetris_hold','value':'off','url':base_url}])
+    page.goto(base_url+'/index.html?ghost=show&nextPreview=off&keep=1#frag')
+    assert page.evaluate('[Tetris.ui.game.config.ghost,Tetris.ui.game.config.hardDrop,Tetris.ui.game.config.nextPreview,Tetris.ui.game.config.hold]') == ['show',False,False,False]
+    cookies={x['name']:x['value'] for x in page.context.cookies()}
+    assert cookies['tetris_ghost']=='show' and cookies['tetris_hardDrop']=='off'
+    page.get_by_label('Hold piece',exact=True).select_option('true')
+    assert 'hold=on' in page.url and 'keep=1' in page.url and page.url.endswith('#frag')
+    page.reload()
+    assert page.evaluate('Tetris.ui.game.config.hold') is True
+
+
+def test_cookie_rejection_is_a_visible_nonfatal_warning(page,base_url):
+    page.add_init_script("Object.defineProperty(document,'cookie',{get(){return ''},set(){throw Error('blocked')}})")
+    page.goto(base_url+'/index.html?ghost=show')
+    page.get_by_label('Hard drop',exact=True).select_option('false')
+    assert page.evaluate('Tetris.ui.game.config.hardDrop') is False
+    assert 'unavailable' in page.locator('#message').text_content()
+
+
+def test_history_rejection_preserves_session_value(page,base_url):
+    page.add_init_script("History.prototype.replaceState=function(){throw Error('blocked history')}")
+    page.goto(base_url+'/index.html')
+    before=page.url
+    page.get_by_label('Hard drop',exact=True).select_option('false')
+    assert page.evaluate('Tetris.ui.game.config.hardDrop') is False
+    assert page.url==before
+    assert 'URL persistence is unavailable' in page.locator('#message').text_content()
