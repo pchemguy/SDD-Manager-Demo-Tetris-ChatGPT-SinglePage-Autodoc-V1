@@ -28,3 +28,8 @@ def test_wall_and_floor_kicks(js):
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'T',rot:1,x:-1,y:4};g.act(0,0,-1);return [g.p.rot,g.p.x]})()") == [0,0]
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'I',rot:1,x:-2,y:4};g.act(0,0,-1);return [g.p.rot,g.p.x]})()") == [0,0]
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'T',rot:0,x:3,y:18};g.act(0,0,1);return [g.p.rot,g.p.x,g.p.y]})()") == [1,2,17]
+
+
+def test_shared_normal_landing(js):
+    assert js("typeof findLanding==='undefined'?null:(()=>{const b=emptyBoard();b[10][3]='J';return findLanding(b,{type:'I',rot:0,x:3,y:0}).y})()") == 8
+    assert js("typeof findLanding==='undefined'?null:findLanding(emptyBoard(),{type:'O',rot:0,x:4,y:0}).y") == 18

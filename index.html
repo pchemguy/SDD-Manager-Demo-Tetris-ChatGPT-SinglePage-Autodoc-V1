@@ -458,6 +458,7 @@ function paintCells(ctx,board,piece,ghost=false,scale=30,ox=0,oy=0){
 function render(){if(!ui)return;const g=ui.game,c=ui.canvas,ctx=c.getContext('2d');ctx.setTransform(2,0,0,2,0,0);ctx.fillStyle='#101811';ctx.fillRect(0,0,300,600);
   ctx.strokeStyle='#233021';ctx.lineWidth=.6;for(let x=0;x<=10;x++){ctx.beginPath();ctx.moveTo(x*30,0);ctx.lineTo(x*30,600);ctx.stroke();}for(let y=0;y<=20;y++){ctx.beginPath();ctx.moveTo(0,y*30);ctx.lineTo(300,y*30);ctx.stroke();}
   for(let y=0;y<20;y++)for(let x=0;x<10;x++)if(g.board[y][x]){ctx.fillStyle=COLORS[g.board[y][x]];ctx.fillRect(x*30+1,y*30+1,28,28);}
+  if(g.p&&g.landing){const land=g.landing();if(ghostVisible(g,land))paintCells(ctx,g.board,land,true);}
   if(g.p)paintCells(ctx,g.board,g.p);
   document.getElementById('score').textContent=String(g.score);document.getElementById('lines').textContent=String(g.lines);document.getElementById('level').textContent=String(g.level);document.getElementById('state').textContent={idle:'Ready to play',running:'In motion',paused:'Paused',over:'Game over'}[g.status];
   const veil=document.getElementById('veil');veil.hidden=g.status==='running';document.getElementById('veil-title').textContent={idle:'MAKE YOUR MOVE',paused:'TAKE A BREATH',over:'ONE MORE TRY',running:''}[g.status];document.getElementById('veil-note').textContent=g.status==='idle'?'Start a game. Find your rhythm.':g.status==='paused'?'Press Pause/Start or Escape to return.':'Restart for a fresh board.';
@@ -508,6 +509,11 @@ Game.prototype.holdPiece=function(){if(this.status!=='running'||this.holdUsed)re
 const JK={ '01':[[-1,0],[-1,1],[0,-2],[-1,-2]],'10':[[1,0],[1,-1],[0,2],[1,2]],'12':[[1,0],[1,-1],[0,2],[1,2]],'21':[[-1,0],[-1,1],[0,-2],[-1,-2]],'23':[[1,0],[1,1],[0,-2],[1,-2]],'32':[[-1,0],[-1,-1],[0,2],[-1,2]],'30':[[-1,0],[-1,-1],[0,2],[-1,2]],'03':[[1,0],[1,1],[0,-2],[1,-2]]};
 const IK={'01':[[-2,0],[1,0],[-2,-1],[1,2]],'10':[[2,0],[-1,0],[2,1],[-1,-2]],'12':[[-1,0],[2,0],[-1,2],[2,-1]],'21':[[1,0],[-2,0],[1,-2],[-2,1]],'23':[[2,0],[-1,0],[2,1],[-1,-2]],'32':[[-2,0],[1,0],[-2,-1],[1,2]],'30':[[1,0],[-2,0],[1,-2],[-2,1]],'03':[[-1,0],[2,0],[-1,2],[2,-1]]};
 transform=function(board,piece,dx=0,dy=0,dr=0,accept=null){const p={...piece,x:piece.x+dx,y:piece.y+dy,rot:(piece.rot+dr+4)%4};const checks=[[0,0],...(dr&&piece.type!=='O'?(piece.type==='I'?IK:JK)[''+piece.rot+p.rot]||[]:[])];for(const [kx,ky]of checks){const q={...p,x:p.x+kx,y:p.y-ky};if(accept?accept(q):valid(board,q.type,q.rot,q.x,q.y))return q;}return piece;};API.transform=transform;
+/* T013_LANDING */
+function findLanding(board,piece){if(!valid(board,piece.type,piece.rot,piece.x,piece.y))return null;let p={...piece};while(valid(board,p.type,p.rot,p.x,p.y+1))p.y++;return p;}
+Game.prototype.landing=function(){return this.p?findLanding(this.board,this.p):null;};
+function ghostVisible(g,landing){return !!landing;}
+Object.assign(API,{findLanding});
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();

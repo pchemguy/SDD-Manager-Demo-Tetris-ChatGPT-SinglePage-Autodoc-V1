@@ -77,7 +77,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 21 passed in 9.66s. Observed RED at wall/floor rotation fixtures. Ordered transition-specific J/L/S/T/Z and I kicks now select valid offsets; O remains untranslated and failed changes retain the pose.
             Scope: index.html rotation tables/rules; tests/test_rules.py. Depends on: T-011.
             Contract/evidence: G2 all transition tables, first-valid offset and unchanged failure. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-013 — Share landing between ghost and drop commands
+        - [x] T-013 — Share landing between ghost and drop commands
+            Verified: `python tools/check.py -q` - 22 passed in 9.05s. Observed RED for missing landing; contiguous normal landing stops above occupied cells and shares its pose directly with the ghost renderer. Bottom and obstruction fixtures pass.
             Scope: index.html landing/view; tests/test_rules.py; tests/test_browser.py. Depends on: T-012.
             Contract/evidence: G2 normal contiguous landing and visible ghost projection. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-014 — Add keyboard hard drop and scoring
