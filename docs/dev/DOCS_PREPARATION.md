@@ -33,7 +33,12 @@ These are confirmed product choices; precise downstream contracts remain to be s
 | --- | --- |
 | DOCS-001 | All four root guidance files retained byte for byte against initial commit 6698c445a0f7efad9741118b8db6e6342bddd5eb; none copied. Standard task template instantiated with only DOCS-001 checked. HANDOFF records initialization and the pending brief. |
 | DOCS-002 | PROJECT proposal SHA-256 ab0afe7c90e52c2e62d0507251c3c3907273fc122ba7f05262abbb96ace69a9c. User-confirmed choices are incorporated without treating that confirmation as unseen document approval. Checked against the full supplied scope, decision table, product-document boundaries, Markdown spacing and local links. First approval supplied by the user's k after the published-brief approval request; approved bytes unchanged. DOCS-002 completes with this acceptance record and checklist; issue #2 closure follows publication. |
-| DOCS-003 through DOCS-008 | Not started; subsequent document checkpoints preapproved by autodoc mode, subject to technical QC. |
+| DOCS-003 | docs/dev/ARCHITECTURE.md SHA-256 3ba925931c90f81d61aa8e6e2db8762121043fe1b08bb03d105afb85e7b02a9f. Accepted under the user-selected autodoc preapproval. Scoped authoring review passed; required adjacent review report accompanies SPEC, PLAN and TASKS. Completion/checklist is atomic; publish/read back and close/read back the existing issue before dependent work. |
+| DOCS-004 | Not started; preapproved under autodoc, subject to technical QC. |
+| DOCS-005 | Not started; preapproved under autodoc, subject to technical QC. |
+| DOCS-006 | Not started; preapproved under autodoc, subject to technical QC. |
+| DOCS-007 | Not started; preapproved under autodoc, subject to technical QC. |
+| DOCS-008 | Not started; preapproved under autodoc, subject to technical QC. |
 | DOCS-009 | Not started; autodoc stops before package QC. |
 
 ## Initialization
@@ -48,4 +53,4 @@ These are confirmed product choices; precise downstream contracts remain to be s
 
 ## Pending transitions
 
-Initialization commit 4b0bc6188d21d06f1badc64d86e2952ca14aad00 was published and exactly read back; issue #1 evidence and completed closure were read back. PROJECT proposal publication was exactly read back. Its acceptance commit must be published and issue #2 closed/read back before dependent design. No package QC or implementation is authorized.
+Initialization commit 4b0bc6188d21d06f1badc64d86e2952ca14aad00 was published and exactly read back; issue #1 evidence and completed closure were read back. PROJECT proposal publication was exactly read back. Acceptance fba272dfaaa19950711af9b168c4b219ecffdb4f was published/read back and issue #2 closed/read back before dependent design. No package QC or implementation is authorized. Each completed document retains its actual content identity below; the current commit's later hosted closure is pending until read back.
