@@ -579,6 +579,10 @@ Object.assign(API,{parseSetting,serializeSetting,resolveSettings});
 function changedSettings(previous,next){return SETTING_DEFS.filter(d=>previous[d.key]!==next[d.key]).map(d=>d.key);}
 function writeSettingsCookies(settings,keys){for(const key of keys){try{const value=serializeSetting(key,settings[key]);document.cookie=encodeURIComponent('tetris_'+key)+'='+encodeURIComponent(value)+'; Path=/; SameSite=Lax; Max-Age=31536000'+(location.protocol==='https:'?'; Secure':'');if(cookieValues(document.cookie).get('tetris_'+key)!==value)throw Error('Cookie rejected');}catch{notice('Cookie persistence is unavailable; selected settings remain active in this page.');}}}
 const cookieApply=applyUIConfig;applyUIConfig=function(settings,options={}){const previous=ui.game.config;cookieApply(settings);writeSettingsCookies(ui.game.config,options.all?SETTING_DEFS.map(d=>d.key):changedSettings(previous,ui.game.config));};API.persistence=true;
+/* T035_QUERY */
+function updatedURL(href,settings,keys){const url=new URL(href);for(const key of keys)url.searchParams.set(key,serializeSetting(key,settings[key]));return url.href;}
+function writeSettingsQuery(settings,keys){if(!keys.length)return;try{history.replaceState(null,'',updatedURL(location.href,settings,keys));}catch{notice('URL persistence is unavailable; selected settings remain active in this page.');}}
+const queryApply=applyUIConfig;applyUIConfig=function(settings,options={}){const previous=ui.game.config;queryApply(settings,options);writeSettingsQuery(ui.game.config,options.all?SETTING_DEFS.map(d=>d.key):changedSettings(previous,ui.game.config));};API.updatedURL=updatedURL;
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();

@@ -19,3 +19,7 @@ def test_independent_configuration_sources(js):
 def test_configuration_spellings(js):
     assert js("SETTING_DEFS.map(d=>serializeSetting(d.key,DEFAULTS[d.key]))") == ['show','on','on','general','interval','on']
     assert js("SETTING_DEFS.map(d=>parseSetting(d.key,serializeSetting(d.key,DEFAULTS[d.key])))") == ['show',True,True,'general','interval',True]
+
+
+def test_query_update_preserves_unrelated_values(js):
+    assert js("typeof updatedURL==='undefined'?null:(()=>{const u=new URL(updatedURL('https://local.test/?keep=1#frag',{...DEFAULTS,hardDrop:false},['hardDrop']));return [u.searchParams.get('keep'),u.searchParams.get('hardDrop'),u.hash]})()") == ['1','off','#frag']

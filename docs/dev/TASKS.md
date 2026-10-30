@@ -194,7 +194,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 6 — URL and cookie configuration
 
 - [ ] Phase 6 — URL and cookie configuration
-    - [ ] Milestone 6.1 — Configuration persistence
+    - [x] Milestone 6.1 — Configuration persistence
         - [x] T-033 — Resolve independent URL cookie and default sources
             Verified: `python tools/check.py -q` - 40 passed in 14.39s. Observed RED for missing source resolution; all 40 checks pass for independent URL/cookie/default choices, invalid first duplicate fallback and omitted-cookie retention. Corrected a test-file whitespace check before committing; no result commit was published prematurely.
             Scope: index.html browser/config adapters; tests/test_persistence.py. Depends on: T-032.
@@ -203,7 +203,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 41 passed in 15.14s. Characterized strict on/off serialization and domain round trips. Explicit valid URL defaults and user changes now write/read back cookies with declared attributes; omitted values do not overwrite saved preferences. Session reload regression now verifies durability when this capability is present.
             Scope: index.html cookie adapter; tests/test_persistence.py; tests/test_browser.py. Depends on: T-033.
             Contract/evidence: C2 explicit-default writes, omission retention, correct attributes and unavailable-cookie warnings. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-035 — Update queries on setting changes without reload
+        - [x] T-035 — Update queries on setting changes without reload
+            Verified: `python tools/check.py -q` - 42 passed in 15.14s. Observed RED for missing query-update behavior. Changed keys now replace their parameters without reload/history push, retaining unrelated values and fragment. All-six explicit writes are supported for the later validated restore path.
             Scope: index.html history adapter; tests/test_persistence.py; tests/test_browser.py. Depends on: T-034.
             Contract/evidence: C2 one changed parameter, unrelated/hash retention and history failure isolation. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 6.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/6/6.1.md and HANDOFF with this task's initial completion.
