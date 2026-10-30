@@ -1,12 +1,12 @@
-# Tetris Atelier v0.5.0
+# Tetris Atelier v0.6.0
 
 ## Changes
 
-All six live game settings with explicit session-only lifetime and independent panel toggles. Retains the previously delivered capabilities.
+Independent URL/cookie/default resolution and immediate cookie/query updates for all six settings. Retains the previously delivered capabilities.
 
 ## Installation and use
 
-Download tetris-v0.5.0.html and open it in a JavaScript-enabled browser, or serve that file with a static HTTP(S) host. No developer runtime is required by players. Verify the download with SHA256SUMS.txt. This is a standalone browser artifact, not a signed or store-distributed desktop package.
+Download tetris-v0.6.0.html and open it in a JavaScript-enabled browser, or serve that file with a static HTTP(S) host. No developer runtime is required by players. Verify the download with SHA256SUMS.txt. This is a standalone browser artifact, not a signed or store-distributed desktop package.
 
 ## Verification and limits
 

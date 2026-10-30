@@ -208,12 +208,13 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: index.html history adapter; tests/test_persistence.py; tests/test_browser.py. Depends on: T-034.
             Contract/evidence: C2 one changed parameter, unrelated/hash retention and history failure isolation. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 6.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/6/6.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 6.2 — Reload delivery
+    - [x] Milestone 6.2 — Reload delivery
         - [x] T-036 — Verify reload and browser-failure integration
             Verified: `python tools/check.py -q` - 48 passed in 16.95s. Real-browser mixed-source/default URL writes, omitted-cookie retention, query/hash preservation, reload durability and rejected-cookie warning scenarios pass alongside prior session/configuration/gameplay checks.
             Scope: tests/test_browser.py; tests/test_persistence.py; index.html fixes. Depends on: T-035.
             Contract/evidence: A6 reload/reopen fixture matrix and file-mode graceful limits. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-037 — Package and document automatic settings persistence
+        - [x] T-037 — Package and document automatic settings persistence
+            Verified: `python tools/check.py -q` - 48 passed in 18.41s. Prepared v0.6.0 with verified independent query/cookie/default resolution, reload behavior and graceful unsupported-persistence limits.
             Scope: README.md; RELEASE-NOTES.md; tools/package.py; index.html version. Depends on: T-036.
             Contract/evidence: A6 cookie/query usage, supported HTTP mode, direct-file limitations and v0.6.0 artifact. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 6.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/6/6.2.md and HANDOFF with this task's initial completion.
