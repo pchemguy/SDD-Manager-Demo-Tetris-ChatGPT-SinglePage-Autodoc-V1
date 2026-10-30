@@ -55,3 +55,21 @@ def test_game_over_render_and_restart(page, browser):
     page.get_by_role('button',name='Start/Restart',exact=True).click()
     assert page.evaluate('Tetris.ui.game.board.flat().filter(Boolean).length') == 0
     assert page.locator('#state').text_content() == 'In motion'
+
+def test_packaged_download_plays_without_server(browser):
+    import re, subprocess, sys
+    root=Path(__file__).resolve().parents[1]
+    subprocess.run([sys.executable,'tools/package.py'],cwd=root,check=True,capture_output=True)
+    version=re.search(r"const VERSION\s*=\s*'([^']+)'",(root/'index.html').read_text()).group(1)
+    artifact=root/'dist'/version/('tetris-v'+version+'.html')
+    context=browser.new_context()
+    p=context.new_page()
+    try:
+        p.goto(artifact.as_uri())
+        p.get_by_role('button',name='Start/Restart',exact=True).click()
+        assert p.locator('#state').text_content() == 'In motion'
+        p.keyboard.press('Escape')
+        assert p.locator('#state').text_content() == 'Paused'
+        assert p.locator('#board').evaluate("c=>c.getContext('2d').getImageData(10,10,1,1).data[3]") == 255
+    finally:
+        context.close()

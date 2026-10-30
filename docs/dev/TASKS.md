@@ -42,12 +42,13 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: tests/test_browser.py; project test configuration; index.html fixes. Depends on: T-005.
             Contract/evidence: A1/A9 actual HTML gameplay, Canvas, pause/restart, game over and responsive required panels. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 1.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/1/1.2.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 1.3 — Baseline distribution
+    - [x] Milestone 1.3 — Baseline distribution
         - [x] T-007 — Prepare single-file release packaging and instructions
             Verified: `python tools/check.py -q` - 16 passed in 7.46s. Observed RED for missing deployable artifact; reproducible packaging now emits an exact-source standalone HTML plus SHA256SUMS. Added candidate installation/control instructions, versioned notes and readable embedded CSS/section organization.
             Scope: tools/package.py; README.md; RELEASE-NOTES.md; index.html version. Depends on: T-006.
             Contract/evidence: D1 one embedded-code HTML, v0.1.0 metadata, direct-file/static hosting instructions and checksums. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-008 — Verify the deployable baseline artifact
+        - [x] T-008 — Verify the deployable baseline artifact
+            Verified: `python tools/check.py -q` - 18 passed in 11.01s. The actual packaged file runs from file:// in both managed browsers, starts/pauses with real controls and renders opaque Canvas without a server or developer runtime. Exact source bytes/checksum and scoped artifact structure pass.
             Scope: tests/test_artifact.py; tools/package.py; README.md. Depends on: T-007.
             Contract/evidence: A1/A9 packaged-file execution, no runtime toolchain and explicit browser evidence limits. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 1.3 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/1/1.3.md and HANDOFF with this task's initial completion.
