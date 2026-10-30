@@ -161,7 +161,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 
 - [ ] Phase 5 — Session configuration
     - [ ] Milestone 5.1 — Live configuration
-        - [ ] T-027 — Define the six canonical setting domains and defaults
+        - [x] T-027 — Define the six canonical setting domains and defaults
+            Verified: `python tools/check.py -q` - 34 passed in 12.47s. Observed RED for absent complete configuration contract. Six canonical key/value domains now supply strict normalization and per-game defaults; wrong Boolean spelling/type is rejected without coercion.
             Scope: index.html config service; tests/test_persistence.py. Depends on: T-026.
             Contract/evidence: C1 strict types/enums and a complete normalized settings object. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-028 — Build the six labeled settings controls
