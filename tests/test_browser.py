@@ -204,3 +204,10 @@ def test_json_restore_validation_is_atomic(page):
     assert page.evaluate('Tetris.ui.results.records')==good['results']
     assert len(page.context.cookies())==6
     assert 'ghost=show' in page.url and 'hold=on' in page.url
+
+
+def test_sql_runtime_lazy_single_file_load(sql_page):
+    requests=[]
+    sql_page.on('request',lambda request:requests.append(request.url))
+    assert sql_page.evaluate("async()=>{if(!Tetris.loadSQL)return null;const unloaded=typeof initSqlJs==='undefined',a=Tetris.loadSQL(),b=Tetris.loadSQL(),SQL=await a,db=new SQL.Database();try{return [unloaded,a===b,db.exec('SELECT 42')[0].values[0][0]]}finally{db.close()}}") == [True,True,42]
+    assert len([url for url in requests if url.startswith('https://')])==1

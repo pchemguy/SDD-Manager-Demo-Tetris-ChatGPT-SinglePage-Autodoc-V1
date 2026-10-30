@@ -56,3 +56,13 @@ def page(browser, base_url):
     yield page
     context.close()
     assert not errors, errors
+
+
+@pytest.fixture
+def sql_page(page):
+    info=json.loads((ROOT/'.test-artifacts/sqljs-manifest.json').read_text())
+    body=(ROOT/'.test-artifacts/sqljs-inline.js').read_bytes()
+    import hashlib,base64
+    assert info['integrity']=='sha384-'+base64.b64encode(hashlib.sha384(body).digest()).decode()
+    page.route(info['url'],lambda route:route.fulfill(status=200,body=body,content_type='application/javascript',headers={'access-control-allow-origin':info['cors']}))
+    return page

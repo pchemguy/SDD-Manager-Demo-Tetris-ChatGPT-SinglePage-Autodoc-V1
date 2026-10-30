@@ -490,6 +490,7 @@ document.getElementById('extras').insertAdjacentHTML('beforeend','<div class="bo
  createLeaderboard();
  createFileControls();
  installRestore();
+ document.getElementById('file-format').insertAdjacentHTML('beforeend','<option value="sqlite">SQLite</option>');
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -641,6 +642,14 @@ async function restoreFile(file){if(!file)return false;const serial=ui.restoreSe
  }catch(error){if(serial===ui.restoreSerial)notice('Could not restore: '+String(error.message).slice(0,240));return false;}}
 function installRestore(){const button=document.getElementById('restore-file'),input=document.getElementById('restore-input');button.disabled=false;button.addEventListener('click',()=>input.click());input.addEventListener('change',()=>{const file=input.files[0];input.value='';restoreFile(file);});}
 Object.assign(API,{restoreFile});
+
+/* T046_SQL_LOADER */
+/* The optional database runtime is a pinned single JavaScript CDN artifact. */
+const SQLJS_URL='https://cdn.jsdelivr.net/npm/sql.js@1.15.0/dist/sql-wasm-inline.js';
+const SQLJS_INTEGRITY='sha384-I5WbIndsU+f93SqytlrlnwBMtpRSul+m1JCz1zdy+bgtWLymCb+ixY89hG/we8Zd';
+let sqlPromise=null;
+function loadSQL(){if(sqlPromise)return sqlPromise;const request=new Promise((resolve,reject)=>{const script=document.createElement('script');let settled=false;const timer=setTimeout(()=>finish(Error('SQLite library load timed out.')),20000);function finish(error,SQL){if(settled)return;settled=true;clearTimeout(timer);script.remove();if(error)reject(error);else resolve(SQL);}script.src=SQLJS_URL;script.integrity=SQLJS_INTEGRITY;script.crossOrigin='anonymous';script.onerror=()=>finish(Error('SQLite library could not load. Check the connection and retry.'));script.onload=()=>Promise.resolve().then(()=>{if(typeof globalThis.initSqlJs!=='function')throw Error('SQLite initialization is unavailable.');return globalThis.initSqlJs();}).then(SQL=>finish(null,SQL),error=>finish(error));document.head.append(script);});sqlPromise=request.catch(error=>{sqlPromise=null;throw error;});return sqlPromise;}
+Object.assign(API,{loadSQL,SQLJS_URL});
 
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;

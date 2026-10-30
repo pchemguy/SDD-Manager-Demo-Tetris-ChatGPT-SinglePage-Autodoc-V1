@@ -267,7 +267,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Contract/evidence: F1 invalid content unchanged across all surfaces; valid replacement, cookies/query, cancellation and stale-read protection. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 8.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/8/8.1.md and HANDOFF with this task's initial completion.
     - [ ] Milestone 8.2 — SQLite transfer
-        - [ ] T-046 — Integrate a pinned lazy single-file sql.js runtime
+        - [x] T-046 — Integrate a pinned lazy single-file sql.js runtime
+            Verified: `python tools/check.py -q` - 63 passed in 20.66s. Observed RED for absent SQLite runtime. Verified pinned CDN artifact/CORS and SRI, then real SQLite SELECT execution in both browsers, one shared lazy initialization and no extra external wasm/worker request. Controlled browser delivery uses exact fetched bytes, not a fake SQL interface.
             Scope: index.html dependency loader; tests/test_persistence.py; README.md. Depends on: T-045.
             Contract/evidence: F2 one CDN JavaScript dependency, bounded load/init, retry and JSON/game isolation. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-047 — Export the versioned SQLite format
