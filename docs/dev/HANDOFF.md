@@ -33,3 +33,7 @@ Outcome: complete intended product design/specification/plan/layout/task hierarc
 - Await explicit advance to package QC. A request for QC plus full implementation may select that subsequent scope; it is not implied by checked preparation boxes.
 - Then assess the whole package, repair/recheck within authority, publish DOCS-009, integrate/verify/publish documentation into main and close/read back the preparation milestone before any selected implementation.
 - No native Windows, browser, gameplay, schema runtime or SQLite behavior has been executed. No product code, install, artifact, release or implementation completion is claimed. No known unresolved scoped-document finding remains; whole-package review is still outstanding.
+
+## Advanced checkpoint
+
+Whole-package QC is Ready under the user's QC and full implementation instruction; DOCS-009 completes with this snapshot/report. Selected range is T-001 through T-051, with all phase integrations and releases. Next: publish/read back DOCS-009, close issue #9, explicitly merge/verify/publish design-docs/main into main and close the preparation milestone. Then activate phase 1 and implement sequential tasks without another human checkpoint. Preserve all task/push/tracking/review gates.
