@@ -150,8 +150,9 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: README.md; RELEASE-NOTES.md; tools/package.py; tests/test_browser.py; index.html version. Depends on: T-024.
             Contract/evidence: A4 integrated fixtures, preserved fixed cells, bonus display and v0.4.0 artifact. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 4.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/4/4.2.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 4.3 — Phase review
-        - [ ] T-026 — Review test and report phase 4
+    - [x] Milestone 4.3 — Phase review
+        - [x] T-026 — Review test and report phase 4
+            Verified: `python tools/check.py -q` - 33 passed in 13.22s. Penetrator phase and prior gameplay/browser/artifact regressions pass; all delivery milestone evidence is present.
             Depends on: all delivery tasks in phase 4, completion/closure of milestones 4.1, 4.2, and their committed review evidence.
             Scope: cross-milestone code review, A4 and lock/hold/ghost regressions; settings and persistence remain deferred. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/4/PHASE-REPORT.md, HANDOFF, release v0.4.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
