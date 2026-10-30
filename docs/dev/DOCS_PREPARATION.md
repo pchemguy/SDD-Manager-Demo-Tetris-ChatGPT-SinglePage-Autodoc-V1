@@ -4,10 +4,10 @@
 
 - Mode: autodoc/onepass, selected by the project request on 2026-10-30.
 - Scope: the complete single-page HTML Tetris description; one documentation pass covering all requested capability increments.
-- Approval basis: the user's OK accepts the proposed interaction choices and delivery direction. It does not accept an unseen project brief. PROJECT approval remains pending; ARCHITECTURE through TASKS checkpoints are preapproved by autodoc mode.
+- Approval basis: the user's OK accepts the proposed interaction choices and delivery direction. The user's subsequent k approves the published PROJECT at proposal commit 2f195000fcc605d1543c86975b35e4ab45ccca92; ARCHITECTURE through TASKS checkpoints are preapproved by autodoc mode.
 - Tracking: enabled for preparation and implementation by the retained root AGENTS.md policy. The sdd-docs-main milestone and DOCS-001 through DOCS-009 issues were created from the running package definitions, with exact body and milestone associations read back before repository writes.
 - Publication: each owned commit is pushed and exactly read back before further work. No implementation range is selected.
-- Next boundary: publish PROJECT for first approval; then prepare the remaining preapproved documents and stop after DOCS-008 before package QC, integration or implementation.
+- Next boundary: PROJECT approved; prepare the remaining preapproved documents and stop after DOCS-008 before package QC, integration or implementation.
 - Source package: installed SDD Manager 0.15.4.
 
 ## Scope and decisions
@@ -32,7 +32,7 @@ These are confirmed product choices; precise downstream contracts remain to be s
 | Task | Evidence and decision state |
 | --- | --- |
 | DOCS-001 | All four root guidance files retained byte for byte against initial commit 6698c445a0f7efad9741118b8db6e6342bddd5eb; none copied. Standard task template instantiated with only DOCS-001 checked. HANDOFF records initialization and the pending brief. |
-| DOCS-002 | PROJECT proposal SHA-256 ab0afe7c90e52c2e62d0507251c3c3907273fc122ba7f05262abbb96ace69a9c. User-confirmed choices are incorporated without treating that confirmation as unseen document approval. Checked against the full supplied scope, decision table, product-document boundaries, Markdown spacing and local links. First PROJECT approval remains pending; DOCS-002 stays unchecked and issue #2 stays open. |
+| DOCS-002 | PROJECT proposal SHA-256 ab0afe7c90e52c2e62d0507251c3c3907273fc122ba7f05262abbb96ace69a9c. User-confirmed choices are incorporated without treating that confirmation as unseen document approval. Checked against the full supplied scope, decision table, product-document boundaries, Markdown spacing and local links. First approval supplied by the user's k after the published-brief approval request; approved bytes unchanged. DOCS-002 completes with this acceptance record and checklist; issue #2 closure follows publication. |
 | DOCS-003 through DOCS-008 | Not started; subsequent document checkpoints preapproved by autodoc mode, subject to technical QC. |
 | DOCS-009 | Not started; autodoc stops before package QC. |
 
@@ -48,4 +48,4 @@ These are confirmed product choices; precise downstream contracts remain to be s
 
 ## Pending transitions
 
-Initialization commit 4b0bc6188d21d06f1badc64d86e2952ca14aad00 was published and exactly read back; issue #1 evidence and completed closure were read back. PROJECT is proposed for human first approval. Proposal publication requires readback after this commit. No dependent design or package QC has started.
+Initialization commit 4b0bc6188d21d06f1badc64d86e2952ca14aad00 was published and exactly read back; issue #1 evidence and completed closure were read back. PROJECT proposal publication was exactly read back. Its acceptance commit must be published and issue #2 closed/read back before dependent design. No package QC or implementation is authorized.
