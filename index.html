@@ -481,6 +481,7 @@ document.getElementById('extras').insertAdjacentHTML('beforeend','<div class="bo
  createSettings();
  installToggle('settings','Settings');
  ui.restored=resolveSettings(location.href,readCookies());ui.game.applySettings(ui.restored.settings);syncSettingsUI();
+ writeSettingsCookies(ui.game.config,Object.keys(ui.restored.explicit));
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -574,6 +575,10 @@ function cookieValues(text){const values=new Map();for(const token of text.split
 function resolveSettings(href,cookieText){const query=new URL(href).searchParams,cookies=cookieValues(cookieText),settings={...DEFAULTS},explicit={};for(const d of SETTING_DEFS){const fromURL=parseSetting(d.key,query.get(d.key)),fromCookie=parseSetting(d.key,cookies.get('tetris_'+d.key));if(fromURL!==undefined){settings[d.key]=fromURL;explicit[d.key]=fromURL;}else if(fromCookie!==undefined)settings[d.key]=fromCookie;}return {settings,explicit};}
 function readCookies(){try{return document.cookie;}catch{notice('Cookie persistence is unavailable; settings remain usable in this page.');return '';}}
 Object.assign(API,{parseSetting,serializeSetting,resolveSettings});
+/* T034_COOKIES */
+function changedSettings(previous,next){return SETTING_DEFS.filter(d=>previous[d.key]!==next[d.key]).map(d=>d.key);}
+function writeSettingsCookies(settings,keys){for(const key of keys){try{const value=serializeSetting(key,settings[key]);document.cookie=encodeURIComponent('tetris_'+key)+'='+encodeURIComponent(value)+'; Path=/; SameSite=Lax; Max-Age=31536000'+(location.protocol==='https:'?'; Secure':'');if(cookieValues(document.cookie).get('tetris_'+key)!==value)throw Error('Cookie rejected');}catch{notice('Cookie persistence is unavailable; selected settings remain active in this page.');}}}
+const cookieApply=applyUIConfig;applyUIConfig=function(settings,options={}){const previous=ui.game.config;cookieApply(settings);writeSettingsCookies(ui.game.config,options.all?SETTING_DEFS.map(d=>d.key):changedSettings(previous,ui.game.config));};API.persistence=true;
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();

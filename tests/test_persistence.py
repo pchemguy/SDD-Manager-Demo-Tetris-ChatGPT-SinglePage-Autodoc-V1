@@ -14,3 +14,8 @@ def test_live_settings_preserve_and_replace_deadlines(js):
 def test_independent_configuration_sources(js):
     assert js("typeof resolveSettings==='undefined'?null:(()=>{const r=resolveSettings('https://local.test/?ghost=show&nextPreview=off&hold=INVALID&hold=on','tetris_ghost=hide; tetris_hardDrop=off; tetris_hold=off');return [r.settings.ghost,r.settings.hardDrop,r.settings.nextPreview,r.settings.hold,r.explicit.ghost]})()") == ['show',False,False,False,'show']
     assert js("typeof resolveSettings==='undefined'?null:resolveSettings('https://local.test/','tetris_ghost=dynamic').settings.ghost") == 'dynamic'
+
+
+def test_configuration_spellings(js):
+    assert js("SETTING_DEFS.map(d=>serializeSetting(d.key,DEFAULTS[d.key]))") == ['show','on','on','general','interval','on']
+    assert js("SETTING_DEFS.map(d=>parseSetting(d.key,serializeSetting(d.key,DEFAULTS[d.key])))") == ['show',True,True,'general','interval',True]

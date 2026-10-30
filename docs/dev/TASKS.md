@@ -199,7 +199,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 40 passed in 14.39s. Observed RED for missing source resolution; all 40 checks pass for independent URL/cookie/default choices, invalid first duplicate fallback and omitted-cookie retention. Corrected a test-file whitespace check before committing; no result commit was published prematurely.
             Scope: index.html browser/config adapters; tests/test_persistence.py. Depends on: T-032.
             Contract/evidence: C2 mixed-source precedence, invalid values, first duplicate, omitted parameter and unknown-key retention. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-034 — Write explicit URL values and changed cookies
+        - [x] T-034 — Write explicit URL values and changed cookies
+            Verified: `python tools/check.py -q` - 41 passed in 15.14s. Characterized strict on/off serialization and domain round trips. Explicit valid URL defaults and user changes now write/read back cookies with declared attributes; omitted values do not overwrite saved preferences. Session reload regression now verifies durability when this capability is present.
             Scope: index.html cookie adapter; tests/test_persistence.py; tests/test_browser.py. Depends on: T-033.
             Contract/evidence: C2 explicit-default writes, omission retention, correct attributes and unavailable-cookie warnings. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-035 — Update queries on setting changes without reload
