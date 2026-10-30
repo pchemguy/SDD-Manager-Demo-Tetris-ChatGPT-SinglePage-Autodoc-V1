@@ -73,3 +73,17 @@ def test_packaged_download_plays_without_server(browser):
         assert p.locator('#board').evaluate("c=>c.getContext('2d').getImageData(10,10,1,1).data[3]") == 255
     finally:
         context.close()
+
+
+def test_modern_keys_and_shared_ghost(page):
+    page.get_by_role('button',name='Start/Restart',exact=True).click()
+    original=page.evaluate('Tetris.ui.game.p.type')
+    page.keyboard.press('c')
+    assert page.evaluate('Tetris.ui.game.held') == original
+    after=page.evaluate('Tetris.ui.game.p.type')
+    page.keyboard.press('c')
+    assert page.evaluate('Tetris.ui.game.p.type') == after
+    page.evaluate("const g=Tetris.ui.game;g.board=Array.from({length:20},()=>Array(10).fill(0));g.p={type:'O',rot:0,x:4,y:0};g.config.lockPolicy='failed';g.syncGround();Tetris.render()")
+    assert page.locator('#board').evaluate("c=>c.getContext('2d').getImageData(246,1086,1,1).data[0]") > 30
+    page.keyboard.press('Space')
+    assert page.evaluate('Tetris.ui.game.board.flat().filter(Boolean).length') == 4

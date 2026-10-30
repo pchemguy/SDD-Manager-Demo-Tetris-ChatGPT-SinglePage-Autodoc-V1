@@ -48,8 +48,11 @@ def browser(request):
 def page(browser, base_url):
     context = browser.new_context(viewport={'width':1440,'height':1000}, accept_downloads=True)
     page = context.new_page()
+    errors=[]
+    page.on('pageerror',lambda error:errors.append(str(error)))
     page.set_default_timeout(5000)
     page.add_init_script('globalThis.__TETRIS_TEST__ = true')
     page.goto(base_url + '/index.html')
     yield page
     context.close()
+    assert not errors, errors

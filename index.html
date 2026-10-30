@@ -528,6 +528,9 @@ Game.prototype.tick=function(ms){if(this.status!=='running'||!Number.isFinite(ms
 Game.prototype.hardDrop=function(){if(this.status!=='running')return;const land=this.landing();if(!land)return;this.score=addScore(this.score,2*(land.y-this.p.y));this.p=land;this.syncGround();if(this.config.hardDropLock==='immediate'||this.config.lockPolicy==='failed')this.lock();};
 function advanceUIClock(){const now=performance.now();ui.game.tick(now-ui.last);ui.last=now;}
 
+/* T018_DYNAMIC */
+let ghostMode='dynamic';
+ghostVisible=function(g,landing){if(!landing)return false;const mode=g.config?.ghost??ghostMode;return mode==='show'||mode==='dynamic'&&cells(landing.type,landing.rot,landing.x,landing.y).every(([,y])=>y>=10);};API.ghostVisible=ghostVisible;
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();
