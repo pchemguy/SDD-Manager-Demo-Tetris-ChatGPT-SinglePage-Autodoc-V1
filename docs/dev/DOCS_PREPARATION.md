@@ -12,7 +12,7 @@
 
 ## Scope and decisions
 
-The user's original project description supplies complete target scope. PROJECT.md will own the proposed product brief once created. Required increments are classic baseline, modern rules, dynamic ghost, penetrator, session-only settings, URL/cookies, session leaderboard, and manual JSON/SQLite persistence. Delivery increments are distinct from documentation passes.
+The user's original project description supplies complete target scope. [PROJECT](PROJECT.md) owns the proposed product brief. Required increments are classic baseline, modern rules, dynamic ghost, penetrator, session-only settings, URL/cookies, session leaderboard, and manual JSON/SQLite persistence. Delivery increments are distinct from documentation passes.
 
 Confirmed by the user's OK in response to the proposed table:
 
@@ -32,7 +32,7 @@ These are confirmed product choices; precise downstream contracts remain to be s
 | Task | Evidence and decision state |
 | --- | --- |
 | DOCS-001 | All four root guidance files retained byte for byte against initial commit 6698c445a0f7efad9741118b8db6e6342bddd5eb; none copied. Standard task template instantiated with only DOCS-001 checked. HANDOFF records initialization and the pending brief. |
-| DOCS-002 | Not yet proposed; first PROJECT approval remains active. |
+| DOCS-002 | PROJECT proposal SHA-256 ab0afe7c90e52c2e62d0507251c3c3907273fc122ba7f05262abbb96ace69a9c. User-confirmed choices are incorporated without treating that confirmation as unseen document approval. Checked against the full supplied scope, decision table, product-document boundaries, Markdown spacing and local links. First PROJECT approval remains pending; DOCS-002 stays unchecked and issue #2 stays open. |
 | DOCS-003 through DOCS-008 | Not started; subsequent document checkpoints preapproved by autodoc mode, subject to technical QC. |
 | DOCS-009 | Not started; autodoc stops before package QC. |
 
@@ -48,4 +48,4 @@ These are confirmed product choices; precise downstream contracts remain to be s
 
 ## Pending transitions
 
-Initialization publication and DOCS-001 evidence/closure require readback after this record's commit. PROJECT remains awaiting proposal and approval. Recover actual Git and hosted state before replaying operations.
+Initialization commit 4b0bc6188d21d06f1badc64d86e2952ca14aad00 was published and exactly read back; issue #1 evidence and completed closure were read back. PROJECT is proposed for human first approval. Proposal publication requires readback after this commit. No dependent design or package QC has started.
