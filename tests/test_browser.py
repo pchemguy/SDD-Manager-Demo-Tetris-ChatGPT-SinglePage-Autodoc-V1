@@ -87,3 +87,13 @@ def test_modern_keys_and_shared_ghost(page):
     assert page.locator('#board').evaluate("c=>c.getContext('2d').getImageData(246,1086,1,1).data[0]") > 30
     page.keyboard.press('Space')
     assert page.evaluate('Tetris.ui.game.board.flat().filter(Boolean).length') == 4
+
+
+def test_penetrator_key_indicator_and_hold(page):
+    page.get_by_role('button',name='Start/Restart',exact=True).click()
+    page.evaluate('Tetris.ui.game.bonuses=2;Tetris.render()')
+    page.keyboard.press('p')
+    assert page.evaluate('Tetris.ui.game.p.penetrator') is True
+    assert page.locator('#bonuses').text_content().count('⚡') == 1
+    page.keyboard.press('c')
+    assert page.evaluate('Tetris.ui.game.held') is None

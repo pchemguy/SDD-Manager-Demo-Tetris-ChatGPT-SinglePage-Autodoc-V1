@@ -63,3 +63,7 @@ def test_penetrator_transit_and_deepest_landing(js):
 def test_penetrator_blocks_hold_and_locks_white(js):
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.bonuses=1;g.activate();return [g.holdPiece(),g.held]})()") == [False,None]
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.config.hardDropLock='immediate';g.bonuses=1;g.activate();g.hardDrop();return [g.board.flat().filter(v=>v==='P').length,!!g.p.penetrator,g.bonuses]})()") == [4,False,0]
+
+
+def test_penetrator_drop_ghost_and_deadline_parity(js):
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:0};for(let x=0;x<8;x++){g.board[8][x]='J';g.board[13][x]='L';}g.bonuses=1;g.activate();const y=g.landing().y;g.hardDrop();const before=[y,g.p.y,g.board.flat().filter(v=>v==='P').length];g.tick(1000);return [...before,g.board.flat().filter(v=>v==='P').length,g.board[8].filter(Boolean).length,g.board[13].filter(Boolean).length]})()") == [18,18,0,4,8,8]

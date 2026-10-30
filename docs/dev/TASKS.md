@@ -141,7 +141,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Contract/evidence: G4 P activation, white active/locked piece, bonus symbols, disabled hold and next regular piece. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 4.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/4/4.1.md and HANDOFF with this task's initial completion.
     - [ ] Milestone 4.2 — Penetrator integration and distribution
-        - [ ] T-024 — Unify penetrator ghost drop and grounding behavior
+        - [x] T-024 — Unify penetrator ghost drop and grounding behavior
+            Verified: `python tools/check.py -q` - 33 passed in 12.82s. Added deep-stack projection/drop/interval-lock parity and actual P/bonus/hold browser cases. Existing shared landing path already satisfies these added characterization fixtures; no fabricated RED or duplicate drop implementation.
             Scope: index.html landing/clock; tests/test_rules.py; tests/test_browser.py. Depends on: T-023.
             Contract/evidence: A4 lowest legal destination across occupied bands, projection/drop identity and both lock modes. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-025 — Package and verify penetrator delivery
