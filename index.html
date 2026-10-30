@@ -504,6 +504,10 @@ function drawPreview(id,type){const c=document.getElementById(id);if(!c)return;c
 const holdStart=Game.prototype.start;Game.prototype.start=function(){this.held=null;this.holdUsed=false;holdStart.call(this);};
 const holdLock=Game.prototype.lock;Game.prototype.lock=function(){const result=holdLock.call(this);if(result)this.holdUsed=false;return result;};
 Game.prototype.holdPiece=function(){if(this.status!=='running'||this.holdUsed)return false;const type=this.p.type,held=this.held;this.held=type;this.spawn(held||undefined);this.holdUsed=true;return true;};
+/* T012_KICKS */
+const JK={ '01':[[-1,0],[-1,1],[0,-2],[-1,-2]],'10':[[1,0],[1,-1],[0,2],[1,2]],'12':[[1,0],[1,-1],[0,2],[1,2]],'21':[[-1,0],[-1,1],[0,-2],[-1,-2]],'23':[[1,0],[1,1],[0,-2],[1,-2]],'32':[[-1,0],[-1,-1],[0,2],[-1,2]],'30':[[-1,0],[-1,-1],[0,2],[-1,2]],'03':[[1,0],[1,1],[0,-2],[1,-2]]};
+const IK={'01':[[-2,0],[1,0],[-2,-1],[1,2]],'10':[[2,0],[-1,0],[2,1],[-1,-2]],'12':[[-1,0],[2,0],[-1,2],[2,-1]],'21':[[1,0],[-2,0],[1,-2],[-2,1]],'23':[[2,0],[-1,0],[2,1],[-1,-2]],'32':[[-2,0],[1,0],[-2,-1],[1,2]],'30':[[1,0],[-2,0],[1,-2],[-2,1]],'03':[[-1,0],[2,0],[-1,2],[2,-1]]};
+transform=function(board,piece,dx=0,dy=0,dr=0,accept=null){const p={...piece,x:piece.x+dx,y:piece.y+dy,rot:(piece.rot+dr+4)%4};const checks=[[0,0],...(dr&&piece.type!=='O'?(piece.type==='I'?IK:JK)[''+piece.rot+p.rot]||[]:[])];for(const [kx,ky]of checks){const q={...p,x:p.x+kx,y:p.y-ky};if(accept?accept(q):valid(board,q.type,q.rot,q.x,q.y))return q;}return piece;};API.transform=transform;
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();

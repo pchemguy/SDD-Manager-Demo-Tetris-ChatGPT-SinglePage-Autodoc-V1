@@ -73,7 +73,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Contract/evidence: G2 empty/swap hold, spawn reset, blocked hold game over and turn limits. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 2.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/2/2.1.md and HANDOFF with this task's initial completion.
     - [ ] Milestone 2.2 — Kicks and landing
-        - [ ] T-012 — Add orientation-specific wall kicks
+        - [x] T-012 — Add orientation-specific wall kicks
+            Verified: `python tools/check.py -q` - 21 passed in 9.66s. Observed RED at wall/floor rotation fixtures. Ordered transition-specific J/L/S/T/Z and I kicks now select valid offsets; O remains untranslated and failed changes retain the pose.
             Scope: index.html rotation tables/rules; tests/test_rules.py. Depends on: T-011.
             Contract/evidence: G2 all transition tables, first-valid offset and unchanged failure. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-013 — Share landing between ghost and drop commands

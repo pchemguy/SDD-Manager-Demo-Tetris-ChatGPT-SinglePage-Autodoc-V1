@@ -22,3 +22,9 @@ def test_seven_bag_and_preview_order(js):
 
 def test_hold_swap_and_turn_limit(js):
     assert js("typeof Game.prototype.holdPiece==='undefined'?null:(()=>{const g=new Game(()=>0.5);g.start();const a=g.p.type,b=g.queue[0];g.holdPiece();const first=[g.held===a,g.p.type===b];g.holdPiece();const limited=g.held===a;g.p.y=16;g.lock();const q=g.queue[0];g.holdPiece();return [...first,limited,g.p.type===a,g.queue[0]===q]})()") == [True,True,True,True,True]
+
+
+def test_wall_and_floor_kicks(js):
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'T',rot:1,x:-1,y:4};g.act(0,0,-1);return [g.p.rot,g.p.x]})()") == [0,0]
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'I',rot:1,x:-2,y:4};g.act(0,0,-1);return [g.p.rot,g.p.x]})()") == [0,0]
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'T',rot:0,x:3,y:18};g.act(0,0,1);return [g.p.rot,g.p.x,g.p.y]})()") == [1,2,17]
