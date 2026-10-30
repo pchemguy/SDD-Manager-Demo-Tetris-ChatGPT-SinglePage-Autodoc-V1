@@ -184,8 +184,9 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: README.md; RELEASE-NOTES.md; tools/package.py; tests/test_browser.py; index.html version. Depends on: T-030.
             Contract/evidence: A5 session-only HTTP and file behavior, default show ghost and v0.5.0 artifact. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 5.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/5/5.2.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 5.3 — Phase review
-        - [ ] T-032 — Review test and report phase 5
+    - [x] Milestone 5.3 — Phase review
+        - [x] T-032 — Review test and report phase 5
+            Verified: `python tools/check.py -q` - 39 passed in 14.19s. Complete session-only settings phase passes canonical-domain, deadline/live-action and real-browser panel/reload cases with previous regressions.
             Depends on: all delivery tasks in phase 5, completion/closure of milestones 5.1, 5.2, and their committed review evidence.
             Scope: cross-milestone code review, A5 and UI setting/ghost/penetrator interactions; no cookie/query reads or writes yet. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/5/PHASE-REPORT.md, HANDOFF, release v0.5.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
