@@ -106,16 +106,19 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 3 — Conditional ghost
 
 - [ ] Phase 3 — Conditional ghost
-    - [ ] Milestone 3.1 — Dynamic ghost delivery
-        - [ ] T-018 — Integrate midline-based ghost visibility
+    - [x] Milestone 3.1 — Dynamic ghost delivery
+        - [x] T-018 — Integrate midline-based ghost visibility
+            Verified: `python tools/check.py -q` - 27 passed in 11.12s. Observed RED: a straddling O projection remained visible. Dynamic mode now requires every projected cell at row 10 or below; modern hold/Space and real ghost pixels also pass in both browsers.
             Scope: index.html ghost predicate/view; tests/test_rules.py; tests/test_browser.py. Depends on: T-017.
             Contract/evidence: G3 every projected cell below row 10, straddling hidden and automatic redraw; use dynamic as this release mode. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-019 — Document package and verify conditional ghost
+        - [x] T-019 — Document package and verify conditional ghost
+            Verified: `python tools/check.py -q` - 27 passed in 10.60s. Verified upper/lower/straddling midline visibility and previous modern keyboard/Canvas behavior, packaged as v0.3.0.
             Scope: README.md; RELEASE-NOTES.md; tools/package.py; tests/test_browser.py; index.html version. Depends on: T-018.
             Contract/evidence: A3 upper/lower/straddling fixtures, pose/board recalculation and v0.3.0 artifact. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 3.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/3/3.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 3.2 — Phase review
-        - [ ] T-020 — Review test and report phase 3
+    - [x] Milestone 3.2 — Phase review
+        - [x] T-020 — Review test and report phase 3
+            Verified: `python tools/check.py -q` - 27 passed in 10.06s. Conditional ghost phase and preserved baseline/modern rules pass all current pytest and real-browser artifact checks.
             Depends on: all delivery tasks in phase 3, completion/closure of milestones 3.1, and their committed review evidence.
             Scope: cross-milestone code review, A3 and ghost/drop parity; no configuration UI or new persistence. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/3/PHASE-REPORT.md, HANDOFF, release v0.3.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
