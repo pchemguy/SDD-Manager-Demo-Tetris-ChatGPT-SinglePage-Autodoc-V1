@@ -166,8 +166,8 @@ h1 {
 .game-buttons button {
   min-width:0;
   overflow-wrap:anywhere;
-  padding:11px 5px;
-  font-size:11px;
+  padding:11px 2px;
+  font-size:10px;
   line-height:1.4
 }
 .board-wrap {
@@ -379,8 +379,8 @@ kbd {
   gap:3px
 }
 .game-buttons button {
-  font-size:9px;
-  padding:8px 2px
+  font-size:8px;
+  padding:8px 1px
 }
 .state {
   font-size:9px;
@@ -410,6 +410,8 @@ h1 {
 
 .left { direction:rtl; justify-content:flex-start; }
 .left > .panel { direction:ltr; }
+
+.leaderboard li, .stat strong { overflow-wrap:anywhere; }
 </style></head><body><main id="root"></main>
 <script id="app">
 'use strict';
@@ -425,7 +427,7 @@ function cells(type,rot=0,x=0,y=0){
     return [a+x,b+y];});
 }
 function valid(board,type,rot,x,y){return cells(type,rot,x,y).every(([a,b])=>a>=0&&a<10&&b>=0&&b<20&&!board[b][a]);}
-function transform(board,piece,dx=0,dy=0,dr=0){const p={...piece,x:piece.x+dx,y:piece.y+dy,rot:(piece.rot+dr+4)%4};return valid(board,p.type,p.rot,p.x,p.y)?p:piece;}
+let transform;
 Object.assign(API,{emptyBoard,cells,valid,transform});
 /* 2. Game state and active-play timing */
 const TYPES=Object.keys(SHAPES);
@@ -435,20 +437,17 @@ class Game {
   constructor(rng=Math.random){this.rng=rng;this.board=emptyBoard();this.status='idle';this.score=0;this.lines=0;this.level=1;this.p=null;this.generation=0;this.events=[];this.elapsed=0;this.config={...DEFAULTS};}
   pause(){if(this.status==='running')this.status='paused';else if(this.status==='paused')this.status='running';}
   interval(){return Math.max(80,Math.floor(1000*Math.pow(0.8,this.level-1)));}
-  draw(){return TYPES[Math.floor(this.rng()*7)%7];}
   start(){this.board=emptyBoard();this.score=0;this.lines=0;this.level=1;this.events=[];this.elapsed=0;this.status='running';this.spawn();}
   spawn(type=this.next()){this.generation++;this.elapsed=0;this.p={type,rot:0,x:Math.floor((10-matrixSize(type))/2),y:0};if(!valid(this.board,type,0,this.p.x,0))this.finish();}
   finish(){if(this.status==='over')return;this.status='over';this.events.push({kind:'game-over',score:this.score,generation:this.generation});}
-  act(dx=0,dy=0,dr=0){if(this.status!=='running')return false;const next=transform(this.board,this.p,dx,dy,dr);if(next===this.p){if(dy>0)this.lock();return false;}this.p=next;return true;}
   soft(){if(this.act(0,1,0))this.score=addScore(this.score,1);}
   lock(){if(this.status!=='running'||!valid(this.board,this.p.type,this.p.rot,this.p.x,this.p.y))return false;for(const [x,y] of cells(this.p.type,this.p.rot,this.p.x,this.p.y))this.board[y][x]=this.p.penetrator?'P':this.p.type;
     const cleared=clearRows(this.board);this.board=cleared.board;this.score=addScore(this.score,[0,100,300,500,800][cleared.count]*this.level);this.lines+=cleared.count;this.level=1+Math.floor(this.lines/10);this.spawn();return true;}
-  tick(ms){if(this.status!=='running'||!Number.isFinite(ms)||ms<0)return;this.elapsed+=ms;while(this.status==='running'&&this.elapsed>=this.interval()){this.elapsed-=this.interval();this.act(0,1,0);}}
 }
 Object.assign(API,{Game,clearRows,COLORS,SHAPES});
 
 /* 3. Canvas and semantic HTML presentation */
-const VERSION='0.7.0';
+const VERSION='1.0.0';
 let ui=null;
 function notice(message){if(ui)document.getElementById('message').textContent=message;}
 function paintCells(ctx,board,piece,ghost=false,scale=30,ox=0,oy=0){
@@ -463,23 +462,120 @@ function render(){if(!ui)return;if(ui.results)for(const event of ui.game.events.
   for(let y=0;y<20;y++)for(let x=0;x<10;x++)if(g.board[y][x]){ctx.fillStyle=COLORS[g.board[y][x]];ctx.fillRect(x*30+1,y*30+1,28,28);}
   if(g.p&&g.landing){const land=g.landing();if(ghostVisible(g,land))paintCells(ctx,g.board,land,true);}
   if(g.p)paintCells(ctx,g.board,g.p);
-  document.getElementById('score').textContent=String(g.score);document.getElementById('lines').textContent=String(g.lines);document.getElementById('level').textContent=String(g.level);document.getElementById('state').textContent={idle:'Ready to play',running:'In motion',paused:'Paused',over:'Game over'}[g.status];
+  document.getElementById('score').textContent=String(g.score);document.getElementById('lines').textContent=String(g.lines);document.getElementById('level').textContent=String(g.level);const state=document.getElementById('state'),stateText={idle:'Ready to play',running:'In motion',paused:'Paused',over:'Game over'}[g.status];if(state.textContent!==stateText)state.textContent=stateText;
   const veil=document.getElementById('veil');veil.hidden=g.status==='running';document.getElementById('veil-title').textContent={idle:'MAKE YOUR MOVE',paused:'TAKE A BREATH',over:'ONE MORE TRY',running:''}[g.status];document.getElementById('veil-note').textContent=g.status==='idle'?'Start a game. Find your rhythm.':g.status==='paused'?'Press Pause/Start or Escape to return.':'Restart for a fresh board.';
   drawPreview('next-piece',g.queue?.[0]);
   drawPreview('held-piece',g.held);
   document.getElementById('bonuses').textContent='⚡'.repeat(g.bonuses||0);document.getElementById('bonuses').setAttribute('aria-label',String(g.bonuses||0)+' penetrator bonuses');
   document.getElementById('next-piece').closest('figure').hidden=g.config.nextPreview===false;
   renderResults();
+  document.querySelector('#help-hold span').textContent=g.config.hold?'Hold':'Hold (off)';
+  document.querySelector('#help-hardDrop span').textContent=g.config.hardDrop?'Hard drop':'Hard drop (off)';
   /* RENDER_EXTENSIONS */
 }
 function mountUI(){
- document.getElementById('root').innerHTML=`<header><div class="brand"><div class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><div class="eyebrow">A STUDY IN FALLING BLOCKS</div><h1>TETRIS ATELIER</h1></div></div><span class="version">v${VERSION}</span></header><div class="arena"><div class="rail left" id="left-rail"><section class="panel info" aria-label="Game info and controls"><h2>Game info<br>&amp; controls</h2><div class="stats"><div class="stat"><span class="label">Score</span><strong id="score">0</strong></div><div class="stat small"><span class="label">Level</span><strong id="level">1</strong></div><div class="stat small"><span class="label">Lines</span><strong id="lines">0</strong></div></div><div id="extras"></div><div class="state" id="state">Ready to play</div><div id="toggles" class="toggles"></div><div class="game-buttons"><button id="start" class="primary">Start/Restart</button><button id="pause">Pause/Start</button></div></section></div><div><div class="board-wrap"><canvas id="board" width="600" height="1200" tabindex="0" aria-label="Tetris board. Use keyboard controls."></canvas><div class="veil" id="veil"><strong id="veil-title"></strong><span id="veil-note"></span></div></div><p class="board-note">FIND YOUR RHYTHM.<br>LEAVE ROOM TO GROW.</p></div><div class="rail right" id="right-rail"><section class="panel help" id="help"><h2>At your fingertips</h2><div class="keys" id="keys"><div class="key-row"><span>Move</span><span><kbd>←</kbd> <kbd>→</kbd></span></div><div class="key-row"><span>Soft drop</span><kbd>↓</kbd></div><div class="key-row"><span>Rotate</span><span><kbd>↑</kbd> <kbd>X</kbd></span></div><div class="key-row"><span>Turn left</span><kbd>Z</kbd></div><div class="key-row"><span>Pause</span><kbd>Esc</kbd></div></div><p>Complete a row. Make a little space. Ten lines take you to the next level.</p></section></div></div><div class="message" id="message" role="status" aria-live="polite"></div>`;
+ document.getElementById('root').innerHTML=`<header>
+<div class="brand">
+<div class="mark" aria-hidden="true">
+<i>
+</i>
+<i>
+</i>
+<i>
+</i>
+<i>
+</i>
+</div>
+<div>
+<div class="eyebrow">A STUDY IN FALLING BLOCKS</div>
+<h1>TETRIS ATELIER</h1>
+</div>
+</div>
+<span class="version">v${VERSION}</span>
+</header>
+<div class="arena">
+<div class="rail left" id="left-rail">
+<section class="panel info" aria-label="Game info and controls">
+<h2>Game info<br>&amp; controls</h2>
+<div class="stats">
+<div class="stat">
+<span class="label">Score</span>
+<strong id="score">0</strong>
+</div>
+<div class="stat small">
+<span class="label">Level</span>
+<strong id="level">1</strong>
+</div>
+<div class="stat small">
+<span class="label">Lines</span>
+<strong id="lines">0</strong>
+</div>
+</div>
+<div id="extras">
+</div>
+<div class="state" id="state" role="status" aria-live="polite" aria-atomic="true">Ready to play</div>
+<div id="toggles" class="toggles">
+</div>
+<div class="game-buttons">
+<button id="start" class="primary">Start/<wbr>Restart</button>
+<button id="pause">Pause/<wbr>Start</button>
+</div>
+</section>
+</div>
+<div>
+<div class="board-wrap">
+<canvas id="board" width="600" height="1200" tabindex="0" aria-label="Tetris board. Use keyboard controls.">
+</canvas>
+<div class="veil" id="veil">
+<strong id="veil-title">
+</strong>
+<span id="veil-note">
+</span>
+</div>
+</div>
+<p class="board-note">FIND YOUR RHYTHM.<br>LEAVE ROOM TO GROW.</p>
+</div>
+<div class="rail right" id="right-rail">
+<section class="panel help" id="help">
+<h2>At your fingertips</h2>
+<div class="keys" id="keys">
+<div class="key-row">
+<span>Move</span>
+<span>
+<kbd>←</kbd> <kbd>→</kbd>
+</span>
+</div>
+<div class="key-row">
+<span>Soft drop</span>
+<kbd>↓</kbd>
+</div>
+<div class="key-row">
+<span>Rotate</span>
+<span>
+<kbd>↑</kbd> <kbd>X</kbd>
+</span>
+</div>
+<div class="key-row">
+<span>Turn left</span>
+<kbd>Z</kbd>
+</div>
+<div class="key-row">
+<span>Pause</span>
+<kbd>Esc</kbd>
+</div>
+</div>
+<p>Complete a row. Make a little space. Ten lines take you to the next level.</p>
+</section>
+</div>
+</div>
+<div class="message" id="message" role="status" aria-live="polite">
+</div>`;
  ui={game:new Game(),canvas:document.getElementById('board')};API.ui=ui;API.render=render;
  bindControls();
 document.getElementById('extras').innerHTML='<div class="preview"><figure><figcaption>NEXT</figcaption><canvas id="next-piece" width="104" height="88" aria-label="Next piece"></canvas></figure></div>';
 document.querySelector('.preview').insertAdjacentHTML('afterbegin','<figure><figcaption>HOLD</figcaption><canvas id="held-piece" width="104" height="88" aria-label="Held piece"></canvas></figure>');
- document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Hold</span><kbd>C / Shift</kbd></div>');
-document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Hard drop</span><kbd>Space</kbd></div>');
+ document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row" id="help-hold"><span>Hold</span><kbd>C / Shift</kbd></div>');
+document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row" id="help-hardDrop"><span>Hard drop</span><kbd>Space</kbd></div>');
 document.getElementById('extras').insertAdjacentHTML('beforeend','<div class="bonus-label">PENETRATOR BONUSES</div><div id="bonuses" class="bonuses" aria-label="Available penetrator bonuses"></div>');
  document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Penetrator</span><kbd>P</kbd></div>');
  createSettings();
@@ -532,12 +628,9 @@ transform=function(board,piece,dx=0,dy=0,dr=0,accept=null){const p={...piece,x:p
 /* T013_LANDING */
 function findLanding(board,piece){if(!valid(board,piece.type,piece.rot,piece.x,piece.y))return null;let p={...piece};while(valid(board,p.type,p.rot,p.x,p.y+1))p.y++;return p;}
 Game.prototype.landing=function(){return this.p?findLanding(this.board,this.p):null;};
-function ghostVisible(g,landing){return !!landing;}
+let ghostVisible;
 Object.assign(API,{findLanding});
-/* T014_DROP */
-Game.prototype.hardDrop=function(){if(this.status!=='running')return;const land=this.landing();if(!land)return;this.score=addScore(this.score,2*(land.y-this.p.y));this.p=land;this.act(0,1,0);};
 /* T015_CLOCK */
-Game.prototype.canPlace=function(p){return valid(this.board,p.type,p.rot,p.x,p.y);};
 Game.prototype.syncGround=function(){const land=this.landing();const grounded=!!land&&land.y===this.p.y;if(this.config?.lockPolicy==='failed'||!grounded)this.deadline=null;else if(this.deadline==null)this.deadline=this.clock+this.interval();};
 const clockSpawn=Game.prototype.spawn;Game.prototype.spawn=function(type){this.deadline=null;clockSpawn.call(this,type);this.gravityAt=this.clock+this.interval();this.lastGravity=this.clock;if(this.status==='running')this.syncGround();};
 const clockStart=Game.prototype.start;Game.prototype.start=function(){this.clock=0;this.deadline=null;this.config??={lockPolicy:'interval',hardDropLock:'general'};clockStart.call(this);};

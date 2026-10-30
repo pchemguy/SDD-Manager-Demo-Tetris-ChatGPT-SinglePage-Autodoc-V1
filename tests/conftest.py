@@ -1,3 +1,4 @@
+"""Acceptance checks against the actual single-file application and isolated runtimes."""
 import json
 import os
 from pathlib import Path

@@ -1,9 +1,9 @@
 # Project handoff
 
-Checkpoint: milestone 8.2 verified by T-048; publication and hosted closure follow this commit.
+Full requested functionality is present in the verified v1.0.0 candidate. Final full test outcome: 78 passed in 26.40s. Seven releases through v0.7.0 are published; v1.0.0 is not published.
 
-Selected scope: user-authorized full T-001 through T-051, all eight releases. Current branch phase/8-manual-file-persistence; creation parent/integration target main; phase branch-off 3eb04b3188f33e5beb6e97c91a63f3b379638c7f. Package QC passed and preparation is integrated. [TASKS](TASKS.md) owns task progress; [report](reports/phases/8/8.2.md) owns this boundary evidence. No further human checkpoint within the selected range.
+Network interruption: shell GitHub API tunnel returned 403 during final readback of T-048 issue #57. The connected GitHub app independently confirmed completed closure. Milestone #24 closure remains pending. Workflow branch phase/8-manual-file-persistence is at verified/pushed 8749a98565bb730fa4a6dcd28b7362a1f82aee02. T-049 through T-051 are verified candidate work, with initial task/phase checkboxes unchanged. Issues #58–60 and milestone #25/#26 remain pending. All original user authorization T-001 through T-051 and eight integrations/releases remains active; no renewed product approval is needed.
 
-Outcome: Observed RED for missing SQLite restore. Real database import shares full canonical validation; invalid dates, values, metadata, extra views and hidden generated columns leave results/settings/cookies/URL unchanged. Statements and databases close on all paths.
+The isolated review/v1.0.0-candidate branch preserves full candidate code and QC evidence, with phase/8-manual-file-persistence as creation parent. It is not a completed task-list workflow or default integration. Resume on the phase branch after ordinary API policy allows the required endpoints; do not merge this preservation branch. See [candidate QC and exact resume order](reports/CANDIDATE-QC-REPORT.md), [aggregate report](reports/IMPLEMENTATION-REPORT.md) and TASKS. Local task-specific snapshots are /tmp/sdd-local-T-049.json, T-050.json and T-051.json. Preserve all initial task results/completion checkboxes atomically on the workflow branch when resuming.
 
-Next: publish/read back this task and close its issue/milestone. Continue the next selected task after required closures. Retain future tasks and prior reports; do not infer external effects from this snapshot.
+No requested feature remains unimplemented. The outstanding blocker is GitHub API publication/tracking access; native Windows/full OS-window evidence remains unexecuted and Firefox uses the documented child-process override.

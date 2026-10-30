@@ -1,3 +1,4 @@
+"""Acceptance checks against the actual single-file application and isolated runtimes."""
 def test_legal_geometry_and_collision(js):
     assert js("valid(emptyBoard(),'T',0,3,0)") is True
     assert js("cells('I',0,3,0)") == [[3,1],[4,1],[5,1],[6,1]]
@@ -67,3 +68,8 @@ def test_penetrator_blocks_hold_and_locks_white(js):
 
 def test_penetrator_drop_ghost_and_deadline_parity(js):
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:0};for(let x=0;x<8;x++){g.board[8][x]='J';g.board[13][x]='L';}g.bonuses=1;g.activate();const y=g.landing().y;g.hardDrop();const before=[y,g.p.y,g.board.flat().filter(v=>v==='P').length];g.tick(1000);return [...before,g.board.flat().filter(v=>v==='P').length,g.board[8].filter(Boolean).length,g.board[13].filter(Boolean).length]})()") == [18,18,0,4,8,8]
+
+
+def test_hold_replaces_grounding_clock_and_pause_preserves_deadline(js):
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:18};g.syncGround();g.tick(400);g.holdPiece();return [g.deadline===null,g.p.y,g.gravityAt-g.clock]})()") == [True,0,1000]
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:18};g.syncGround();g.tick(400);g.pause();g.tick(10000);g.pause();g.tick(599);const before=g.board.flat().filter(Boolean).length;g.tick(1);return [before,g.board.flat().filter(Boolean).length,g.p.y]})()") == [0,4,0]
