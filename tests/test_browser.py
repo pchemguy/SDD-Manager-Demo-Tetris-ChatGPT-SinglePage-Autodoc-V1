@@ -186,3 +186,21 @@ def test_save_json_snapshot_and_hidden_file_controls(page):
     page.get_by_role('button',name='Settings',exact=True).click()
     assert not page.get_by_role('button',name='Save',exact=True).is_visible()
     assert not page.get_by_role('button',name='Restore',exact=True).is_visible()
+
+
+def test_json_restore_validation_is_atomic(page):
+    import json
+    assert page.get_by_role('button',name='Restore',exact=True).is_enabled()
+    before=page.evaluate('({results:Tetris.ui.results.records,settings:Tetris.ui.game.config,cookies:document.cookie,url:location.href})')
+    for broken in [dict(formatVersion=2,results=[],settings=before['settings']),dict(formatVersion=1,results=[{'id':'bad','score':3,'timestamp':'2025-02-29T00:00:00.000Z'}],settings=before['settings'])]:
+        page.evaluate("document.getElementById('message').textContent=''")
+        page.locator('#restore-input').set_input_files({'name':'bad.json','mimeType':'application/json','buffer':json.dumps(broken).encode()})
+        page.wait_for_function("document.getElementById('message').textContent.startsWith('Could not restore:')")
+        after=page.evaluate('({results:Tetris.ui.results.records,settings:Tetris.ui.game.config,cookies:document.cookie,url:location.href})')
+        assert after==before
+    good={'formatVersion':1,'results':[{'id':'restored-stable','score':123,'timestamp':'2026-10-30T01:02:03.004Z'}],'settings':before['settings']}
+    page.locator('#restore-input').set_input_files({'name':'good.json','mimeType':'application/json','buffer':json.dumps(good).encode()})
+    page.wait_for_function("document.getElementById('message').textContent==='Session restored.'")
+    assert page.evaluate('Tetris.ui.results.records')==good['results']
+    assert len(page.context.cookies())==6
+    assert 'ghost=show' in page.url and 'hold=on' in page.url

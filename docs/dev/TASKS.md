@@ -252,7 +252,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 8 — Manual file persistence
 
 - [ ] Phase 8 — Manual file persistence
-    - [ ] Milestone 8.1 — Validated JSON transfer
+    - [x] Milestone 8.1 — Validated JSON transfer
         - [x] T-043 — Define the export schema and complete canonical validator
             Verified: `python tools/check.py -q` - 57 passed in 23.45s. Observed RED for missing complete export validation. Version/schema/types/all setting values, unique IDs, safe scores and real canonical UTC timestamps are enforced; duplicate JSON members and precision-losing numeric literals are rejected. Supplied schema is extracted from embedded runtime definitions.
             Scope: index.html embedded schema/validator; tests/test_persistence.py; schema/session.schema.json. Depends on: T-042.
@@ -261,7 +261,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 59 passed in 19.76s. Observed RED for missing Save control. Real JSON downloads preserve stable ID, score, UTC timestamp and all six typed settings in one file; hiding settings hides the single Save/Restore pair. Save format is distinct from the six game settings.
             Scope: index.html JSON codec/settings file controls; tests/test_browser.py; tests/test_persistence.py. Depends on: T-043.
             Contract/evidence: F1 one JSON snapshot file, correct current top ten/settings, hidden-settings button containment. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-045 — Restore JSON through staged atomic replacement
+        - [x] T-045 — Restore JSON through staged atomic replacement
+            Verified: `python tools/check.py -q` - 61 passed in 20.06s. Observed RED for disabled Restore. Complete file validation now precedes one results/settings replacement and all-six cookie/query writes; invalid version/date files leave all four surfaces unchanged. Pending game events are reconciled before the synchronous commit.
             Scope: index.html file coordinator/controller; tests/test_persistence.py; tests/test_browser.py. Depends on: T-044.
             Contract/evidence: F1 invalid content unchanged across all surfaces; valid replacement, cookies/query, cancellation and stale-read protection. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 8.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/8/8.1.md and HANDOFF with this task's initial completion.

@@ -489,6 +489,7 @@ document.getElementById('extras').insertAdjacentHTML('beforeend','<div class="bo
  ui.results=new SessionResults();
  createLeaderboard();
  createFileControls();
+ installRestore();
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -573,7 +574,7 @@ function createSettings(){const panel=document.createElement('section');panel.id
 Game.prototype.applySettings=function(next){const checked=normaliseSettings(next);const previous=this.config;this.config=checked;if(previous?.lockPolicy!==checked.lockPolicy)this.deadline=null;if(this.p&&this.status!=='over')this.syncGround();};
 const configurableDrop=Game.prototype.hardDrop;Game.prototype.hardDrop=function(){if(this.config.hardDrop===false)return;return configurableDrop.call(this);};
 const configurableHold=Game.prototype.holdPiece;Game.prototype.holdPiece=function(){if(this.config.hold===false)return false;return configurableHold.call(this);};
-function applyUIConfig(settings){advanceUIClock();ui.game.applySettings(settings);syncSettingsUI();render();notice('Settings applied for this game.');}
+function applyUIConfig(settings,options={}){if(options.advance!==false)advanceUIClock();ui.game.applySettings(settings);syncSettingsUI();render();notice('Settings applied for this game.');}
 
 /* T033_RESOLUTION */
 function parseSetting(key,raw){const d=SETTING_DEFS.find(d=>d.key===key);if(!d)return undefined;if(typeof d.value==='boolean')return raw==='on'?true:raw==='off'?false:undefined;return d.choices.some(([v])=>v===raw)?raw:undefined;}
@@ -584,11 +585,11 @@ function readCookies(){try{return document.cookie;}catch{notice('Cookie persiste
 Object.assign(API,{parseSetting,serializeSetting,resolveSettings});
 /* T034_COOKIES */
 function changedSettings(previous,next){return SETTING_DEFS.filter(d=>previous[d.key]!==next[d.key]).map(d=>d.key);}
-function writeSettingsCookies(settings,keys){for(const key of keys){try{const value=serializeSetting(key,settings[key]);document.cookie=encodeURIComponent('tetris_'+key)+'='+encodeURIComponent(value)+'; Path=/; SameSite=Lax; Max-Age=31536000'+(location.protocol==='https:'?'; Secure':'');if(cookieValues(document.cookie).get('tetris_'+key)!==value)throw Error('Cookie rejected');}catch{notice('Cookie persistence is unavailable; selected settings remain active in this page.');}}}
-const cookieApply=applyUIConfig;applyUIConfig=function(settings,options={}){const previous=ui.game.config;cookieApply(settings);writeSettingsCookies(ui.game.config,options.all?SETTING_DEFS.map(d=>d.key):changedSettings(previous,ui.game.config));};API.persistence=true;
+function writeSettingsCookies(settings,keys){for(const key of keys){try{const value=serializeSetting(key,settings[key]);document.cookie=encodeURIComponent('tetris_'+key)+'='+encodeURIComponent(value)+'; Path=/; SameSite=Lax; Max-Age=31536000'+(location.protocol==='https:'?'; Secure':'');if(cookieValues(document.cookie).get('tetris_'+key)!==value)throw Error('Cookie rejected');}catch{persistenceNotice('Cookie persistence is unavailable; selected settings remain active in this page.');}}}
+const cookieApply=applyUIConfig;applyUIConfig=function(settings,options={}){const previous=ui.game.config;cookieApply(settings,options);writeSettingsCookies(ui.game.config,options.all?SETTING_DEFS.map(d=>d.key):changedSettings(previous,ui.game.config));};API.persistence=true;
 /* T035_QUERY */
 function updatedURL(href,settings,keys){const url=new URL(href);for(const key of keys)url.searchParams.set(key,serializeSetting(key,settings[key]));return url.href;}
-function writeSettingsQuery(settings,keys){if(!keys.length)return;try{history.replaceState(null,'',updatedURL(location.href,settings,keys));}catch{notice('URL persistence is unavailable; selected settings remain active in this page.');}}
+function writeSettingsQuery(settings,keys){if(!keys.length)return;try{history.replaceState(null,'',updatedURL(location.href,settings,keys));}catch{persistenceNotice('URL persistence is unavailable; selected settings remain active in this page.');}}
 const queryApply=applyUIConfig;applyUIConfig=function(settings,options={}){const previous=ui.game.config;queryApply(settings,options);writeSettingsQuery(ui.game.config,options.all?SETTING_DEFS.map(d=>d.key):changedSettings(previous,ui.game.config));};API.updatedURL=updatedURL;
 /* T039_RESULTS */
 function rankResults(records){return records.map(r=>({...r})).sort((a,b)=>b.score-a.score||(a.timestamp<b.timestamp?-1:a.timestamp>b.timestamp?1:0)||(a.id<b.id?-1:a.id>b.id?1:0)).slice(0,10);}
@@ -631,6 +632,15 @@ function downloadFile(content,type,name){const blob=new Blob([content],{type}),u
 async function saveCurrent(){try{advanceUIClock();render();const snapshot=captureExport(),format=document.getElementById('file-format').value;const content=format==='json'?JSON.stringify(snapshot,null,2):await encodeSQLite(snapshot);downloadFile(content,format==='json'?'application/json':'application/vnd.sqlite3','tetris-session.'+(format==='json'?'json':'sqlite'));notice('Session saved as '+(format==='json'?'JSON.':'SQLite.'));}catch(error){notice('Could not save: '+String(error.message).slice(0,240));}}
 function createFileControls(){const panel=document.getElementById('settings'),label=document.createElement('label');label.textContent='Save format';const select=document.createElement('select');select.id='file-format';select.setAttribute('aria-label','Save format');select.innerHTML='<option value="json">JSON</option>';label.append(select);panel.append(label);const controls=document.createElement('div');controls.className='file-buttons';controls.innerHTML='<button id="save-file">Save</button><button id="restore-file" disabled>Restore</button>';panel.append(controls);const input=document.createElement('input');input.id='restore-input';input.type='file';input.accept='.json,.sqlite,.db,application/json,application/vnd.sqlite3';input.hidden=true;panel.append(input);document.getElementById('save-file').addEventListener('click',saveCurrent);}
 Object.assign(API,{captureExport});
+
+/* T045_RESTORE */
+/* Validation is side-effect-free; the serialized commit cannot interleave with a frame. */
+function persistenceNotice(message){ui.persistenceWarning=message;notice(message);}
+async function restoreFile(file){if(!file)return false;const serial=ui.restoreSerial=(ui.restoreSerial||0)+1;try{if(file.size>2097152)throw Error('File exceeds 2 MiB.');const bytes=new Uint8Array(await file.arrayBuffer());if(bytes.length>2097152)throw Error('File exceeds 2 MiB.');if(serial!==ui.restoreSerial)return false;let candidate;if(bytes.length>=16&&String.fromCharCode(...bytes.slice(0,16))==='SQLite format 3\0')candidate=await decodeSQLite(bytes);else{const text=new TextDecoder('utf-8',{fatal:true,ignoreBOM:true}).decode(bytes).replace(/^\uFEFF/,'');candidate=parseExportJSON(text);}if(serial!==ui.restoreSerial)return false;
+ advanceUIClock();render();ui.persistenceWarning=null;ui.results.replace(candidate.results);applyUIConfig(candidate.settings,{all:true,advance:false});render();notice(ui.persistenceWarning||'Session restored.');return true;
+ }catch(error){if(serial===ui.restoreSerial)notice('Could not restore: '+String(error.message).slice(0,240));return false;}}
+function installRestore(){const button=document.getElementById('restore-file'),input=document.getElementById('restore-input');button.disabled=false;button.addEventListener('click',()=>input.click());input.addEventListener('change',()=>{const file=input.files[0];input.value='';restoreFile(file);});}
+Object.assign(API,{restoreFile});
 
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
