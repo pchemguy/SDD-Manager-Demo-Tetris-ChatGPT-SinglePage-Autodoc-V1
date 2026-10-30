@@ -160,7 +160,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 5 — Session configuration
 
 - [ ] Phase 5 — Session configuration
-    - [ ] Milestone 5.1 — Live configuration
+    - [x] Milestone 5.1 — Live configuration
         - [x] T-027 — Define the six canonical setting domains and defaults
             Verified: `python tools/check.py -q` - 34 passed in 12.47s. Observed RED for absent complete configuration contract. Six canonical key/value domains now supply strict normalization and per-game defaults; wrong Boolean spelling/type is rejected without coercion.
             Scope: index.html config service; tests/test_persistence.py. Depends on: T-026.
@@ -169,7 +169,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 36 passed in 14.27s. Observed RED for absent selects, then identified option text in accessible labels. Added explicit canonical aria-labels; both browsers now locate all six controls by exact visible setting names and verify defaults.
             Scope: index.html settings HTML/view; tests/test_browser.py. Depends on: T-027.
             Contract/evidence: C1 all six choices, defaults and disabled-capability display without extra gameplay actions. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-029 — Apply settings through one live controller update
+        - [x] T-029 — Apply settings through one live controller update
+            Verified: `python tools/check.py -q` - 37 passed in 13.86s. Observed RED for missing live settings path. Unchanged interval policy retains the deadline; switching to failed clears it, switching back starts a full interval. Disabled hard drop/hold leave the active pose/source untouched.
             Scope: index.html controller/clock/view; tests/test_rules.py; tests/test_browser.py. Depends on: T-028.
             Contract/evidence: C1 interval-policy changes, unchanged deadlines, hardDrop/preview/hold/ghost effects and penetrator restriction. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 5.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/5/5.1.md and HANDOFF with this task's initial completion.

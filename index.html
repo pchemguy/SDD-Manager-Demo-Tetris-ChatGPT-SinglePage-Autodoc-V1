@@ -465,6 +465,7 @@ function render(){if(!ui)return;const g=ui.game,c=ui.canvas,ctx=c.getContext('2d
   drawPreview('next-piece',g.queue?.[0]);
   drawPreview('held-piece',g.held);
   document.getElementById('bonuses').textContent='⚡'.repeat(g.bonuses||0);document.getElementById('bonuses').setAttribute('aria-label',String(g.bonuses||0)+' penetrator bonuses');
+  document.getElementById('next-piece').closest('figure').hidden=g.config.nextPreview===false;
   /* RENDER_EXTENSIONS */
 }
 function mountUI(){
@@ -557,6 +558,12 @@ Object.assign(API,{DEFAULTS,SETTING_DEFS,normaliseSettings});
 /* T028_SETTINGS_UI */
 function syncSettingsUI(){for(const d of SETTING_DEFS){const el=document.getElementById('setting-'+d.key);if(el)el.value=String(ui.game.config[d.key]);}}
 function createSettings(){const panel=document.createElement('section');panel.id='settings';panel.className='panel settings';const heading=document.createElement('h2');heading.textContent='Settings';panel.append(heading);for(const d of SETTING_DEFS){const label=document.createElement('label');label.textContent=d.label;const select=document.createElement('select');select.id='setting-'+d.key;select.setAttribute('aria-label',d.label);for(const [v,text]of d.choices){const option=document.createElement('option');option.value=String(v);option.textContent=text;select.append(option);}select.value=String(ui.game.config[d.key]);select.addEventListener('change',()=>{const value=d.choices.find(([v])=>String(v)===select.value)[0];applyUIConfig({...ui.game.config,[d.key]:value});});label.append(select);panel.append(label);}document.getElementById('right-rail').prepend(panel);}
+
+/* T029_APPLY_SETTINGS */
+Game.prototype.applySettings=function(next){const checked=normaliseSettings(next);const previous=this.config;this.config=checked;if(previous?.lockPolicy!==checked.lockPolicy)this.deadline=null;if(this.p&&this.status!=='over')this.syncGround();};
+const configurableDrop=Game.prototype.hardDrop;Game.prototype.hardDrop=function(){if(this.config.hardDrop===false)return;return configurableDrop.call(this);};
+const configurableHold=Game.prototype.holdPiece;Game.prototype.holdPiece=function(){if(this.config.hold===false)return false;return configurableHold.call(this);};
+function applyUIConfig(settings){advanceUIClock();ui.game.applySettings(settings);syncSettingsUI();render();notice('Settings applied for this game.');}
 
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
