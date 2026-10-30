@@ -266,7 +266,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: index.html file coordinator/controller; tests/test_persistence.py; tests/test_browser.py. Depends on: T-044.
             Contract/evidence: F1 invalid content unchanged across all surfaces; valid replacement, cookies/query, cancellation and stale-read protection. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 8.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/8/8.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 8.2 — SQLite transfer
+    - [x] Milestone 8.2 — SQLite transfer
         - [x] T-046 — Integrate a pinned lazy single-file sql.js runtime
             Verified: `python tools/check.py -q` - 63 passed in 20.66s. Observed RED for absent SQLite runtime. Verified pinned CDN artifact/CORS and SRI, then real SQLite SELECT execution in both browsers, one shared lazy initialization and no extra external wasm/worker request. Controlled browser delivery uses exact fetched bytes, not a fake SQL interface.
             Scope: index.html dependency loader; tests/test_persistence.py; README.md. Depends on: T-045.
@@ -275,7 +275,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 65 passed in 25.05s. Observed RED for missing SQLite bytes. Standard SQLite downloads are independently opened by Python sqlite3; version/application metadata, six keyed setting rows, score zero/MAX-safe, stable IDs and exact UTC values are verified.
             Scope: index.html SQLite encoder; tests/test_persistence.py. Depends on: T-046.
             Contract/evidence: F2 exact high_scores/settings tables, metadata, bound writes and stable values. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-048 — Validate and restore SQLite through the common candidate path
+        - [x] T-048 — Validate and restore SQLite through the common candidate path
+            Verified: `python tools/check.py -q` - 67 passed in 23.49s. Observed RED for missing SQLite restore. Real database import shares full canonical validation; invalid dates, values, metadata, extra views and hidden generated columns leave results/settings/cookies/URL unchanged. Statements and databases close on all paths.
             Scope: index.html SQLite reader/validator; tests/test_persistence.py; tests/test_browser.py. Depends on: T-047.
             Contract/evidence: F2 integrity/schema/storage types/all rows/version, complete validation and cleanup before one common commit. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 8.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/8/8.2.md and HANDOFF with this task's initial completion.

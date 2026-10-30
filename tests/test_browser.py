@@ -231,3 +231,12 @@ def test_sqlite_export_is_standard_and_preserves_values(sql_page):
         assert db.execute("SELECT value FROM settings WHERE key='hold'").fetchone()[0]=='on'
     finally:
         db.close()
+
+
+def test_sqlite_restore_and_complete_invalid_content(sql_page):
+    assert sql_page.evaluate("async()=>{const data={formatVersion:1,results:[{id:'sql-stable',score:777,timestamp:'2026-10-30T00:00:00.000Z'}],settings:{...Tetris.DEFAULTS}};const bytes=await Tetris.encodeSQLite(data);return await Tetris.restoreFile(new File([bytes],'valid.json'))}") is True
+    assert sql_page.evaluate('Tetris.ui.results.records[0].id')=='sql-stable'
+    before=sql_page.evaluate('({results:Tetris.ui.results.records,settings:Tetris.ui.game.config,cookies:document.cookie,url:location.href})')
+    for mutation in ["UPDATE high_scores SET timestamp='2025-02-29T00:00:00.000Z'","UPDATE settings SET value='invalid' WHERE key='hold'","PRAGMA user_version=999","CREATE VIEW extra AS SELECT 1","ALTER TABLE high_scores ADD COLUMN hidden_extra TEXT GENERATED ALWAYS AS ('x') VIRTUAL"]:
+        assert sql_page.evaluate("async sql=>{const SQL=await Tetris.loadSQL(),bytes=await Tetris.encodeSQLite({formatVersion:1,results:[{id:'reject-me',score:1,timestamp:'2026-10-30T00:00:00.000Z'}],settings:{...Tetris.DEFAULTS}}),db=new SQL.Database(bytes);try{db.run(sql);return await Tetris.restoreFile(new File([db.export()],'invalid.sqlite'))}finally{db.close()}}",mutation) is False
+        assert sql_page.evaluate('({results:Tetris.ui.results.records,settings:Tetris.ui.game.config,cookies:document.cookie,url:location.href})')==before
