@@ -195,7 +195,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 
 - [ ] Phase 6 — URL and cookie configuration
     - [ ] Milestone 6.1 — Configuration persistence
-        - [ ] T-033 — Resolve independent URL cookie and default sources
+        - [x] T-033 — Resolve independent URL cookie and default sources
+            Verified: `python tools/check.py -q` - 40 passed in 14.39s. Observed RED for missing source resolution; all 40 checks pass for independent URL/cookie/default choices, invalid first duplicate fallback and omitted-cookie retention. Corrected a test-file whitespace check before committing; no result commit was published prematurely.
             Scope: index.html browser/config adapters; tests/test_persistence.py. Depends on: T-032.
             Contract/evidence: C2 mixed-source precedence, invalid values, first duplicate, omitted parameter and unknown-key retention. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-034 — Write explicit URL values and changed cookies
