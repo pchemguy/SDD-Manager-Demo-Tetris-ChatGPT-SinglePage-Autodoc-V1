@@ -1,3 +1,4 @@
+"""Acceptance checks against the actual single-file application and isolated runtimes."""
 
 
 def test_complete_setting_domains(js):

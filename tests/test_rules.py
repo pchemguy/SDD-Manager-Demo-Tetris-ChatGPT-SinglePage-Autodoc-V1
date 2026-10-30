@@ -1,3 +1,4 @@
+"""Acceptance checks against the actual single-file application and isolated runtimes."""
 def test_legal_geometry_and_collision(js):
     assert js("valid(emptyBoard(),'T',0,3,0)") is True
     assert js("cells('I',0,3,0)") == [[3,1],[4,1],[5,1],[6,1]]

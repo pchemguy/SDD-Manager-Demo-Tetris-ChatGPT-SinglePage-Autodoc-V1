@@ -1,3 +1,4 @@
+"""Acceptance checks against the actual single-file application and isolated runtimes."""
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -62,7 +63,7 @@ def test_packaged_download_plays_without_server(browser):
     root=Path(__file__).resolve().parents[1]
     subprocess.run([sys.executable,'tools/package.py'],cwd=root,check=True,capture_output=True)
     version=re.search(r"const VERSION\s*=\s*'([^']+)'",(root/'index.html').read_text()).group(1)
-    artifact=root/'dist'/version/('tetris-v'+version+'.html')
+    artifact=root/'dist'/version/'tetris.html'
     context=browser.new_context()
     p=context.new_page()
     try:

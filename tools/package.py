@@ -10,7 +10,10 @@ def package():
     version = re.search(rb"const VERSION\s*=\s*['\"]([^'\"]+)", source).group(1).decode()
     output = ROOT / 'dist' / version
     output.mkdir(parents=True, exist_ok=True)
-    artifact = output / ('tetris-v' + version + '.html')
+    # Remove only obsolete owned candidate filenames, never unrelated outputs.
+    for legacy in [output / ('tetris-v' + version + '.html'), output / 'SHA256SUMS.txt']:
+        legacy.unlink(missing_ok=True)
+    artifact = output / 'tetris.html'
     artifact.write_bytes(source)
     files = [artifact]
     schema = ROOT / 'schema/session.schema.json'
@@ -19,7 +22,7 @@ def package():
         shutil.copyfile(schema, target)
         files.append(target)
     checksums = ''.join(hashlib.sha256(f.read_bytes()).hexdigest() + '  ' + f.name + '\n' for f in files)
-    (output / 'SHA256SUMS.txt').write_text(checksums)
+    (output / 'SHA256SUMS').write_text(checksums)
     return output
 
 if __name__ == '__main__':
