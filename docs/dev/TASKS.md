@@ -242,8 +242,9 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: README.md; RELEASE-NOTES.md; tests/test_browser.py; tools/package.py; index.html version. Depends on: T-040.
             Contract/evidence: A7 restart retention, reload empty history despite saved settings, v0.7.0 artifact. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 7.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/7/7.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 7.2 — Phase review
-        - [ ] T-042 — Review test and report phase 7
+    - [x] Milestone 7.2 — Phase review
+        - [x] T-042 — Review test and report phase 7
+            Verified: `python tools/check.py -q` - 53 passed in 19.41s. Session leaderboard phase and all prior gameplay/settings/browser/artifact regressions pass.
             Depends on: all delivery tasks in phase 7, completion/closure of milestones 7.1, and their committed review evidence.
             Scope: cross-milestone code review, A7 plus leaderboard panel placement; no automatic or file history persistence. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/7/PHASE-REPORT.md, HANDOFF, release v0.7.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
