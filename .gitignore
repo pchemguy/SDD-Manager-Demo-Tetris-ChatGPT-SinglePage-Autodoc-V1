@@ -1,3 +1,10 @@
 .obsidian
 .trash
 *.tkn
+
+.devdeps/
+.browser-runtime/
+.test-artifacts/
+.pytest_cache/
+__pycache__/
+dist/

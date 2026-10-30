@@ -14,7 +14,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 
 - [ ] Phase 1 — Classic baseline
     - [ ] Milestone 1.1 — Classic rules
-        - [ ] T-001 — Implement board geometry and legal piece transitions
+        - [x] T-001 — Implement board geometry and legal piece transitions
+            Verified: `python tools/check.py -q` - 1 passed in 0.36s. Observed RED: valid empty-board T placement returned false; geometry implementation makes collision/bounds/translation scenarios pass. Pinned local pytest and source-extraction Node VM harness verified.
             Scope: index.html rule definitions; tests/test_rules.py. Depends on: accepted/reviewed preparation and eligible phase-1 activation.
             Contract/evidence: G1 bounds, spawn coordinates, four-cell shapes, legal move/rotate and collision rejection. Include relevant checks, fixes and changed usage documentation.
             Establish the pinned pytest/source-extraction harness and developer instructions as part of verifying these rules; do not install an application runtime dependency.
