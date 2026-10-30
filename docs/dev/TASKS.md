@@ -175,7 +175,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Contract/evidence: C1 interval-policy changes, unchanged deadlines, hardDrop/preview/hold/ghost effects and penetrator restriction. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 5.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/5/5.1.md and HANDOFF with this task's initial completion.
     - [ ] Milestone 5.2 — Session-only delivery
-        - [ ] T-030 — Integrate panel visibility and reload isolation
+        - [x] T-030 — Integrate panel visibility and reload isolation
+            Verified: `python tools/check.py -q` - 39 passed in 18.59s. Observed missing settings toggle after verifying session reload defaults and zero cookie/query writes. Individual settings visibility now preserves board centering; controls and session-only reload behavior pass in both browsers.
             Scope: index.html panel controls; tests/test_browser.py. Depends on: T-029.
             Contract/evidence: U1 settings/help toggles preserve board center; C1 page reload resets defaults with no persistence side effects. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-031 — Package and verify session-only settings

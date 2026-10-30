@@ -104,3 +104,20 @@ def test_six_labeled_settings(page):
     assert page.get_by_label('Ghost piece',exact=True).input_value() == 'show'
     assert page.get_by_label('General locking',exact=True).input_value() == 'interval'
     assert page.get_by_label('Hold piece',exact=True).input_value() == 'true'
+
+
+def test_session_settings_and_panel_visibility(page):
+    page.get_by_label('Hard drop',exact=True).select_option('false')
+    assert page.evaluate('Tetris.ui.game.config.hardDrop') is False
+    durable=page.evaluate('!!Tetris.persistence')
+    if not durable:
+        assert page.context.cookies() == []
+        assert '?' not in page.url
+    page.reload()
+    assert page.evaluate('Tetris.ui.game.config.hardDrop') is (not durable)
+    center=page.locator('#board').bounding_box()
+    page.get_by_role('button',name='Settings',exact=True).click()
+    assert not page.locator('#settings').is_visible()
+    assert abs(page.locator('#board').bounding_box()['x']-center['x']) < 1
+    page.get_by_role('button',name='Settings',exact=True).click()
+    assert page.locator('#settings').is_visible()
