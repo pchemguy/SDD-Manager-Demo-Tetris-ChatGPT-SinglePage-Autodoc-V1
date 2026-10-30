@@ -151,3 +151,11 @@ def test_history_rejection_preserves_session_value(page,base_url):
     assert page.evaluate('Tetris.ui.game.config.hardDrop') is False
     assert page.url==before
     assert 'URL persistence is unavailable' in page.locator('#message').text_content()
+
+
+def test_leaderboard_panel_and_stable_center(page):
+    assert page.locator('#leaderboard').is_visible()
+    before=page.locator('#board').bounding_box()
+    page.get_by_role('button',name='Leaderboard',exact=True).click()
+    assert not page.locator('#leaderboard').is_visible()
+    assert abs(page.locator('#board').bounding_box()['x']-before['x'])<1

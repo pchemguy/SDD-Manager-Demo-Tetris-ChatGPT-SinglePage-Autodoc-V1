@@ -407,6 +407,9 @@ h1 {
 }
 
 
+
+.left { direction:rtl; justify-content:flex-start; }
+.left > .panel { direction:ltr; }
 </style></head><body><main id="root"></main>
 <script id="app">
 'use strict';
@@ -466,6 +469,7 @@ function render(){if(!ui)return;if(ui.results)for(const event of ui.game.events.
   drawPreview('held-piece',g.held);
   document.getElementById('bonuses').textContent='⚡'.repeat(g.bonuses||0);document.getElementById('bonuses').setAttribute('aria-label',String(g.bonuses||0)+' penetrator bonuses');
   document.getElementById('next-piece').closest('figure').hidden=g.config.nextPreview===false;
+  renderResults();
   /* RENDER_EXTENSIONS */
 }
 function mountUI(){
@@ -483,6 +487,7 @@ document.getElementById('extras').insertAdjacentHTML('beforeend','<div class="bo
  ui.restored=resolveSettings(location.href,readCookies());ui.game.applySettings(ui.restored.settings);syncSettingsUI();
  writeSettingsCookies(ui.game.config,Object.keys(ui.restored.explicit));
  ui.results=new SessionResults();
+ createLeaderboard();
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -592,6 +597,10 @@ class SessionResults{
  replace(records){this.records=rankResults(records);this.revision++;}
 }
 Object.assign(API,{rankResults,SessionResults});
+/* T040_RESULTS_UI */
+function createLeaderboard(){const panel=document.createElement('section');panel.id='leaderboard';panel.className='panel leaderboard';panel.innerHTML='<h2>Leaderboard</h2><p class="empty" id="no-results">A fresh start.<br>Your top ten completed games appear here.</p><ol id="results"></ol>';document.getElementById('left-rail').append(panel);installToggle('leaderboard','Leaderboard');}
+function renderResults(){if(!ui.results||ui.lastResultRevision===ui.results.revision)return;ui.lastResultRevision=ui.results.revision;const list=document.getElementById('results');if(!list)return;list.replaceChildren();document.getElementById('no-results').hidden=ui.results.records.length>0;ui.results.records.forEach((r,index)=>{const item=document.createElement('li'),stamp=document.createElement('small');item.append(document.createTextNode(String(index+1).padStart(2,'0')+' / '+r.score.toLocaleString()));stamp.textContent=r.timestamp;item.append(stamp);list.append(item);});}
+
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();

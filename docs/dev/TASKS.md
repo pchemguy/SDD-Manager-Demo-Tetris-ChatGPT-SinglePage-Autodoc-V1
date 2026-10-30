@@ -233,7 +233,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 49 passed in 18.65s. Observed RED for absent session result collection. Once-only game generation, score zero, collision-safe stable IDs, UTC timestamp preservation and deterministic bounded ranking now pass; controller consumes terminal events once.
             Scope: index.html session-results/controller; tests/test_persistence.py. Depends on: T-038.
             Contract/evidence: L1 stable IDs/UTC, tie ordering, duplicate-event exclusion, abandoned-game omission and top-ten bound. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-040 — Present the leaderboard and visibility toggle
+        - [x] T-040 — Present the leaderboard and visibility toggle
+            Verified: `python tools/check.py -q` - 51 passed in 18.21s. Observed RED for absent leaderboard panel. Top-ten session results render to the left of information with an empty state and independent toggle; hiding it leaves the board centered. Result text uses safe text nodes and rerenders only on revision changes.
             Scope: index.html leaderboard/info layout; tests/test_browser.py. Depends on: T-039.
             Contract/evidence: L1/U1 left-of-info panel, empty state, hide/show centering and game-over refresh. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-041 — Verify session lifetime and package leaderboard release
