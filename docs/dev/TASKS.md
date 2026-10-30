@@ -160,27 +160,33 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 5 — Session configuration
 
 - [ ] Phase 5 — Session configuration
-    - [ ] Milestone 5.1 — Live configuration
-        - [ ] T-027 — Define the six canonical setting domains and defaults
+    - [x] Milestone 5.1 — Live configuration
+        - [x] T-027 — Define the six canonical setting domains and defaults
+            Verified: `python tools/check.py -q` - 34 passed in 12.47s. Observed RED for absent complete configuration contract. Six canonical key/value domains now supply strict normalization and per-game defaults; wrong Boolean spelling/type is rejected without coercion.
             Scope: index.html config service; tests/test_persistence.py. Depends on: T-026.
             Contract/evidence: C1 strict types/enums and a complete normalized settings object. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-028 — Build the six labeled settings controls
+        - [x] T-028 — Build the six labeled settings controls
+            Verified: `python tools/check.py -q` - 36 passed in 14.27s. Observed RED for absent selects, then identified option text in accessible labels. Added explicit canonical aria-labels; both browsers now locate all six controls by exact visible setting names and verify defaults.
             Scope: index.html settings HTML/view; tests/test_browser.py. Depends on: T-027.
             Contract/evidence: C1 all six choices, defaults and disabled-capability display without extra gameplay actions. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-029 — Apply settings through one live controller update
+        - [x] T-029 — Apply settings through one live controller update
+            Verified: `python tools/check.py -q` - 37 passed in 13.86s. Observed RED for missing live settings path. Unchanged interval policy retains the deadline; switching to failed clears it, switching back starts a full interval. Disabled hard drop/hold leave the active pose/source untouched.
             Scope: index.html controller/clock/view; tests/test_rules.py; tests/test_browser.py. Depends on: T-028.
             Contract/evidence: C1 interval-policy changes, unchanged deadlines, hardDrop/preview/hold/ghost effects and penetrator restriction. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 5.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/5/5.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 5.2 — Session-only delivery
-        - [ ] T-030 — Integrate panel visibility and reload isolation
+    - [x] Milestone 5.2 — Session-only delivery
+        - [x] T-030 — Integrate panel visibility and reload isolation
+            Verified: `python tools/check.py -q` - 39 passed in 18.59s. Observed missing settings toggle after verifying session reload defaults and zero cookie/query writes. Individual settings visibility now preserves board centering; controls and session-only reload behavior pass in both browsers.
             Scope: index.html panel controls; tests/test_browser.py. Depends on: T-029.
             Contract/evidence: U1 settings/help toggles preserve board center; C1 page reload resets defaults with no persistence side effects. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-031 — Package and verify session-only settings
+        - [x] T-031 — Package and verify session-only settings
+            Verified: `python tools/check.py -q` - 39 passed in 15.23s. Session-only v0.5.0 candidate exposes all six live settings without reading/writing URL/cookies and resets defaults on reload; prior gameplay/file-launch tests pass.
             Scope: README.md; RELEASE-NOTES.md; tools/package.py; tests/test_browser.py; index.html version. Depends on: T-030.
             Contract/evidence: A5 session-only HTTP and file behavior, default show ghost and v0.5.0 artifact. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 5.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/5/5.2.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 5.3 — Phase review
-        - [ ] T-032 — Review test and report phase 5
+    - [x] Milestone 5.3 — Phase review
+        - [x] T-032 — Review test and report phase 5
+            Verified: `python tools/check.py -q` - 39 passed in 14.19s. Complete session-only settings phase passes canonical-domain, deadline/live-action and real-browser panel/reload cases with previous regressions.
             Depends on: all delivery tasks in phase 5, completion/closure of milestones 5.1, 5.2, and their committed review evidence.
             Scope: cross-milestone code review, A5 and UI setting/ghost/penetrator interactions; no cookie/query reads or writes yet. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/5/PHASE-REPORT.md, HANDOFF, release v0.5.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.

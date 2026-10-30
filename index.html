@@ -429,7 +429,7 @@ const TYPES=Object.keys(SHAPES);
 const addScore=(a,b)=>Math.min(Number.MAX_SAFE_INTEGER,a+b);
 function clearRows(board){const keep=board.filter(row=>row.some(v=>!v));const count=20-keep.length;return {count,board:[...Array.from({length:count},()=>Array(10).fill(0)),...keep.map(r=>r.slice())]};}
 class Game {
-  constructor(rng=Math.random){this.rng=rng;this.board=emptyBoard();this.status='idle';this.score=0;this.lines=0;this.level=1;this.p=null;this.generation=0;this.events=[];this.elapsed=0;}
+  constructor(rng=Math.random){this.rng=rng;this.board=emptyBoard();this.status='idle';this.score=0;this.lines=0;this.level=1;this.p=null;this.generation=0;this.events=[];this.elapsed=0;this.config={...DEFAULTS};}
   pause(){if(this.status==='running')this.status='paused';else if(this.status==='paused')this.status='running';}
   interval(){return Math.max(80,Math.floor(1000*Math.pow(0.8,this.level-1)));}
   draw(){return TYPES[Math.floor(this.rng()*7)%7];}
@@ -445,7 +445,7 @@ class Game {
 Object.assign(API,{Game,clearRows,COLORS,SHAPES});
 
 /* 3. Canvas and semantic HTML presentation */
-const VERSION='0.4.0';
+const VERSION='0.5.0';
 let ui=null;
 function notice(message){if(ui)document.getElementById('message').textContent=message;}
 function paintCells(ctx,board,piece,ghost=false,scale=30,ox=0,oy=0){
@@ -465,6 +465,7 @@ function render(){if(!ui)return;const g=ui.game,c=ui.canvas,ctx=c.getContext('2d
   drawPreview('next-piece',g.queue?.[0]);
   drawPreview('held-piece',g.held);
   document.getElementById('bonuses').textContent='⚡'.repeat(g.bonuses||0);document.getElementById('bonuses').setAttribute('aria-label',String(g.bonuses||0)+' penetrator bonuses');
+  document.getElementById('next-piece').closest('figure').hidden=g.config.nextPreview===false;
   /* RENDER_EXTENSIONS */
 }
 function mountUI(){
@@ -477,6 +478,8 @@ document.querySelector('.preview').insertAdjacentHTML('afterbegin','<figure><fig
 document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Hard drop</span><kbd>Space</kbd></div>');
 document.getElementById('extras').insertAdjacentHTML('beforeend','<div class="bonus-label">PENETRATOR BONUSES</div><div id="bonuses" class="bonuses" aria-label="Available penetrator bonuses"></div>');
  document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Penetrator</span><kbd>P</kbd></div>');
+ createSettings();
+ installToggle('settings','Settings');
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -542,6 +545,27 @@ Game.prototype.activate=function(){if(this.status!=='running'||!this.p||this.p.p
 /* T022_TRANSIT */
 const ordinaryLanding=findLanding;findLanding=function(board,piece){if(!piece.penetrator)return ordinaryLanding(board,piece);let best=null;for(let y=piece.y;y<20;y++)if(valid(board,piece.type,piece.rot,piece.x,y))best={...piece,y};return best;};API.findLanding=findLanding;
 Game.prototype.canPlace=function(p){return p.penetrator?cells(p.type,p.rot,p.x,p.y).every(([x,y])=>x>=0&&x<10&&y>=0&&y<20)&&!!findLanding(this.board,p):valid(this.board,p.type,p.rot,p.x,p.y);};
+/* T027_SETTINGS */
+const SETTING_DEFS=[
+ {key:'ghost',label:'Ghost piece',choices:[['hide','Always hide'],['dynamic','Hide above midline'],['show','Always show']],value:'show'},
+ {key:'hardDrop',label:'Hard drop',choices:[[true,'On'],[false,'Off']],value:true},
+ {key:'nextPreview',label:'Next-piece preview',choices:[[true,'On'],[false,'Off']],value:true},
+ {key:'hardDropLock',label:'Hard-drop locking',choices:[['general','Follow general policy'],['immediate','Lock immediately']],value:'general'},
+ {key:'lockPolicy',label:'General locking',choices:[['failed','Failed downward attempt'],['interval','Full gravity interval']],value:'interval'},
+ {key:'hold',label:'Hold piece',choices:[[true,'On'],[false,'Off']],value:true}];
+const DEFAULTS=Object.freeze(Object.fromEntries(SETTING_DEFS.map(d=>[d.key,d.value])));
+function normaliseSettings(value){if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length!==6)throw Error('Settings must contain all six keys.');const out={};for(const d of SETTING_DEFS){if(!Object.hasOwn(value,d.key)||!d.choices.some(([v])=>v===value[d.key]))throw Error('Invalid setting: '+d.key);out[d.key]=value[d.key];}return out;}
+Object.assign(API,{DEFAULTS,SETTING_DEFS,normaliseSettings});
+/* T028_SETTINGS_UI */
+function syncSettingsUI(){for(const d of SETTING_DEFS){const el=document.getElementById('setting-'+d.key);if(el)el.value=String(ui.game.config[d.key]);}}
+function createSettings(){const panel=document.createElement('section');panel.id='settings';panel.className='panel settings';const heading=document.createElement('h2');heading.textContent='Settings';panel.append(heading);for(const d of SETTING_DEFS){const label=document.createElement('label');label.textContent=d.label;const select=document.createElement('select');select.id='setting-'+d.key;select.setAttribute('aria-label',d.label);for(const [v,text]of d.choices){const option=document.createElement('option');option.value=String(v);option.textContent=text;select.append(option);}select.value=String(ui.game.config[d.key]);select.addEventListener('change',()=>{const value=d.choices.find(([v])=>String(v)===select.value)[0];applyUIConfig({...ui.game.config,[d.key]:value});});label.append(select);panel.append(label);}document.getElementById('right-rail').prepend(panel);}
+
+/* T029_APPLY_SETTINGS */
+Game.prototype.applySettings=function(next){const checked=normaliseSettings(next);const previous=this.config;this.config=checked;if(previous?.lockPolicy!==checked.lockPolicy)this.deadline=null;if(this.p&&this.status!=='over')this.syncGround();};
+const configurableDrop=Game.prototype.hardDrop;Game.prototype.hardDrop=function(){if(this.config.hardDrop===false)return;return configurableDrop.call(this);};
+const configurableHold=Game.prototype.holdPiece;Game.prototype.holdPiece=function(){if(this.config.hold===false)return false;return configurableHold.call(this);};
+function applyUIConfig(settings){advanceUIClock();ui.game.applySettings(settings);syncSettingsUI();render();notice('Settings applied for this game.');}
+
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();
