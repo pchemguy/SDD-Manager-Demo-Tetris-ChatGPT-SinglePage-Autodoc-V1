@@ -455,7 +455,7 @@ function paintCells(ctx,board,piece,ghost=false,scale=30,ox=0,oy=0){
     else{ctx.fillRect(ox+x*scale+1,oy+y*scale+1,scale-2,scale-2);ctx.fillStyle='#ffffff20';ctx.fillRect(ox+x*scale+2,oy+y*scale+2,scale-4,2);}
   }
 }
-function render(){if(!ui)return;const g=ui.game,c=ui.canvas,ctx=c.getContext('2d');ctx.setTransform(2,0,0,2,0,0);ctx.fillStyle='#101811';ctx.fillRect(0,0,300,600);
+function render(){if(!ui)return;if(ui.results)for(const event of ui.game.events.splice(0))if(event.kind==='game-over')ui.results.complete(event);const g=ui.game,c=ui.canvas,ctx=c.getContext('2d');ctx.setTransform(2,0,0,2,0,0);ctx.fillStyle='#101811';ctx.fillRect(0,0,300,600);
   ctx.strokeStyle='#233021';ctx.lineWidth=.6;for(let x=0;x<=10;x++){ctx.beginPath();ctx.moveTo(x*30,0);ctx.lineTo(x*30,600);ctx.stroke();}for(let y=0;y<=20;y++){ctx.beginPath();ctx.moveTo(0,y*30);ctx.lineTo(300,y*30);ctx.stroke();}
   for(let y=0;y<20;y++)for(let x=0;x<10;x++)if(g.board[y][x]){ctx.fillStyle=COLORS[g.board[y][x]];ctx.fillRect(x*30+1,y*30+1,28,28);}
   if(g.p&&g.landing){const land=g.landing();if(ghostVisible(g,land))paintCells(ctx,g.board,land,true);}
@@ -482,6 +482,7 @@ document.getElementById('extras').insertAdjacentHTML('beforeend','<div class="bo
  installToggle('settings','Settings');
  ui.restored=resolveSettings(location.href,readCookies());ui.game.applySettings(ui.restored.settings);syncSettingsUI();
  writeSettingsCookies(ui.game.config,Object.keys(ui.restored.explicit));
+ ui.results=new SessionResults();
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -583,6 +584,14 @@ const cookieApply=applyUIConfig;applyUIConfig=function(settings,options={}){cons
 function updatedURL(href,settings,keys){const url=new URL(href);for(const key of keys)url.searchParams.set(key,serializeSetting(key,settings[key]));return url.href;}
 function writeSettingsQuery(settings,keys){if(!keys.length)return;try{history.replaceState(null,'',updatedURL(location.href,settings,keys));}catch{notice('URL persistence is unavailable; selected settings remain active in this page.');}}
 const queryApply=applyUIConfig;applyUIConfig=function(settings,options={}){const previous=ui.game.config;queryApply(settings,options);writeSettingsQuery(ui.game.config,options.all?SETTING_DEFS.map(d=>d.key):changedSettings(previous,ui.game.config));};API.updatedURL=updatedURL;
+/* T039_RESULTS */
+function rankResults(records){return records.map(r=>({...r})).sort((a,b)=>b.score-a.score||(a.timestamp<b.timestamp?-1:a.timestamp>b.timestamp?1:0)||(a.id<b.id?-1:a.id>b.id?1:0)).slice(0,10);}
+class SessionResults{
+ constructor(idFactory=()=>globalThis.crypto?.randomUUID?.()||'game-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),now=()=>new Date().toISOString()){this.records=[];this.seen=new Set();this.idFactory=idFactory;this.now=now;this.sequence=0;this.revision=0;}
+ complete(event){if(this.seen.has(event.generation))return false;if(!Number.isSafeInteger(event.score)||event.score<0)throw Error('Invalid completed score');let id=this.idFactory();while(this.records.some(r=>r.id===id))id='game-'+(++this.sequence);const result={id,score:event.score,timestamp:this.now()};this.records=rankResults([...this.records,result]);this.seen.add(event.generation);this.revision++;return true;}
+ replace(records){this.records=rankResults(records);this.revision++;}
+}
+Object.assign(API,{rankResults,SessionResults});
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();

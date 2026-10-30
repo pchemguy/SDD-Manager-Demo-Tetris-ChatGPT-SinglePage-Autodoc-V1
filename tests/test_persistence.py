@@ -23,3 +23,8 @@ def test_configuration_spellings(js):
 
 def test_query_update_preserves_unrelated_values(js):
     assert js("typeof updatedURL==='undefined'?null:(()=>{const u=new URL(updatedURL('https://local.test/?keep=1#frag',{...DEFAULTS,hardDrop:false},['hardDrop']));return [u.searchParams.get('keep'),u.searchParams.get('hardDrop'),u.hash]})()") == ['1','off','#frag']
+
+
+def test_session_ranking_and_stable_completion(js):
+    assert js("typeof SessionResults==='undefined'?null:(()=>{const s=new SessionResults(()=> 'stable',()=> '2026-10-30T00:00:00.000Z');s.complete({generation:1,score:0});s.complete({generation:1,score:999});s.complete({generation:2,score:500});return [s.records.length,s.records[0].score,s.records[1].id]})()") == [2,500,'stable']
+    assert js("typeof rankResults==='undefined'?null:rankResults(Array.from({length:12},(_,i)=>({id:'g'+i,score:i,timestamp:'2026-10-30T00:00:00.000Z'}))).map(r=>r.score)") == [11,10,9,8,7,6,5,4,3,2]

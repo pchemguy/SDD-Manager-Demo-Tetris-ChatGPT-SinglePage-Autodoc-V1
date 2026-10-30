@@ -229,7 +229,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 
 - [ ] Phase 7 — Session leaderboard
     - [ ] Milestone 7.1 — Top-ten session delivery
-        - [ ] T-039 — Collect and rank completed game records
+        - [x] T-039 — Collect and rank completed game records
+            Verified: `python tools/check.py -q` - 49 passed in 18.65s. Observed RED for absent session result collection. Once-only game generation, score zero, collision-safe stable IDs, UTC timestamp preservation and deterministic bounded ranking now pass; controller consumes terminal events once.
             Scope: index.html session-results/controller; tests/test_persistence.py. Depends on: T-038.
             Contract/evidence: L1 stable IDs/UTC, tie ordering, duplicate-event exclusion, abandoned-game omission and top-ten bound. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-040 — Present the leaderboard and visibility toggle
