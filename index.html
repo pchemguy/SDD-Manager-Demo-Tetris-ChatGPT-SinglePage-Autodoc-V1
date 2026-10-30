@@ -651,6 +651,11 @@ let sqlPromise=null;
 function loadSQL(){if(sqlPromise)return sqlPromise;const request=new Promise((resolve,reject)=>{const script=document.createElement('script');let settled=false;const timer=setTimeout(()=>finish(Error('SQLite library load timed out.')),20000);function finish(error,SQL){if(settled)return;settled=true;clearTimeout(timer);script.remove();if(error)reject(error);else resolve(SQL);}script.src=SQLJS_URL;script.integrity=SQLJS_INTEGRITY;script.crossOrigin='anonymous';script.onerror=()=>finish(Error('SQLite library could not load. Check the connection and retry.'));script.onload=()=>Promise.resolve().then(()=>{if(typeof globalThis.initSqlJs!=='function')throw Error('SQLite initialization is unavailable.');return globalThis.initSqlJs();}).then(SQL=>finish(null,SQL),error=>finish(error));document.head.append(script);});sqlPromise=request.catch(error=>{sqlPromise=null;throw error;});return sqlPromise;}
 Object.assign(API,{loadSQL,SQLJS_URL});
 
+/* T047_SQL_EXPORT */
+/* Every database is temporary. Bound values preserve data rather than executing it. */
+async function encodeSQLite(value){const data=validateExport(value),SQL=await loadSQL(),db=new SQL.Database();try{db.run('PRAGMA user_version=1');db.run('PRAGMA application_id=1414812243');db.run('CREATE TABLE high_scores (id TEXT NOT NULL PRIMARY KEY, score INTEGER NOT NULL CHECK (score >= 0 AND score <= 9007199254740991), timestamp TEXT NOT NULL)');db.run('CREATE TABLE settings (key TEXT NOT NULL PRIMARY KEY, value TEXT NOT NULL)');db.run('BEGIN');for(const r of data.results)db.run('INSERT INTO high_scores(id,score,timestamp) VALUES (?,?,?)',[r.id,r.score,r.timestamp]);for(const d of SETTING_DEFS)db.run('INSERT INTO settings(key,value) VALUES (?,?)',[d.key,serializeSetting(d.key,data.settings[d.key])]);db.run('COMMIT');return db.export().slice();}finally{db.close();}}
+Object.assign(API,{encodeSQLite});
+
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();

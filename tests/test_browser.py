@@ -211,3 +211,23 @@ def test_sql_runtime_lazy_single_file_load(sql_page):
     sql_page.on('request',lambda request:requests.append(request.url))
     assert sql_page.evaluate("async()=>{if(!Tetris.loadSQL)return null;const unloaded=typeof initSqlJs==='undefined',a=Tetris.loadSQL(),b=Tetris.loadSQL(),SQL=await a,db=new SQL.Database();try{return [unloaded,a===b,db.exec('SELECT 42')[0].values[0][0]]}finally{db.close()}}") == [True,True,42]
     assert len([url for url in requests if url.startswith('https://')])==1
+
+
+def test_sqlite_export_is_standard_and_preserves_values(sql_page):
+    import sqlite3
+    assert sql_page.evaluate("async()=>{if(!Tetris.encodeSQLite)return null;const b=await Tetris.encodeSQLite({formatVersion:1,results:[],settings:{...Tetris.DEFAULTS}});return String.fromCharCode(...b.slice(0,15))}") == 'SQLite format 3'
+    sql_page.evaluate("Tetris.ui.results.replace([{id:'zero',score:0,timestamp:'2026-10-30T00:00:00.000Z'},{id:'max',score:Number.MAX_SAFE_INTEGER,timestamp:'2026-10-30T01:02:03.004Z'}]);Tetris.render()")
+    sql_page.locator('#file-format').select_option('sqlite')
+    with sql_page.expect_download() as received:
+        sql_page.get_by_role('button',name='Save',exact=True).click()
+    file=Path(received.value.path())
+    assert file.read_bytes().startswith(b'SQLite format 3'+bytes([0]))
+    db=sqlite3.connect('file:'+str(file)+'?mode=ro',uri=True)
+    try:
+        assert db.execute('PRAGMA user_version').fetchone()[0]==1
+        assert db.execute('PRAGMA application_id').fetchone()[0]==1414812243
+        assert db.execute('SELECT id,score,timestamp,typeof(score) FROM high_scores ORDER BY score DESC').fetchall()==[('max',9007199254740991,'2026-10-30T01:02:03.004Z','integer'),('zero',0,'2026-10-30T00:00:00.000Z','integer')]
+        assert db.execute('SELECT count(*) FROM settings').fetchone()[0]==6
+        assert db.execute("SELECT value FROM settings WHERE key='hold'").fetchone()[0]=='on'
+    finally:
+        db.close()

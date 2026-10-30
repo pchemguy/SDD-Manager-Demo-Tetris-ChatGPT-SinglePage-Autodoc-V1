@@ -271,7 +271,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 63 passed in 20.66s. Observed RED for absent SQLite runtime. Verified pinned CDN artifact/CORS and SRI, then real SQLite SELECT execution in both browsers, one shared lazy initialization and no extra external wasm/worker request. Controlled browser delivery uses exact fetched bytes, not a fake SQL interface.
             Scope: index.html dependency loader; tests/test_persistence.py; README.md. Depends on: T-045.
             Contract/evidence: F2 one CDN JavaScript dependency, bounded load/init, retry and JSON/game isolation. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-047 — Export the versioned SQLite format
+        - [x] T-047 — Export the versioned SQLite format
+            Verified: `python tools/check.py -q` - 65 passed in 25.05s. Observed RED for missing SQLite bytes. Standard SQLite downloads are independently opened by Python sqlite3; version/application metadata, six keyed setting rows, score zero/MAX-safe, stable IDs and exact UTC values are verified.
             Scope: index.html SQLite encoder; tests/test_persistence.py. Depends on: T-046.
             Contract/evidence: F2 exact high_scores/settings tables, metadata, bound writes and stable values. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-048 — Validate and restore SQLite through the common candidate path
