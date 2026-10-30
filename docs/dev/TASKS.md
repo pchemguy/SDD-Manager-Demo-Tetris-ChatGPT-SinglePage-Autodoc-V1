@@ -96,8 +96,9 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: tools/package.py; tests/test_browser.py; README.md; RELEASE-NOTES.md; index.html version. Depends on: T-015.
             Contract/evidence: A2 integrated rules/default interval timing, v0.2.0 artifact and baseline regression evidence. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 2.3 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/2/2.3.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 2.4 — Phase review
-        - [ ] T-017 — Review test and report phase 2
+    - [x] Milestone 2.4 — Phase review
+        - [x] T-017 — Review test and report phase 2
+            Verified: `python tools/check.py -q` - 24 passed in 9.09s. Full modern-rule phase checks pass with preserved classic behavior and a v0.2.0 single-file candidate; all three delivery milestones reviewed.
             Depends on: all delivery tasks in phase 2, completion/closure of milestones 2.1, 2.2, 2.3, and their committed review evidence.
             Scope: cross-milestone code review, A2 and prior baseline regressions; configurable settings/dynamic ghost/penetrator remain deferred. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/2/PHASE-REPORT.md, HANDOFF, release v0.2.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
