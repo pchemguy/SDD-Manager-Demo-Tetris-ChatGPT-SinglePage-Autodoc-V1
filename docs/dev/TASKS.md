@@ -52,8 +52,9 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: tests/test_artifact.py; tools/package.py; README.md. Depends on: T-007.
             Contract/evidence: A1/A9 packaged-file execution, no runtime toolchain and explicit browser evidence limits. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 1.3 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/1/1.3.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 1.4 — Phase review
-        - [ ] T-009 — Review test and report phase 1
+    - [x] Milestone 1.4 — Phase review
+        - [x] T-009 — Review test and report phase 1
+            Verified: `python tools/check.py -q` - 18 passed in 8.43s. Full classic phase acceptance passes: 18 rule, real-browser, responsive and direct-file artifact tests. Reviewed all three milestone reports and their corrected findings; task persistence audit and explicit default integration/release publication follow this phase result.
             Depends on: all delivery tasks in phase 1, completion/closure of milestones 1.1, 1.2, 1.3, and their committed review evidence.
             Scope: cross-milestone code review, A1 and A9 for classic play; modern controls, settings, leaderboard and files remain deferred. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/1/PHASE-REPORT.md, HANDOFF, release v0.1.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
