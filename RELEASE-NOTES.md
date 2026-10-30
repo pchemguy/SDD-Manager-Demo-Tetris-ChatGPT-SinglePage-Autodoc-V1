@@ -1,12 +1,12 @@
-# Tetris Atelier v0.1.0
+# Tetris Atelier v0.2.0
 
 ## Changes
 
-Playable classic Tetris with keyboard controls, score/level progression, pause/restart and a centered Canvas board.
+Seven-bag randomization, hold, next preview, wall kicks, ghost projection, hard drop and full-interval grounded locking. Retains the previously delivered capabilities.
 
 ## Installation and use
 
-Download tetris-v0.1.0.html and open it in a JavaScript-enabled browser, or serve that file with a static HTTP(S) host. No developer runtime is required by players. Verify the download with SHA256SUMS.txt. This is a standalone browser artifact, not a signed or store-distributed desktop package.
+Download tetris-v0.2.0.html and open it in a JavaScript-enabled browser, or serve that file with a static HTTP(S) host. No developer runtime is required by players. Verify the download with SHA256SUMS.txt. This is a standalone browser artifact, not a signed or store-distributed desktop package.
 
 ## Verification and limits
 

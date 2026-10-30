@@ -434,7 +434,7 @@ class Game {
   interval(){return Math.max(80,Math.floor(1000*Math.pow(0.8,this.level-1)));}
   draw(){return TYPES[Math.floor(this.rng()*7)%7];}
   start(){this.board=emptyBoard();this.score=0;this.lines=0;this.level=1;this.events=[];this.elapsed=0;this.status='running';this.spawn();}
-  spawn(type=this.draw()){this.generation++;this.elapsed=0;this.p={type,rot:0,x:Math.floor((10-matrixSize(type))/2),y:0};if(!valid(this.board,type,0,this.p.x,0))this.finish();}
+  spawn(type=this.next()){this.generation++;this.elapsed=0;this.p={type,rot:0,x:Math.floor((10-matrixSize(type))/2),y:0};if(!valid(this.board,type,0,this.p.x,0))this.finish();}
   finish(){if(this.status==='over')return;this.status='over';this.events.push({kind:'game-over',score:this.score,generation:this.generation});}
   act(dx=0,dy=0,dr=0){if(this.status!=='running')return false;const next=transform(this.board,this.p,dx,dy,dr);if(next===this.p){if(dy>0)this.lock();return false;}this.p=next;return true;}
   soft(){if(this.act(0,1,0))this.score=addScore(this.score,1);}
@@ -445,7 +445,7 @@ class Game {
 Object.assign(API,{Game,clearRows,COLORS,SHAPES});
 
 /* 3. Canvas and semantic HTML presentation */
-const VERSION='0.1.0';
+const VERSION='0.2.0';
 let ui=null;
 function notice(message){if(ui)document.getElementById('message').textContent=message;}
 function paintCells(ctx,board,piece,ghost=false,scale=30,ox=0,oy=0){
@@ -458,15 +458,22 @@ function paintCells(ctx,board,piece,ghost=false,scale=30,ox=0,oy=0){
 function render(){if(!ui)return;const g=ui.game,c=ui.canvas,ctx=c.getContext('2d');ctx.setTransform(2,0,0,2,0,0);ctx.fillStyle='#101811';ctx.fillRect(0,0,300,600);
   ctx.strokeStyle='#233021';ctx.lineWidth=.6;for(let x=0;x<=10;x++){ctx.beginPath();ctx.moveTo(x*30,0);ctx.lineTo(x*30,600);ctx.stroke();}for(let y=0;y<=20;y++){ctx.beginPath();ctx.moveTo(0,y*30);ctx.lineTo(300,y*30);ctx.stroke();}
   for(let y=0;y<20;y++)for(let x=0;x<10;x++)if(g.board[y][x]){ctx.fillStyle=COLORS[g.board[y][x]];ctx.fillRect(x*30+1,y*30+1,28,28);}
+  if(g.p&&g.landing){const land=g.landing();if(ghostVisible(g,land))paintCells(ctx,g.board,land,true);}
   if(g.p)paintCells(ctx,g.board,g.p);
   document.getElementById('score').textContent=String(g.score);document.getElementById('lines').textContent=String(g.lines);document.getElementById('level').textContent=String(g.level);document.getElementById('state').textContent={idle:'Ready to play',running:'In motion',paused:'Paused',over:'Game over'}[g.status];
   const veil=document.getElementById('veil');veil.hidden=g.status==='running';document.getElementById('veil-title').textContent={idle:'MAKE YOUR MOVE',paused:'TAKE A BREATH',over:'ONE MORE TRY',running:''}[g.status];document.getElementById('veil-note').textContent=g.status==='idle'?'Start a game. Find your rhythm.':g.status==='paused'?'Press Pause/Start or Escape to return.':'Restart for a fresh board.';
+  drawPreview('next-piece',g.queue?.[0]);
+  drawPreview('held-piece',g.held);
   /* RENDER_EXTENSIONS */
 }
 function mountUI(){
  document.getElementById('root').innerHTML=`<header><div class="brand"><div class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><div class="eyebrow">A STUDY IN FALLING BLOCKS</div><h1>TETRIS ATELIER</h1></div></div><span class="version">v${VERSION}</span></header><div class="arena"><div class="rail left" id="left-rail"><section class="panel info" aria-label="Game info and controls"><h2>Game info<br>&amp; controls</h2><div class="stats"><div class="stat"><span class="label">Score</span><strong id="score">0</strong></div><div class="stat small"><span class="label">Level</span><strong id="level">1</strong></div><div class="stat small"><span class="label">Lines</span><strong id="lines">0</strong></div></div><div id="extras"></div><div class="state" id="state">Ready to play</div><div id="toggles" class="toggles"></div><div class="game-buttons"><button id="start" class="primary">Start/Restart</button><button id="pause">Pause/Start</button></div></section></div><div><div class="board-wrap"><canvas id="board" width="600" height="1200" tabindex="0" aria-label="Tetris board. Use keyboard controls."></canvas><div class="veil" id="veil"><strong id="veil-title"></strong><span id="veil-note"></span></div></div><p class="board-note">FIND YOUR RHYTHM.<br>LEAVE ROOM TO GROW.</p></div><div class="rail right" id="right-rail"><section class="panel help" id="help"><h2>At your fingertips</h2><div class="keys" id="keys"><div class="key-row"><span>Move</span><span><kbd>←</kbd> <kbd>→</kbd></span></div><div class="key-row"><span>Soft drop</span><kbd>↓</kbd></div><div class="key-row"><span>Rotate</span><span><kbd>↑</kbd> <kbd>X</kbd></span></div><div class="key-row"><span>Turn left</span><kbd>Z</kbd></div><div class="key-row"><span>Pause</span><kbd>Esc</kbd></div></div><p>Complete a row. Make a little space. Ten lines take you to the next level.</p></section></div></div><div class="message" id="message" role="status" aria-live="polite"></div>`;
  ui={game:new Game(),canvas:document.getElementById('board')};API.ui=ui;API.render=render;
  bindControls();
+document.getElementById('extras').innerHTML='<div class="preview"><figure><figcaption>NEXT</figcaption><canvas id="next-piece" width="104" height="88" aria-label="Next piece"></canvas></figure></div>';
+document.querySelector('.preview').insertAdjacentHTML('afterbegin','<figure><figcaption>HOLD</figcaption><canvas id="held-piece" width="104" height="88" aria-label="Held piece"></canvas></figure>');
+ document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Hold</span><kbd>C / Shift</kbd></div>');
+document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Hard drop</span><kbd>Space</kbd></div>');
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -476,17 +483,50 @@ function installToggle(id,label){const panel=document.getElementById(id);if(!pan
 function bindControls(){
  const g=ui.game;const focus=()=>{ui.last=performance.now();ui.canvas.focus();render();};
  document.getElementById('start').addEventListener('click',()=>{g.start();focus();});
- document.getElementById('pause').addEventListener('click',()=>{if(g.status==='idle'||g.status==='over')g.start();else g.pause();focus();});
+ document.getElementById('pause').addEventListener('click',()=>{advanceUIClock();if(g.status==='idle'||g.status==='over')g.start();else g.pause();focus();});
  ui.canvas.addEventListener('click',()=>ui.canvas.focus());installToggle('help','Controls / help');
  document.addEventListener('keydown',e=>{if(e.target.closest?.('input,select,textarea,button'))return;const handled=['ArrowLeft','ArrowRight','ArrowDown','ArrowUp','KeyX','KeyZ','Escape','Space','KeyC','ShiftLeft','ShiftRight','KeyP'];if(!handled.includes(e.code))return;e.preventDefault();
-   if(e.repeat&&!['ArrowLeft','ArrowRight','ArrowDown'].includes(e.code))return;
+   if(e.repeat&&!['ArrowLeft','ArrowRight','ArrowDown'].includes(e.code))return;advanceUIClock();
    if(e.code==='ArrowLeft')g.act(-1);else if(e.code==='ArrowRight')g.act(1);else if(e.code==='ArrowDown')g.soft();else if(e.code==='ArrowUp'||e.code==='KeyX')g.act(0,0,1);else if(e.code==='KeyZ')g.act(0,0,-1);else if(e.code==='Escape'){g.pause();ui.last=performance.now();}
+   else if(['KeyC','ShiftLeft','ShiftRight'].includes(e.code))g.holdPiece();
+   else if(e.code==='Space')g.hardDrop();
    /* KEY_EXTENSIONS */
    render();
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden&&g.status==='running'){g.pause();render();}ui.last=performance.now();});
  ui.last=performance.now();function frame(now){const dt=now-ui.last;ui.last=now;g.tick(dt);render();requestAnimationFrame(frame);}requestAnimationFrame(frame);
 }
+
+/* T010_SOURCE */
+Game.prototype.draw=function(){if(!this.bag?.length){this.bag=[...TYPES];for(let i=6;i>0;i--){const j=Math.floor(this.rng()*(i+1));[this.bag[i],this.bag[j]]=[this.bag[j],this.bag[i]];}}return this.bag.pop();};
+Game.prototype.next=function(){if(!this.queue?.length)this.queue=[this.draw()];const type=this.queue.shift();this.queue.push(this.draw());return type;};
+const sourceStart=Game.prototype.start;Game.prototype.start=function(){this.bag=[];this.queue=[];sourceStart.call(this);};
+function drawPreview(id,type){const c=document.getElementById(id);if(!c)return;const ctx=c.getContext('2d');ctx.setTransform(2,0,0,2,0,0);ctx.clearRect(0,0,52,44);if(type)paintCells(ctx,null,{type,rot:0,x:0,y:0},false,10,6,7);}
+
+/* T011_HOLD */
+const holdStart=Game.prototype.start;Game.prototype.start=function(){this.held=null;this.holdUsed=false;holdStart.call(this);};
+const holdLock=Game.prototype.lock;Game.prototype.lock=function(){const result=holdLock.call(this);if(result)this.holdUsed=false;return result;};
+Game.prototype.holdPiece=function(){if(this.status!=='running'||this.holdUsed)return false;const type=this.p.type,held=this.held;this.held=type;this.spawn(held||undefined);this.holdUsed=true;return true;};
+/* T012_KICKS */
+const JK={ '01':[[-1,0],[-1,1],[0,-2],[-1,-2]],'10':[[1,0],[1,-1],[0,2],[1,2]],'12':[[1,0],[1,-1],[0,2],[1,2]],'21':[[-1,0],[-1,1],[0,-2],[-1,-2]],'23':[[1,0],[1,1],[0,-2],[1,-2]],'32':[[-1,0],[-1,-1],[0,2],[-1,2]],'30':[[-1,0],[-1,-1],[0,2],[-1,2]],'03':[[1,0],[1,1],[0,-2],[1,-2]]};
+const IK={'01':[[-2,0],[1,0],[-2,-1],[1,2]],'10':[[2,0],[-1,0],[2,1],[-1,-2]],'12':[[-1,0],[2,0],[-1,2],[2,-1]],'21':[[1,0],[-2,0],[1,-2],[-2,1]],'23':[[2,0],[-1,0],[2,1],[-1,-2]],'32':[[-2,0],[1,0],[-2,-1],[1,2]],'30':[[1,0],[-2,0],[1,-2],[-2,1]],'03':[[-1,0],[2,0],[-1,2],[2,-1]]};
+transform=function(board,piece,dx=0,dy=0,dr=0,accept=null){const p={...piece,x:piece.x+dx,y:piece.y+dy,rot:(piece.rot+dr+4)%4};const checks=[[0,0],...(dr&&piece.type!=='O'?(piece.type==='I'?IK:JK)[''+piece.rot+p.rot]||[]:[])];for(const [kx,ky]of checks){const q={...p,x:p.x+kx,y:p.y-ky};if(accept?accept(q):valid(board,q.type,q.rot,q.x,q.y))return q;}return piece;};API.transform=transform;
+/* T013_LANDING */
+function findLanding(board,piece){if(!valid(board,piece.type,piece.rot,piece.x,piece.y))return null;let p={...piece};while(valid(board,p.type,p.rot,p.x,p.y+1))p.y++;return p;}
+Game.prototype.landing=function(){return this.p?findLanding(this.board,this.p):null;};
+function ghostVisible(g,landing){return !!landing;}
+Object.assign(API,{findLanding});
+/* T014_DROP */
+Game.prototype.hardDrop=function(){if(this.status!=='running')return;const land=this.landing();if(!land)return;this.score=addScore(this.score,2*(land.y-this.p.y));this.p=land;this.act(0,1,0);};
+/* T015_CLOCK */
+Game.prototype.canPlace=function(p){return valid(this.board,p.type,p.rot,p.x,p.y);};
+Game.prototype.syncGround=function(){const land=this.landing();const grounded=!!land&&land.y===this.p.y;if(this.config?.lockPolicy==='failed'||!grounded)this.deadline=null;else if(this.deadline==null)this.deadline=this.clock+this.interval();};
+const clockSpawn=Game.prototype.spawn;Game.prototype.spawn=function(type){this.deadline=null;clockSpawn.call(this,type);this.gravityAt=this.clock+this.interval();this.lastGravity=this.clock;if(this.status==='running')this.syncGround();};
+const clockStart=Game.prototype.start;Game.prototype.start=function(){this.clock=0;this.deadline=null;this.config??={lockPolicy:'interval',hardDropLock:'general'};clockStart.call(this);};
+Game.prototype.act=function(dx=0,dy=0,dr=0){if(this.status!=='running')return false;const next=transform(this.board,this.p,dx,dy,dr,q=>this.canPlace(q));if(next===this.p){if(dy>0&&this.config.lockPolicy==='failed')this.lock();else this.syncGround();return false;}this.p=next;this.syncGround();return true;};
+Game.prototype.tick=function(ms){if(this.status!=='running'||!Number.isFinite(ms)||ms<0)return;const target=this.clock+ms;this.syncGround();while(this.status==='running'){const due=Math.min(this.gravityAt,this.deadline??Infinity);if(due>target)break;this.clock=due;if(this.deadline!=null&&this.deadline<=due)this.lock();else{this.gravityAt=this.clock+this.interval();this.lastGravity=this.clock;this.act(0,1,0);}}this.clock=target;this.elapsed=this.clock-this.lastGravity;};
+Game.prototype.hardDrop=function(){if(this.status!=='running')return;const land=this.landing();if(!land)return;this.score=addScore(this.score,2*(land.y-this.p.y));this.p=land;this.syncGround();if(this.config.hardDropLock==='immediate'||this.config.lockPolicy==='failed')this.lock();};
+function advanceUIClock(){const now=performance.now();ui.game.tick(now-ui.last);ui.last=now;}
 
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;

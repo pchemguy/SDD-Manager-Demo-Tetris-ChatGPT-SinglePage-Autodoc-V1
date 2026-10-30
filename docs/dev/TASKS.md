@@ -62,35 +62,43 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 2 — Modern rules
 
 - [ ] Phase 2 — Modern rules
-    - [ ] Milestone 2.1 — Piece source and hold
-        - [ ] T-010 — Add seven-bag source and next preview
+    - [x] Milestone 2.1 — Piece source and hold
+        - [x] T-010 — Add seven-bag source and next preview
+            Verified: `python tools/check.py -q` - 19 passed in 8.51s. Observed RED for seven-bag permutations and queued preview. Source now shuffles complete bags and preview consumes the same queue as spawning; restart replaces the source state.
             Scope: index.html piece source and preview; tests/test_rules.py. Depends on: T-009.
             Contract/evidence: G2 deterministic bag permutations, preview order and queue retention. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-011 — Add hold and once-per-turn lifecycle
+        - [x] T-011 — Add hold and once-per-turn lifecycle
+            Verified: `python tools/check.py -q` - 20 passed in 9.65s. Observed RED for absent hold behavior; verified empty hold, next-source consumption, repeated-hold rejection and post-lock swap without consuming next preview.
             Scope: index.html reducer/input/hold view; tests/test_rules.py; tests/test_browser.py. Depends on: T-010.
             Contract/evidence: G2 empty/swap hold, spawn reset, blocked hold game over and turn limits. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 2.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/2/2.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 2.2 — Kicks and landing
-        - [ ] T-012 — Add orientation-specific wall kicks
+    - [x] Milestone 2.2 — Kicks and landing
+        - [x] T-012 — Add orientation-specific wall kicks
+            Verified: `python tools/check.py -q` - 21 passed in 9.66s. Observed RED at wall/floor rotation fixtures. Ordered transition-specific J/L/S/T/Z and I kicks now select valid offsets; O remains untranslated and failed changes retain the pose.
             Scope: index.html rotation tables/rules; tests/test_rules.py. Depends on: T-011.
             Contract/evidence: G2 all transition tables, first-valid offset and unchanged failure. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-013 — Share landing between ghost and drop commands
+        - [x] T-013 — Share landing between ghost and drop commands
+            Verified: `python tools/check.py -q` - 22 passed in 9.05s. Observed RED for missing landing; contiguous normal landing stops above occupied cells and shares its pose directly with the ghost renderer. Bottom and obstruction fixtures pass.
             Scope: index.html landing/view; tests/test_rules.py; tests/test_browser.py. Depends on: T-012.
             Contract/evidence: G2 normal contiguous landing and visible ghost projection. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-014 — Add keyboard hard drop and scoring
+        - [x] T-014 — Add keyboard hard drop and scoring
+            Verified: `python tools/check.py -q` - 23 passed in 9.53s. Observed RED for absent hard drop; shared landing, terminal failed-down locking and two-points-per-row scoring pass. Space dispatch uses the same reducer path.
             Scope: index.html input/reducer; tests/test_rules.py; tests/test_browser.py. Depends on: T-013.
             Contract/evidence: G2 Space dispatch, drop distance scoring and ghost/drop parity. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 2.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/2/2.2.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 2.3 — Grounded timing and distribution
-        - [ ] T-015 — Implement full-interval and immediate-drop timing policies
+    - [x] Milestone 2.3 — Grounded timing and distribution
+        - [x] T-015 — Implement full-interval and immediate-drop timing policies
+            Verified: `python tools/check.py -q` - 24 passed in 10.39s. Observed RED for missing retained grounding deadline/lift reset and repeated drop timing. Full-interval default locks once after one active interval, lateral motion does not extend it, lifting clears it and repeat hard drop earns no extra score or delay.
             Scope: index.html active-play clock/reducer; tests/test_rules.py. Depends on: T-014.
             Contract/evidence: G2 retained grounding deadline, lift reset, pause, stale timers and terminal-drop policy. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-016 — Package and verify the modern-rule release
+        - [x] T-016 — Package and verify the modern-rule release
+            Verified: `python tools/check.py -q` - 24 passed in 9.87s. Prepared and verified v0.2.0 candidate: seven-bag/hold/preview/kicks/ghost/hard-drop and interval-lock behavior plus all prior packaged-file/browser regressions.
             Scope: tools/package.py; tests/test_browser.py; README.md; RELEASE-NOTES.md; index.html version. Depends on: T-015.
             Contract/evidence: A2 integrated rules/default interval timing, v0.2.0 artifact and baseline regression evidence. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 2.3 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/2/2.3.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 2.4 — Phase review
-        - [ ] T-017 — Review test and report phase 2
+    - [x] Milestone 2.4 — Phase review
+        - [x] T-017 — Review test and report phase 2
+            Verified: `python tools/check.py -q` - 24 passed in 9.09s. Full modern-rule phase checks pass with preserved classic behavior and a v0.2.0 single-file candidate; all three delivery milestones reviewed.
             Depends on: all delivery tasks in phase 2, completion/closure of milestones 2.1, 2.2, 2.3, and their committed review evidence.
             Scope: cross-milestone code review, A2 and prior baseline regressions; configurable settings/dynamic ghost/penetrator remain deferred. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/2/PHASE-REPORT.md, HANDOFF, release v0.2.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
