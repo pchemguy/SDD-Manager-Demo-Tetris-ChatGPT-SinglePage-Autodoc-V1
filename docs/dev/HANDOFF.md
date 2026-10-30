@@ -1,5 +1,9 @@
 # Project handoff
 
-Phase 1 completed, verified and explicitly integrated into main. Release [v0.1.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V1/releases/tag/v0.1.0) is published at source a1f3aaa5cf8422e6838f917654bbf8d76232a308, with verified uploaded artifact metadata/digests and download outcomes in the phase report. Current default branch main contains the completed phase outcome.
+Checkpoint: milestone 2.1 verified by T-011; publication and hosted closure follow this commit.
 
-User-selected range remains T-001 through T-051 with all requested integrations/releases. [TASKS](TASKS.md) owns completion; [phase report](reports/phases/1/PHASE-REPORT.md) owns checks/limits. Next: activate phase 2 only after this follow-up is published. No renewed human checkpoint within the selected range. Published source is pinned; do not move tags or erase historical reports. Firefox uses the documented local-only sandbox override; native Windows/OS-window behavior remains unverified.
+Selected scope: user-authorized full T-001 through T-051, all eight releases. Current branch phase/2-modern-rules; creation parent/integration target main; phase branch-off fd372e5e6891b20adfc8bde854e33740ae11b560. Package QC passed and preparation is integrated. [TASKS](TASKS.md) owns task progress; [report](reports/phases/2/2.1.md) owns this boundary evidence. No further human checkpoint within the selected range.
+
+Outcome: Observed RED for absent hold behavior; verified empty hold, next-source consumption, repeated-hold rejection and post-lock swap without consuming next preview.
+
+Next: publish/read back this task and close its issue/milestone. Continue the next selected task after required closures. Retain future tasks and prior reports; do not infer external effects from this snapshot.

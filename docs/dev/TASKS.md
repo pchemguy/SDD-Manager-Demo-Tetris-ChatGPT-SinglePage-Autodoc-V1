@@ -62,12 +62,13 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 2 — Modern rules
 
 - [ ] Phase 2 — Modern rules
-    - [ ] Milestone 2.1 — Piece source and hold
+    - [x] Milestone 2.1 — Piece source and hold
         - [x] T-010 — Add seven-bag source and next preview
             Verified: `python tools/check.py -q` - 19 passed in 8.51s. Observed RED for seven-bag permutations and queued preview. Source now shuffles complete bags and preview consumes the same queue as spawning; restart replaces the source state.
             Scope: index.html piece source and preview; tests/test_rules.py. Depends on: T-009.
             Contract/evidence: G2 deterministic bag permutations, preview order and queue retention. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-011 — Add hold and once-per-turn lifecycle
+        - [x] T-011 — Add hold and once-per-turn lifecycle
+            Verified: `python tools/check.py -q` - 20 passed in 9.65s. Observed RED for absent hold behavior; verified empty hold, next-source consumption, repeated-hold rejection and post-lock swap without consuming next preview.
             Scope: index.html reducer/input/hold view; tests/test_rules.py; tests/test_browser.py. Depends on: T-010.
             Contract/evidence: G2 empty/swap hold, spawn reset, blocked hold game over and turn limits. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 2.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/2/2.1.md and HANDOFF with this task's initial completion.

@@ -18,3 +18,7 @@ def test_pause_freezes_clock_and_restart_replaces_game(js):
 def test_seven_bag_and_preview_order(js):
     assert js("(()=>{const g=new Game(()=>0.5);const a=Array.from({length:14},()=>g.draw());return [new Set(a.slice(0,7)).size,new Set(a.slice(7)).size]})()") == [7,7]
     assert js("typeof Game.prototype.next==='undefined'?null:(()=>{const g=new Game(()=>0.5);g.start();const next=g.queue[0];g.p.y=16;g.lock();return [g.p.type===next,g.queue.length]})()") == [True,1]
+
+
+def test_hold_swap_and_turn_limit(js):
+    assert js("typeof Game.prototype.holdPiece==='undefined'?null:(()=>{const g=new Game(()=>0.5);g.start();const a=g.p.type,b=g.queue[0];g.holdPiece();const first=[g.held===a,g.p.type===b];g.holdPiece();const limited=g.held===a;g.p.y=16;g.lock();const q=g.queue[0];g.holdPiece();return [...first,limited,g.p.type===a,g.queue[0]===q]})()") == [True,True,True,True,True]

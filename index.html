@@ -462,6 +462,7 @@ function render(){if(!ui)return;const g=ui.game,c=ui.canvas,ctx=c.getContext('2d
   document.getElementById('score').textContent=String(g.score);document.getElementById('lines').textContent=String(g.lines);document.getElementById('level').textContent=String(g.level);document.getElementById('state').textContent={idle:'Ready to play',running:'In motion',paused:'Paused',over:'Game over'}[g.status];
   const veil=document.getElementById('veil');veil.hidden=g.status==='running';document.getElementById('veil-title').textContent={idle:'MAKE YOUR MOVE',paused:'TAKE A BREATH',over:'ONE MORE TRY',running:''}[g.status];document.getElementById('veil-note').textContent=g.status==='idle'?'Start a game. Find your rhythm.':g.status==='paused'?'Press Pause/Start or Escape to return.':'Restart for a fresh board.';
   drawPreview('next-piece',g.queue?.[0]);
+  drawPreview('held-piece',g.held);
   /* RENDER_EXTENSIONS */
 }
 function mountUI(){
@@ -469,6 +470,8 @@ function mountUI(){
  ui={game:new Game(),canvas:document.getElementById('board')};API.ui=ui;API.render=render;
  bindControls();
 document.getElementById('extras').innerHTML='<div class="preview"><figure><figcaption>NEXT</figcaption><canvas id="next-piece" width="104" height="88" aria-label="Next piece"></canvas></figure></div>';
+document.querySelector('.preview').insertAdjacentHTML('afterbegin','<figure><figcaption>HOLD</figcaption><canvas id="held-piece" width="104" height="88" aria-label="Held piece"></canvas></figure>');
+ document.getElementById('keys').insertAdjacentHTML('beforeend','<div class="key-row"><span>Hold</span><kbd>C / Shift</kbd></div>');
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -483,6 +486,7 @@ function bindControls(){
  document.addEventListener('keydown',e=>{if(e.target.closest?.('input,select,textarea,button'))return;const handled=['ArrowLeft','ArrowRight','ArrowDown','ArrowUp','KeyX','KeyZ','Escape','Space','KeyC','ShiftLeft','ShiftRight','KeyP'];if(!handled.includes(e.code))return;e.preventDefault();
    if(e.repeat&&!['ArrowLeft','ArrowRight','ArrowDown'].includes(e.code))return;
    if(e.code==='ArrowLeft')g.act(-1);else if(e.code==='ArrowRight')g.act(1);else if(e.code==='ArrowDown')g.soft();else if(e.code==='ArrowUp'||e.code==='KeyX')g.act(0,0,1);else if(e.code==='KeyZ')g.act(0,0,-1);else if(e.code==='Escape'){g.pause();ui.last=performance.now();}
+   else if(['KeyC','ShiftLeft','ShiftRight'].includes(e.code))g.holdPiece();
    /* KEY_EXTENSIONS */
    render();
  });
@@ -496,6 +500,10 @@ Game.prototype.next=function(){if(!this.queue?.length)this.queue=[this.draw()];c
 const sourceStart=Game.prototype.start;Game.prototype.start=function(){this.bag=[];this.queue=[];sourceStart.call(this);};
 function drawPreview(id,type){const c=document.getElementById(id);if(!c)return;const ctx=c.getContext('2d');ctx.setTransform(2,0,0,2,0,0);ctx.clearRect(0,0,52,44);if(type)paintCells(ctx,null,{type,rot:0,x:0,y:0},false,10,6,7);}
 
+/* T011_HOLD */
+const holdStart=Game.prototype.start;Game.prototype.start=function(){this.held=null;this.holdUsed=false;holdStart.call(this);};
+const holdLock=Game.prototype.lock;Game.prototype.lock=function(){const result=holdLock.call(this);if(result)this.holdUsed=false;return result;};
+Game.prototype.holdPiece=function(){if(this.status!=='running'||this.holdUsed)return false;const type=this.p.type,held=this.held;this.held=type;this.spawn(held||undefined);this.holdUsed=true;return true;};
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 if(typeof document!=='undefined')mountUI();
