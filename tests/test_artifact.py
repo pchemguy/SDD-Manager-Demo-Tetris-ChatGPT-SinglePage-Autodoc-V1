@@ -16,3 +16,8 @@ def test_reproducible_single_file_artifact():
     assert hashlib.sha256(source).hexdigest() in (artifact.parent/'SHA256SUMS.txt').read_text()
     assert b'<style id="styles">' in source and b'<script id="app">' in source
     assert not re.search(rb'<(?:script|img)[^>]+src=',source)
+
+
+def test_embedded_and_distributed_schema_agree(js):
+    import json
+    assert js('EXPORT_SCHEMA')==json.loads((ROOT/'schema/session.schema.json').read_text())

@@ -28,3 +28,15 @@ def test_query_update_preserves_unrelated_values(js):
 def test_session_ranking_and_stable_completion(js):
     assert js("typeof SessionResults==='undefined'?null:(()=>{const s=new SessionResults(()=> 'stable',()=> '2026-10-30T00:00:00.000Z');s.complete({generation:1,score:0});s.complete({generation:1,score:999});s.complete({generation:2,score:500});return [s.records.length,s.records[0].score,s.records[1].id]})()") == [2,500,'stable']
     assert js("typeof rankResults==='undefined'?null:rankResults(Array.from({length:12},(_,i)=>({id:'g'+i,score:i,timestamp:'2026-10-30T00:00:00.000Z'}))).map(r=>r.score)") == [11,10,9,8,7,6,5,4,3,2]
+
+
+def test_complete_export_validation(js):
+    assert js("typeof validateExport==='undefined'?null:(()=>{const v=validateExport(({formatVersion:1,results:[{id:'a',score:0,timestamp:'2026-10-30T00:00:00.000Z'}],settings:{...DEFAULTS}}));return [v.formatVersion,v.results[0].score,Object.keys(v.settings).length]})()") == [1,0,6]
+
+
+def test_export_rejects_complete_invalid_candidates(js):
+    assert js("(()=>{const good=()=>({formatVersion:1,results:[{id:'a',score:0,timestamp:'2026-10-30T00:00:00.000Z'}],settings:{...DEFAULTS}});return [v=>v.formatVersion=2,v=>v.extra=1,v=>v.results[0].score=-1,v=>v.results[0].score=1.5,v=>v.results[0].score=9007199254740992,v=>v.results[0].timestamp='2025-02-29T00:00:00.000Z',v=>v.results[0].timestamp='2026-10-30T00:00:00Z',v=>v.results.push({...v.results[0]}),v=>delete v.settings.hold,v=>v.settings.hold='on',v=>v.settings.unknown=true].every(change=>{const v=good();change(v);try{validateExport(v);return false}catch{return true}})})()") is True
+
+
+def test_duplicate_members_and_exact_json_numbers(js):
+    assert js('(()=>{const base=JSON.stringify({formatVersion:1,results:[{id:\'a\',score:0,timestamp:\'2026-10-30T00:00:00.000Z\'}],settings:{...DEFAULTS}});const bad=[base.replace(\'\\"formatVersion\\":1\',\'\\"formatVersion\\":1,\\"formatVersion\\":1\'),base.replace(\'\\"score\\":0\',\'\\"score\\":9007199254740991.1\'),base.replace(\'\\"score\\":0\',\'\\"score\\":1e-400\')];return bad.every(text=>{try{parseExportJSON(text);return false}catch{return true}})})()') is True
