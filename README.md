@@ -12,7 +12,7 @@ Developer tools are separate from the downloaded page. Install the exact tools i
 
 Browser checks use project-local managed Chromium shell revision 1248 (156.0.8078.4) and Firefox revision 1555 (157.0), matching Playwright 1.64.1. This execution reused compatible dedicated cached assets by copying them into .browser-runtime, not personal browser profiles. `tools/browser_probe.py` verifies two isolated rendering/input cycles per browser. On this Linux host Firefox default content processes failed with `/proc/self/uid_map: EPERM`; the process-local `MOZ_DISABLE_CONTENT_SANDBOX=1` override passed for trusted local tests. The untracked .test-artifacts/provisioning.json records whether the current environment needs that override. Re-evaluate on another host; no OS security policy is changed.
 
-## Release candidate
+## Current release
 
 Version 1.0.0. Validated versioned JSON/SQLite save and restore of session results and all six settings; complete-file validation precedes effects.
 
@@ -31,3 +31,5 @@ SQLite alone loads sql.js 1.15.0 from the pinned jsDelivr single-file build. Its
 Developer setup installs managed browser assets if absent, probes two fresh contexts per engine, and verifies the pinned SQL asset. This host reused compatible managed browser assets; a clean browser download and native Windows execution were not exercised here. The Firefox override described above is limited to child processes and diagnosed namespace failures.
 
 Stable latest downloads: [game HTML](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V1/releases/latest/download/tetris.html), [JSON Schema](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V1/releases/latest/download/session.schema.json), [checksums](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V1/releases/latest/download/SHA256SUMS). Version identity remains in the tag and embedded page metadata.
+
+Published release: [v1.0.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V1/releases/tag/v1.0.0).

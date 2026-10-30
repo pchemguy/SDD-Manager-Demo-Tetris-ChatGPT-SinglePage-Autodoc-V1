@@ -34,3 +34,7 @@ Checks ran on Linux using Playwright 1.64.1, managed Chromium headless shell 156
 SQLite first use needs the pinned sql.js CDN asset. Its actual response, CORS and SHA-384 integrity were verified. Browser tests route those exact fetched bytes to the real engine; direct browser internet/CDN reachability is not claimed. JSON/play do not need the library. Cookies are supported under HTTP(S); direct-file cookie rejection is reported without blocking play. Session results persist only through manual files. The maintainer owns future browser/CDN compatibility checks; no unresolved implementation blocker remains.
 
 Final packaging uses stable version-free filenames tetris.html, session.schema.json and SHA256SUMS. The earlier temporary network denial was resolved on retry; issue #57 completed closure and milestone #24 closure were independently read back before resumed execution. The isolated candidate branch was retained for preservation and was not merged as a substitute for the required task commits.
+
+## Final publication outcome
+
+Full scope is published as [v1.0.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V1/releases/tag/v1.0.0) at immutable source 0609a58c00619bdf50cf4df4b65dd14729ce2315. All eight phase release outcomes are recorded. The final uploaded HTML, JSON Schema and checksum inventory matches verified local files; public download results are recorded in the phase report. Default branch includes this publication evidence after exact remote readback.

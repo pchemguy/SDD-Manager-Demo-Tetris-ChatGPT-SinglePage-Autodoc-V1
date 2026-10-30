@@ -1,9 +1,5 @@
 # Project handoff
 
-Checkpoint: phase 8 verified by T-051; publication and hosted closure follow this commit.
+Phase 8 completed, verified and explicitly integrated into main. Release [v1.0.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V1/releases/tag/v1.0.0) is published at source 0609a58c00619bdf50cf4df4b65dd14729ce2315, with verified uploaded artifact metadata/digests and download outcomes in the phase report. Current default branch main contains the completed phase outcome.
 
-Selected scope: user-authorized full T-001 through T-051, all eight releases. Current branch phase/8-manual-file-persistence; creation parent/integration target main; phase branch-off 3eb04b3188f33e5beb6e97c91a63f3b379638c7f. Package QC passed and preparation is integrated. [TASKS](TASKS.md) owns task progress; [report](reports/phases/8/PHASE-REPORT.md) owns this boundary evidence. No further human checkpoint within the selected range.
-
-Outcome: All requested functionality is verified. Full browser/rule/artifact/file regressions pass, including actual production-mode HTML JSON transfer offline. Independent gameplay and persistence reviews found no blockers; lifecycle/help findings were fixed after observed RED tests. Desktop/mobile visual QC retained centered board and visible information.
-
-Next: publish/read back this task and close its issue/milestone. Verify/integrate/publish the complete phase and release before activating the next phase. Retain future tasks and prior reports; do not infer external effects from this snapshot.
+User-selected range remains T-001 through T-051 with all requested integrations/releases. [TASKS](TASKS.md) owns completion; [phase report](reports/phases/8/PHASE-REPORT.md) owns checks/limits. Next: full requested scope complete; report final verified artifacts and limits. No renewed human checkpoint within the selected range. Published source is pinned; do not move tags or erase historical reports. Firefox uses the documented local-only sandbox override; native Windows/OS-window behavior remains unverified.

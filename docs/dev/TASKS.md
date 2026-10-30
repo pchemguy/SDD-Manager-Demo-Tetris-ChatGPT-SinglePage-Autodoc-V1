@@ -251,7 +251,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 
 ## Phase 8 — Manual file persistence
 
-- [ ] Phase 8 — Manual file persistence
+- [x] Phase 8 — Manual file persistence
     - [x] Milestone 8.1 — Validated JSON transfer
         - [x] T-043 — Define the export schema and complete canonical validator
             Verified: `python tools/check.py -q` - 57 passed in 23.45s. Observed RED for missing complete export validation. Version/schema/types/all setting values, unique IDs, safe scores and real canonical UTC timestamps are enforced; duplicate JSON members and precision-losing numeric literals are rejected. Supplied schema is extracted from embedded runtime definitions.

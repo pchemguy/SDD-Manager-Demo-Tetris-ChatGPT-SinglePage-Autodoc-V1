@@ -15,3 +15,11 @@ No unresolved blocking finding in this boundary. Browser/native evidence is limi
 ## TODO
 
 None.
+
+## Published integration and release
+
+Source 0609a58c00619bdf50cf4df4b65dd14729ce2315; release [v1.0.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V1/releases/tag/v1.0.0). Explicit main merge verified and published, tag matches the release commit on default first-parent history. Uploaded inventory sizes/digests and published notes/latest selection were read back.
+
+- session.schema.json: downloaded bytes match SHA-256.
+- SHA256SUMS: downloaded bytes match SHA-256.
+- tetris.html: downloaded bytes match SHA-256.
