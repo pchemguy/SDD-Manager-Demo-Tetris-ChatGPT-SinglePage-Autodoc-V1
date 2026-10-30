@@ -125,7 +125,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 
 ## Phase 4 — Penetrator mode
 
-- [ ] Phase 4 — Penetrator mode
+- [x] Phase 4 — Penetrator mode
     - [x] Milestone 4.1 — Penetrator gameplay
         - [x] T-021 — Add bonus accounting and activation state
             Verified: `python tools/check.py -q` - 28 passed in 10.33s. Observed RED for missing bonus activation. Four-line award, cap three, one immediate spend and repeated-activation rejection pass; restart resets bonuses.
