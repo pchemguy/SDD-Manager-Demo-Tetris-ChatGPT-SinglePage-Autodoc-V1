@@ -165,7 +165,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 34 passed in 12.47s. Observed RED for absent complete configuration contract. Six canonical key/value domains now supply strict normalization and per-game defaults; wrong Boolean spelling/type is rejected without coercion.
             Scope: index.html config service; tests/test_persistence.py. Depends on: T-026.
             Contract/evidence: C1 strict types/enums and a complete normalized settings object. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-028 — Build the six labeled settings controls
+        - [x] T-028 — Build the six labeled settings controls
+            Verified: `python tools/check.py -q` - 36 passed in 14.27s. Observed RED for absent selects, then identified option text in accessible labels. Added explicit canonical aria-labels; both browsers now locate all six controls by exact visible setting names and verify defaults.
             Scope: index.html settings HTML/view; tests/test_browser.py. Depends on: T-027.
             Contract/evidence: C1 all six choices, defaults and disabled-capability display without extra gameplay actions. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-029 — Apply settings through one live controller update

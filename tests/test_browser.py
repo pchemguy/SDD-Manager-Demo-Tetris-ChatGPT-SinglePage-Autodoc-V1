@@ -97,3 +97,10 @@ def test_penetrator_key_indicator_and_hold(page):
     assert page.locator('#bonuses').text_content().count('⚡') == 1
     page.keyboard.press('c')
     assert page.evaluate('Tetris.ui.game.held') is None
+
+
+def test_six_labeled_settings(page):
+    assert page.locator('#settings select').count() == 6
+    assert page.get_by_label('Ghost piece',exact=True).input_value() == 'show'
+    assert page.get_by_label('General locking',exact=True).input_value() == 'interval'
+    assert page.get_by_label('Hold piece',exact=True).input_value() == 'true'
