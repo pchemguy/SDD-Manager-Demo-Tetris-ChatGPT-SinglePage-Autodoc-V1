@@ -19,7 +19,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: index.html rule definitions; tests/test_rules.py. Depends on: accepted/reviewed preparation and eligible phase-1 activation.
             Contract/evidence: G1 bounds, spawn coordinates, four-cell shapes, legal move/rotate and collision rejection. Include relevant checks, fixes and changed usage documentation.
             Establish the pinned pytest/source-extraction harness and developer instructions as part of verifying these rules; do not install an application runtime dependency.
-        - [ ] T-002 — Implement gravity locking line clearing and scoring
+        - [x] T-002 — Implement gravity locking line clearing and scoring
+            Verified: `python tools/check.py -q` - 2 passed in 0.59s. Observed RED for missing game scoring result; four-line clear, prior-level scoring, gravity failed-down lock and once-only blocked-spawn game over now pass.
             Scope: index.html reducer/clock; tests/test_rules.py. Depends on: T-001.
             Contract/evidence: G1 failed-attempt locking, simultaneous clears, score/level progression and game-over once. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-003 — Verify baseline game lifecycle invariants

@@ -15,6 +15,24 @@ function cells(type,rot=0,x=0,y=0){
 function valid(board,type,rot,x,y){return cells(type,rot,x,y).every(([a,b])=>a>=0&&a<10&&b>=0&&b<20&&!board[b][a]);}
 function transform(board,piece,dx=0,dy=0,dr=0){const p={...piece,x:piece.x+dx,y:piece.y+dy,rot:(piece.rot+dr+4)%4};return valid(board,p.type,p.rot,p.x,p.y)?p:piece;}
 Object.assign(API,{emptyBoard,cells,valid,transform});
+const TYPES=Object.keys(SHAPES);
+const addScore=(a,b)=>Math.min(Number.MAX_SAFE_INTEGER,a+b);
+function clearRows(board){const keep=board.filter(row=>row.some(v=>!v));const count=20-keep.length;return {count,board:[...Array.from({length:count},()=>Array(10).fill(0)),...keep.map(r=>r.slice())]};}
+class Game {
+  constructor(rng=Math.random){this.rng=rng;this.board=emptyBoard();this.status='idle';this.score=0;this.lines=0;this.level=1;this.p=null;this.generation=0;this.events=[];this.elapsed=0;}
+  interval(){return Math.max(80,Math.floor(1000*Math.pow(0.8,this.level-1)));}
+  draw(){return TYPES[Math.floor(this.rng()*7)%7];}
+  start(){this.board=emptyBoard();this.score=0;this.lines=0;this.level=1;this.events=[];this.elapsed=0;this.status='running';this.spawn();}
+  spawn(type=this.draw()){this.generation++;this.elapsed=0;this.p={type,rot:0,x:Math.floor((10-matrixSize(type))/2),y:0};if(!valid(this.board,type,0,this.p.x,0))this.finish();}
+  finish(){if(this.status==='over')return;this.status='over';this.events.push({kind:'game-over',score:this.score,generation:this.generation});}
+  act(dx=0,dy=0,dr=0){if(this.status!=='running')return false;const next=transform(this.board,this.p,dx,dy,dr);if(next===this.p){if(dy>0)this.lock();return false;}this.p=next;return true;}
+  soft(){if(this.act(0,1,0))this.score=addScore(this.score,1);}
+  lock(){if(this.status!=='running'||!valid(this.board,this.p.type,this.p.rot,this.p.x,this.p.y))return false;for(const [x,y] of cells(this.p.type,this.p.rot,this.p.x,this.p.y))this.board[y][x]=this.p.type;
+    const cleared=clearRows(this.board);this.board=cleared.board;this.score=addScore(this.score,[0,100,300,500,800][cleared.count]*this.level);this.lines+=cleared.count;this.level=1+Math.floor(this.lines/10);this.spawn();return true;}
+  tick(ms){if(this.status!=='running'||!Number.isFinite(ms)||ms<0)return;this.elapsed+=ms;while(this.status==='running'&&this.elapsed>=this.interval()){this.elapsed-=this.interval();this.act(0,1,0);}}
+}
+Object.assign(API,{Game,clearRows,COLORS,SHAPES});
+
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;
 /* UI_START */
