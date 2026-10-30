@@ -13,39 +13,48 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 1 — Classic baseline
 
 - [ ] Phase 1 — Classic baseline
-    - [ ] Milestone 1.1 — Classic rules
-        - [ ] T-001 — Implement board geometry and legal piece transitions
+    - [x] Milestone 1.1 — Classic rules
+        - [x] T-001 — Implement board geometry and legal piece transitions
+            Verified: `python tools/check.py -q` - 1 passed in 0.36s. Observed RED: valid empty-board T placement returned false; geometry implementation makes collision/bounds/translation scenarios pass. Pinned local pytest and source-extraction Node VM harness verified.
             Scope: index.html rule definitions; tests/test_rules.py. Depends on: accepted/reviewed preparation and eligible phase-1 activation.
             Contract/evidence: G1 bounds, spawn coordinates, four-cell shapes, legal move/rotate and collision rejection. Include relevant checks, fixes and changed usage documentation.
             Establish the pinned pytest/source-extraction harness and developer instructions as part of verifying these rules; do not install an application runtime dependency.
-        - [ ] T-002 — Implement gravity locking line clearing and scoring
+        - [x] T-002 — Implement gravity locking line clearing and scoring
+            Verified: `python tools/check.py -q` - 2 passed in 0.59s. Observed RED for missing game scoring result; four-line clear, prior-level scoring, gravity failed-down lock and once-only blocked-spawn game over now pass.
             Scope: index.html reducer/clock; tests/test_rules.py. Depends on: T-001.
             Contract/evidence: G1 failed-attempt locking, simultaneous clears, score/level progression and game-over once. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-003 — Verify baseline game lifecycle invariants
+        - [x] T-003 — Verify baseline game lifecycle invariants
+            Verified: `python tools/check.py -q` - 3 passed in 0.66s. Observed RED: a paused clock advanced five rows; pause/resume now freezes elapsed time and restart resets score lines level and pose.
             Scope: index.html rule integration; tests/test_rules.py. Depends on: T-002.
             Contract/evidence: G1 injected random/clock seams, start/pause/resume/restart and stale-generation protection. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 1.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/1/1.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 1.2 — Playable interface
-        - [ ] T-004 — Build the centered board and information view
+    - [x] Milestone 1.2 — Playable interface
+        - [x] T-004 — Build the centered board and information view
+            Verified: `python tools/check.py -q` - 5 passed in 3.59s. Observed RED in both real browsers because the board was absent; centered Canvas and information now render with opaque pixels, correct initial statistics and exact two gameplay buttons. Chromium shell and Firefox local-environment override passed representative provisioning cycles.
             Scope: index.html embedded CSS/Canvas/HTML; tests/test_browser.py. Depends on: T-003.
             Contract/evidence: U1 board/info placement, visible information and Canvas occupied cells. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-005 — Connect keyboard and the two gameplay buttons
+        - [x] T-005 — Connect keyboard and the two gameplay buttons
+            Verified: `python tools/check.py -q` - 7 passed in 4.42s. Observed RED: Start left pages idle. Actual mouse/keyboard dispatch, movement, pause freeze, resume and restart now pass. Corrected the test to inspect status text content independently of CSS uppercase presentation; its behavioral state assertions remain intact.
             Scope: index.html controller/input/help; tests/test_browser.py. Depends on: T-004.
             Contract/evidence: G1/U1 keyboard-only moves, exact button order/labels, focus handling and pause. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-006 — Exercise playable classic scenarios in Chromium and Firefox
+        - [x] T-006 — Exercise playable classic scenarios in Chromium and Firefox
+            Verified: `python tools/check.py -q` - 15 passed in 8.07s. Real Chromium/Firefox keyboard, lifecycle, game-over, opaque Canvas and 360/768/1440 centering scenarios pass. Screenshot review found clipped gameplay buttons; added failing bounds checks and fixed intrinsic grid minimums, preserving exact labels.
             Scope: tests/test_browser.py; project test configuration; index.html fixes. Depends on: T-005.
             Contract/evidence: A1/A9 actual HTML gameplay, Canvas, pause/restart, game over and responsive required panels. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 1.2 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/1/1.2.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 1.3 — Baseline distribution
-        - [ ] T-007 — Prepare single-file release packaging and instructions
+    - [x] Milestone 1.3 — Baseline distribution
+        - [x] T-007 — Prepare single-file release packaging and instructions
+            Verified: `python tools/check.py -q` - 16 passed in 7.46s. Observed RED for missing deployable artifact; reproducible packaging now emits an exact-source standalone HTML plus SHA256SUMS. Added candidate installation/control instructions, versioned notes and readable embedded CSS/section organization.
             Scope: tools/package.py; README.md; RELEASE-NOTES.md; index.html version. Depends on: T-006.
             Contract/evidence: D1 one embedded-code HTML, v0.1.0 metadata, direct-file/static hosting instructions and checksums. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-008 — Verify the deployable baseline artifact
+        - [x] T-008 — Verify the deployable baseline artifact
+            Verified: `python tools/check.py -q` - 18 passed in 11.01s. The actual packaged file runs from file:// in both managed browsers, starts/pauses with real controls and renders opaque Canvas without a server or developer runtime. Exact source bytes/checksum and scoped artifact structure pass.
             Scope: tests/test_artifact.py; tools/package.py; README.md. Depends on: T-007.
             Contract/evidence: A1/A9 packaged-file execution, no runtime toolchain and explicit browser evidence limits. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 1.3 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/1/1.3.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 1.4 — Phase review
-        - [ ] T-009 — Review test and report phase 1
+    - [x] Milestone 1.4 — Phase review
+        - [x] T-009 — Review test and report phase 1
+            Verified: `python tools/check.py -q` - 18 passed in 8.43s. Full classic phase acceptance passes: 18 rule, real-browser, responsive and direct-file artifact tests. Reviewed all three milestone reports and their corrected findings; task persistence audit and explicit default integration/release publication follow this phase result.
             Depends on: all delivery tasks in phase 1, completion/closure of milestones 1.1, 1.2, 1.3, and their committed review evidence.
             Scope: cross-milestone code review, A1 and A9 for classic play; modern controls, settings, leaderboard and files remain deferred. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/1/PHASE-REPORT.md, HANDOFF, release v0.1.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
