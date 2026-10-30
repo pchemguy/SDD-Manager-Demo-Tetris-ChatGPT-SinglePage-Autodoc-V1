@@ -116,8 +116,9 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: README.md; RELEASE-NOTES.md; tools/package.py; tests/test_browser.py; index.html version. Depends on: T-018.
             Contract/evidence: A3 upper/lower/straddling fixtures, pose/board recalculation and v0.3.0 artifact. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 3.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/3/3.1.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 3.2 — Phase review
-        - [ ] T-020 — Review test and report phase 3
+    - [x] Milestone 3.2 — Phase review
+        - [x] T-020 — Review test and report phase 3
+            Verified: `python tools/check.py -q` - 27 passed in 10.06s. Conditional ghost phase and preserved baseline/modern rules pass all current pytest and real-browser artifact checks.
             Depends on: all delivery tasks in phase 3, completion/closure of milestones 3.1, and their committed review evidence.
             Scope: cross-milestone code review, A3 and ghost/drop parity; no configuration UI or new persistence. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/3/PHASE-REPORT.md, HANDOFF, release v0.3.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
