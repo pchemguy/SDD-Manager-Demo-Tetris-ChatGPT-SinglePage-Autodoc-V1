@@ -63,7 +63,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 
 - [ ] Phase 2 — Modern rules
     - [ ] Milestone 2.1 — Piece source and hold
-        - [ ] T-010 — Add seven-bag source and next preview
+        - [x] T-010 — Add seven-bag source and next preview
+            Verified: `python tools/check.py -q` - 19 passed in 8.51s. Observed RED for seven-bag permutations and queued preview. Source now shuffles complete bags and preview consumes the same queue as spawning; restart replaces the source state.
             Scope: index.html piece source and preview; tests/test_rules.py. Depends on: T-009.
             Contract/evidence: G2 deterministic bag permutations, preview order and queue retention. Include relevant checks, fixes and changed usage documentation.
         - [ ] T-011 — Add hold and once-per-turn lifecycle

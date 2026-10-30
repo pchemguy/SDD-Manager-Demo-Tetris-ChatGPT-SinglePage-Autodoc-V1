@@ -434,7 +434,7 @@ class Game {
   interval(){return Math.max(80,Math.floor(1000*Math.pow(0.8,this.level-1)));}
   draw(){return TYPES[Math.floor(this.rng()*7)%7];}
   start(){this.board=emptyBoard();this.score=0;this.lines=0;this.level=1;this.events=[];this.elapsed=0;this.status='running';this.spawn();}
-  spawn(type=this.draw()){this.generation++;this.elapsed=0;this.p={type,rot:0,x:Math.floor((10-matrixSize(type))/2),y:0};if(!valid(this.board,type,0,this.p.x,0))this.finish();}
+  spawn(type=this.next()){this.generation++;this.elapsed=0;this.p={type,rot:0,x:Math.floor((10-matrixSize(type))/2),y:0};if(!valid(this.board,type,0,this.p.x,0))this.finish();}
   finish(){if(this.status==='over')return;this.status='over';this.events.push({kind:'game-over',score:this.score,generation:this.generation});}
   act(dx=0,dy=0,dr=0){if(this.status!=='running')return false;const next=transform(this.board,this.p,dx,dy,dr);if(next===this.p){if(dy>0)this.lock();return false;}this.p=next;return true;}
   soft(){if(this.act(0,1,0))this.score=addScore(this.score,1);}
@@ -461,12 +461,14 @@ function render(){if(!ui)return;const g=ui.game,c=ui.canvas,ctx=c.getContext('2d
   if(g.p)paintCells(ctx,g.board,g.p);
   document.getElementById('score').textContent=String(g.score);document.getElementById('lines').textContent=String(g.lines);document.getElementById('level').textContent=String(g.level);document.getElementById('state').textContent={idle:'Ready to play',running:'In motion',paused:'Paused',over:'Game over'}[g.status];
   const veil=document.getElementById('veil');veil.hidden=g.status==='running';document.getElementById('veil-title').textContent={idle:'MAKE YOUR MOVE',paused:'TAKE A BREATH',over:'ONE MORE TRY',running:''}[g.status];document.getElementById('veil-note').textContent=g.status==='idle'?'Start a game. Find your rhythm.':g.status==='paused'?'Press Pause/Start or Escape to return.':'Restart for a fresh board.';
+  drawPreview('next-piece',g.queue?.[0]);
   /* RENDER_EXTENSIONS */
 }
 function mountUI(){
  document.getElementById('root').innerHTML=`<header><div class="brand"><div class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><div class="eyebrow">A STUDY IN FALLING BLOCKS</div><h1>TETRIS ATELIER</h1></div></div><span class="version">v${VERSION}</span></header><div class="arena"><div class="rail left" id="left-rail"><section class="panel info" aria-label="Game info and controls"><h2>Game info<br>&amp; controls</h2><div class="stats"><div class="stat"><span class="label">Score</span><strong id="score">0</strong></div><div class="stat small"><span class="label">Level</span><strong id="level">1</strong></div><div class="stat small"><span class="label">Lines</span><strong id="lines">0</strong></div></div><div id="extras"></div><div class="state" id="state">Ready to play</div><div id="toggles" class="toggles"></div><div class="game-buttons"><button id="start" class="primary">Start/Restart</button><button id="pause">Pause/Start</button></div></section></div><div><div class="board-wrap"><canvas id="board" width="600" height="1200" tabindex="0" aria-label="Tetris board. Use keyboard controls."></canvas><div class="veil" id="veil"><strong id="veil-title"></strong><span id="veil-note"></span></div></div><p class="board-note">FIND YOUR RHYTHM.<br>LEAVE ROOM TO GROW.</p></div><div class="rail right" id="right-rail"><section class="panel help" id="help"><h2>At your fingertips</h2><div class="keys" id="keys"><div class="key-row"><span>Move</span><span><kbd>←</kbd> <kbd>→</kbd></span></div><div class="key-row"><span>Soft drop</span><kbd>↓</kbd></div><div class="key-row"><span>Rotate</span><span><kbd>↑</kbd> <kbd>X</kbd></span></div><div class="key-row"><span>Turn left</span><kbd>Z</kbd></div><div class="key-row"><span>Pause</span><kbd>Esc</kbd></div></div><p>Complete a row. Make a little space. Ten lines take you to the next level.</p></section></div></div><div class="message" id="message" role="status" aria-live="polite"></div>`;
  ui={game:new Game(),canvas:document.getElementById('board')};API.ui=ui;API.render=render;
  bindControls();
+document.getElementById('extras').innerHTML='<div class="preview"><figure><figcaption>NEXT</figcaption><canvas id="next-piece" width="104" height="88" aria-label="Next piece"></canvas></figure></div>';
  /* MOUNT_EXTENSIONS */
  render();
 }
@@ -487,6 +489,12 @@ function bindControls(){
  document.addEventListener('visibilitychange',()=>{if(document.hidden&&g.status==='running'){g.pause();render();}ui.last=performance.now();});
  ui.last=performance.now();function frame(now){const dt=now-ui.last;ui.last=now;g.tick(dt);render();requestAnimationFrame(frame);}requestAnimationFrame(frame);
 }
+
+/* T010_SOURCE */
+Game.prototype.draw=function(){if(!this.bag?.length){this.bag=[...TYPES];for(let i=6;i>0;i--){const j=Math.floor(this.rng()*(i+1));[this.bag[i],this.bag[j]]=[this.bag[j],this.bag[i]];}}return this.bag.pop();};
+Game.prototype.next=function(){if(!this.queue?.length)this.queue=[this.draw()];const type=this.queue.shift();this.queue.push(this.draw());return type;};
+const sourceStart=Game.prototype.start;Game.prototype.start=function(){this.bag=[];this.queue=[];sourceStart.call(this);};
+function drawPreview(id,type){const c=document.getElementById(id);if(!c)return;const ctx=c.getContext('2d');ctx.setTransform(2,0,0,2,0,0);ctx.clearRect(0,0,52,44);if(type)paintCells(ctx,null,{type,rot:0,x:0,y:0},false,10,6,7);}
 
 /* APP_EXTENSIONS */
 if (globalThis.__TETRIS_TEST__) globalThis.Tetris = API;

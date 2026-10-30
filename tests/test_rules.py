@@ -13,3 +13,8 @@ def test_gravity_lock_clear_and_scoring(js):
 def test_pause_freezes_clock_and_restart_replaces_game(js):
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.tick(500);g.pause?.();g.tick(5000);return [g.status,g.elapsed,g.p.y]})()") == ['paused',500,0]
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.tick(500);g.pause();g.tick(9000);g.pause();g.tick(500);const y=g.p.y;g.score=100;g.start();return [y,g.score,g.lines,g.level,g.p.y,g.status]})()") == [1,0,0,1,0,'running']
+
+
+def test_seven_bag_and_preview_order(js):
+    assert js("(()=>{const g=new Game(()=>0.5);const a=Array.from({length:14},()=>g.draw());return [new Set(a.slice(0,7)).size,new Set(a.slice(7)).size]})()") == [7,7]
+    assert js("typeof Game.prototype.next==='undefined'?null:(()=>{const g=new Game(()=>0.5);g.start();const next=g.queue[0];g.p.y=16;g.lock();return [g.p.type===next,g.queue.length]})()") == [True,1]
