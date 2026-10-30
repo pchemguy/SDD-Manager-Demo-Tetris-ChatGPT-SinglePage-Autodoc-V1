@@ -1,12 +1,12 @@
-# Tetris Atelier v0.6.0
+# Tetris Atelier v0.7.0
 
 ## Changes
 
-Independent URL/cookie/default resolution and immediate cookie/query updates for all six settings. Retains the previously delivered capabilities.
+Session top-ten completed-game results with stable IDs, UTC timestamps and deterministic tie ranking. Retains the previously delivered capabilities.
 
 ## Installation and use
 
-Download tetris-v0.6.0.html and open it in a JavaScript-enabled browser, or serve that file with a static HTTP(S) host. No developer runtime is required by players. Verify the download with SHA256SUMS.txt. This is a standalone browser artifact, not a signed or store-distributed desktop package.
+Download tetris-v0.7.0.html and open it in a JavaScript-enabled browser, or serve that file with a static HTTP(S) host. No developer runtime is required by players. Verify the download with SHA256SUMS.txt. This is a standalone browser artifact, not a signed or store-distributed desktop package.
 
 ## Verification and limits
 

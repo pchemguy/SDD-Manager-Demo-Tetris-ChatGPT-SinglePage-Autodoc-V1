@@ -448,7 +448,7 @@ class Game {
 Object.assign(API,{Game,clearRows,COLORS,SHAPES});
 
 /* 3. Canvas and semantic HTML presentation */
-const VERSION='0.6.0';
+const VERSION='0.7.0';
 let ui=null;
 function notice(message){if(ui)document.getElementById('message').textContent=message;}
 function paintCells(ctx,board,piece,ghost=false,scale=30,ox=0,oy=0){

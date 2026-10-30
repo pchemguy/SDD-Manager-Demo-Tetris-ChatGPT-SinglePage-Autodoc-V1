@@ -228,7 +228,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 7 — Session leaderboard
 
 - [ ] Phase 7 — Session leaderboard
-    - [ ] Milestone 7.1 — Top-ten session delivery
+    - [x] Milestone 7.1 — Top-ten session delivery
         - [x] T-039 — Collect and rank completed game records
             Verified: `python tools/check.py -q` - 49 passed in 18.65s. Observed RED for absent session result collection. Once-only game generation, score zero, collision-safe stable IDs, UTC timestamp preservation and deterministic bounded ranking now pass; controller consumes terminal events once.
             Scope: index.html session-results/controller; tests/test_persistence.py. Depends on: T-038.
@@ -237,7 +237,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 51 passed in 18.21s. Observed RED for absent leaderboard panel. Top-ten session results render to the left of information with an empty state and independent toggle; hiding it leaves the board centered. Result text uses safe text nodes and rerenders only on revision changes.
             Scope: index.html leaderboard/info layout; tests/test_browser.py. Depends on: T-039.
             Contract/evidence: L1/U1 left-of-info panel, empty state, hide/show centering and game-over refresh. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-041 — Verify session lifetime and package leaderboard release
+        - [x] T-041 — Verify session lifetime and package leaderboard release
+            Verified: `python tools/check.py -q` - 53 passed in 20.01s. Real-browser completed-game insertion is once-only, restart preserves existing history without recording abandonment, and reload clears results while settings persistence remains independent. v0.7.0 candidate packaged.
             Scope: README.md; RELEASE-NOTES.md; tests/test_browser.py; tools/package.py; index.html version. Depends on: T-040.
             Contract/evidence: A7 restart retention, reload empty history despite saved settings, v0.7.0 artifact. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 7.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/7/7.1.md and HANDOFF with this task's initial completion.
