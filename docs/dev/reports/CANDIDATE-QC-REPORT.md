@@ -1,5 +1,7 @@
 # v1.0.0 candidate QC and publication interruption
 
+Historical interruption evidence: GitHub API access recovered on the user-requested retry. Issue #57 and milestone #24 closure were read back before resuming; the current TASKS and HANDOFF supersede the pending-state snapshot below. The preservation branch was retained without merging it into the implementation branch.
+
 ## Verified candidate
 
 All requested functionality is implemented in index.html, SHA-256 28d3fe27e49a3d37beb72d9e4de117e9649f11f7032e003d8586dff93de1a3d1. Final full check: `python tools/check.py -q` — 78 passed in 26.40s. The source-identical HTML, extracted JSON Schema and checksums are in dist/1.0.0. The final source was checked in Chromium headless shell and Firefox, including actual production-mode packaged-file JSON transfer with HTTPS requests blocked. Desktop 1440px and mobile 360px screenshots were inspected; board/info remain visible and the board stays centered. Mobile document width equals the 360px viewport. Button word breaks were adjusted after visual inspection; tests verify the exact accessible labels.

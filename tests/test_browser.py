@@ -266,3 +266,44 @@ def test_sql_dependency_failure_is_retryable(page):
 def test_extreme_score_remains_inside_panels(page):
     page.evaluate("Tetris.ui.results.replace([{id:'maximum',score:Number.MAX_SAFE_INTEGER,timestamp:'2026-10-30T00:00:00.000Z'}]);Tetris.ui.game.score=Number.MAX_SAFE_INTEGER;Tetris.render()")
     assert page.locator('#results li').evaluate('(el)=>el.scrollWidth<=el.clientWidth')
+
+
+def test_lifecycle_announcements_and_disabled_help(page):
+    assert page.locator('#state').get_attribute('aria-live')=='polite'
+    page.get_by_role('button',name='Start/Restart',exact=True).click()
+    page.keyboard.press('Escape')
+    assert page.locator('#state').text_content()=='Paused'
+    page.get_by_label('Hold piece',exact=True).select_option('false')
+    page.get_by_label('Hard drop',exact=True).select_option('false')
+    assert 'off' in page.locator('#help-hold').inner_text()
+    assert 'off' in page.locator('#help-hardDrop').inner_text()
+    page.get_by_label('Hold piece',exact=True).select_option('true')
+    assert 'off' not in page.locator('#help-hold').inner_text()
+
+
+def test_packaged_json_transfer_without_network(browser):
+    import json,re,subprocess,sys
+    root=Path(__file__).resolve().parents[1]
+    subprocess.run([sys.executable,'tools/package.py'],cwd=root,check=True,capture_output=True)
+    version=re.search(r"const VERSION\s*=\s*'([^']+)'",(root/'index.html').read_text()).group(1)
+    context=browser.new_context(accept_downloads=True)
+    p=context.new_page()
+    p.route('https://**',lambda route:route.abort())
+    p.set_default_timeout(5000)
+    try:
+        p.goto((root/'dist'/version/'tetris.html').as_uri())
+        assert p.evaluate('typeof Tetris')=='undefined'
+        data={'formatVersion':1,'results':[{'id':'offline-stable','score':123,'timestamp':'2026-10-30T00:00:00.000Z'}],'settings':{'ghost':'dynamic','hardDrop':False,'nextPreview':True,'hardDropLock':'immediate','lockPolicy':'interval','hold':False}}
+        previous={**data,'results':[{'id':'old','score':999,'timestamp':'2026-10-30T00:00:00.000Z'}]}
+        p.locator('#restore-input').set_input_files({'name':'previous.json','mimeType':'application/json','buffer':json.dumps(previous).encode()})
+        p.wait_for_function("document.querySelector('#results')?.textContent.includes('999')")
+        p.locator('#restore-input').set_input_files({'name':'session.json','mimeType':'application/json','buffer':json.dumps(data).encode()})
+        p.wait_for_function("document.querySelector('#results')?.textContent.includes('123')")
+        assert p.locator('#results li').count()==1
+        assert '123' in p.locator('#results').inner_text()
+        assert p.get_by_label('Hold piece',exact=True).input_value()=='false'
+        with p.expect_download() as received:
+            p.get_by_role('button',name='Save',exact=True).click()
+        assert json.loads(Path(received.value.path()).read_text())==data
+    finally:
+        context.close()

@@ -290,8 +290,9 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Scope: tools/package.py; schema/session.schema.json; README.md; RELEASE-NOTES.md; index.html version. Depends on: T-049.
             Contract/evidence: A9 v1.0.0 HTML, embedded/extracted-schema equality, checksum/install instructions and full-scope artifact checks. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 8.3 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/8/8.3.md and HANDOFF with this task's initial completion.
-    - [ ] Milestone 8.4 — Phase review
-        - [ ] T-051 — Review test and report phase 8
+    - [x] Milestone 8.4 — Phase review
+        - [x] T-051 — Review test and report phase 8
+            Verified: `python tools/check.py -q` - 78 passed in 30.26s. All requested functionality is verified. Full browser/rule/artifact/file regressions pass, including actual production-mode HTML JSON transfer offline. Independent gameplay and persistence reviews found no blockers; lifecycle/help findings were fixed after observed RED tests. Desktop/mobile visual QC retained centered board and visible information.
             Depends on: all delivery tasks in phase 8, completion/closure of milestones 8.1, 8.2, 8.3, and their committed review evidence.
             Scope: cross-milestone code review, A8 and full A1-A9 regression/packaging; JSON/SQLite parity and all six settings. Review actual source/packaged HTML, applicable rule/adapter/browser cases and milestone findings; repair blockers and retain excluded/unavailable checks accurately.
             Evidence: docs/dev/reports/phases/8/PHASE-REPORT.md, HANDOFF, release v1.0.0 readiness/source/artifact identity and TODO disposition. Do not claim integration or provider publication before readback.
