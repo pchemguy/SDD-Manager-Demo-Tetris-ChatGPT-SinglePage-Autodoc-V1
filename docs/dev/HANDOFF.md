@@ -1,9 +1,5 @@
 # Project handoff
 
-Checkpoint: phase 5 verified by T-032; publication and hosted closure follow this commit.
+Phase 5 completed, verified and explicitly integrated into main. Release [v0.5.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V1/releases/tag/v0.5.0) is published at source 420f0a0ea787c4e1f492d34d7e117588a2b37cc4, with verified uploaded artifact metadata/digests and download outcomes in the phase report. Current default branch main contains the completed phase outcome.
 
-Selected scope: user-authorized full T-001 through T-051, all eight releases. Current branch phase/5-session-configuration; creation parent/integration target main; phase branch-off 38da1c20a4b55a35611b224a7682d9dcd47d7856. Package QC passed and preparation is integrated. [TASKS](TASKS.md) owns task progress; [report](reports/phases/5/PHASE-REPORT.md) owns this boundary evidence. No further human checkpoint within the selected range.
-
-Outcome: Complete session-only settings phase passes canonical-domain, deadline/live-action and real-browser panel/reload cases with previous regressions.
-
-Next: publish/read back this task and close its issue/milestone. Verify/integrate/publish the complete phase and release before activating the next phase. Retain future tasks and prior reports; do not infer external effects from this snapshot.
+User-selected range remains T-001 through T-051 with all requested integrations/releases. [TASKS](TASKS.md) owns completion; [phase report](reports/phases/5/PHASE-REPORT.md) owns checks/limits. Next: activate phase 6 only after this follow-up is published. No renewed human checkpoint within the selected range. Published source is pinned; do not move tags or erase historical reports. Firefox uses the documented local-only sandbox override; native Windows/OS-window behavior remains unverified.

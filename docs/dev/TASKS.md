@@ -159,7 +159,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 
 ## Phase 5 — Session configuration
 
-- [ ] Phase 5 — Session configuration
+- [x] Phase 5 — Session configuration
     - [x] Milestone 5.1 — Live configuration
         - [x] T-027 — Define the six canonical setting domains and defaults
             Verified: `python tools/check.py -q` - 34 passed in 12.47s. Observed RED for absent complete configuration contract. Six canonical key/value domains now supply strict normalization and per-game defaults; wrong Boolean spelling/type is rejected without coercion.

@@ -19,3 +19,5 @@ Version 0.5.0. All six live game settings with explicit session-only lifetime an
 Run `python tools/package.py` to create dist/0.5.0/tetris-v0.5.0.html and its checksum. Download/open the HTML directly for play; no Node.js, Python, package installation or local server is required for players. Static HTTP(S) hosting supports cookie persistence when that capability is delivered.
 
 Controls: Left/Right move; Down soft-drops; Up/X rotate clockwise; Z turns counterclockwise; Escape pauses/resumes. Use the two labeled buttons to start/restart or pause/start. Space hard-drops; C or Shift holds once per piece. P spends one available penetrator bonus; four-line clears award a bonus up to three, and hold is disabled while penetrator is active. The settings panel controls ghost mode, hard drop, preview, both locking policies and hold. Settings reset on reload in this session-only release.
+
+Published release: [v0.5.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V1/releases/tag/v0.5.0).
