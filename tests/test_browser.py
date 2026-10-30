@@ -151,3 +151,24 @@ def test_history_rejection_preserves_session_value(page,base_url):
     assert page.evaluate('Tetris.ui.game.config.hardDrop') is False
     assert page.url==before
     assert 'URL persistence is unavailable' in page.locator('#message').text_content()
+
+
+def test_leaderboard_panel_and_stable_center(page):
+    assert page.locator('#leaderboard').is_visible()
+    before=page.locator('#board').bounding_box()
+    page.get_by_role('button',name='Leaderboard',exact=True).click()
+    assert not page.locator('#leaderboard').is_visible()
+    assert abs(page.locator('#board').bounding_box()['x']-before['x'])<1
+
+
+def test_completed_history_restart_and_reload(page):
+    page.get_by_role('button',name='Start/Restart',exact=True).click()
+    page.evaluate('Tetris.ui.game.score=500;Tetris.ui.game.finish();Tetris.render();Tetris.render()')
+    assert page.locator('#results li').count()==1
+    assert page.evaluate('Tetris.ui.results.records[0].score')==500
+    page.get_by_role('button',name='Start/Restart',exact=True).click()
+    page.evaluate('Tetris.ui.game.score=900')
+    page.get_by_role('button',name='Start/Restart',exact=True).click()
+    assert page.locator('#results li').count()==1
+    page.reload()
+    assert page.locator('#results li').count()==0
