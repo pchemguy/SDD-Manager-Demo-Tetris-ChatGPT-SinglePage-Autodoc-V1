@@ -12,7 +12,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 
 ## Phase 1 — Classic baseline
 
-- [ ] Phase 1 — Classic baseline
+- [x] Phase 1 — Classic baseline
     - [x] Milestone 1.1 — Classic rules
         - [x] T-001 — Implement board geometry and legal piece transitions
             Verified: `python tools/check.py -q` - 1 passed in 0.36s. Observed RED: valid empty-board T placement returned false; geometry implementation makes collision/bounds/translation scenarios pass. Pinned local pytest and source-extraction Node VM harness verified.
