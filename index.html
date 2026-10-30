@@ -20,6 +20,7 @@ const addScore=(a,b)=>Math.min(Number.MAX_SAFE_INTEGER,a+b);
 function clearRows(board){const keep=board.filter(row=>row.some(v=>!v));const count=20-keep.length;return {count,board:[...Array.from({length:count},()=>Array(10).fill(0)),...keep.map(r=>r.slice())]};}
 class Game {
   constructor(rng=Math.random){this.rng=rng;this.board=emptyBoard();this.status='idle';this.score=0;this.lines=0;this.level=1;this.p=null;this.generation=0;this.events=[];this.elapsed=0;}
+  pause(){if(this.status==='running')this.status='paused';else if(this.status==='paused')this.status='running';}
   interval(){return Math.max(80,Math.floor(1000*Math.pow(0.8,this.level-1)));}
   draw(){return TYPES[Math.floor(this.rng()*7)%7];}
   start(){this.board=emptyBoard();this.score=0;this.lines=0;this.level=1;this.events=[];this.elapsed=0;this.status='running';this.spawn();}

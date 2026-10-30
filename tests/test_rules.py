@@ -9,3 +9,7 @@ def test_gravity_lock_clear_and_scoring(js):
     assert js("typeof Game==='undefined'?null:(()=>{const g=new Game(()=>0.5);g.start();g.lines=6;g.p={type:'I',rot:1,x:3,y:16};for(let y=16;y<20;y++)g.board[y]=Array.from({length:10},(_,x)=>x===5?0:'J');g.lock();return [g.score,g.lines,g.level,g.board.flat().filter(Boolean).length]})()") == [800,10,2,0]
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.p={type:'O',rot:0,x:4,y:18};g.tick(999);const a=g.board.flat().filter(Boolean).length;g.tick(1);return [a,g.board.flat().filter(Boolean).length,g.status]})()") == [0,4,'running']
     assert js("(()=>{const g=new Game(()=>0.5);g.start();g.board[0][4]='I';g.spawn('O');g.finish();return [g.status,g.events.length]})()") == ['over',1]
+
+def test_pause_freezes_clock_and_restart_replaces_game(js):
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.tick(500);g.pause?.();g.tick(5000);return [g.status,g.elapsed,g.p.y]})()") == ['paused',500,0]
+    assert js("(()=>{const g=new Game(()=>0.5);g.start();g.tick(500);g.pause();g.tick(9000);g.pause();g.tick(500);const y=g.p.y;g.score=100;g.start();return [y,g.score,g.lines,g.level,g.p.y,g.status]})()") == [1,0,0,1,0,'running']

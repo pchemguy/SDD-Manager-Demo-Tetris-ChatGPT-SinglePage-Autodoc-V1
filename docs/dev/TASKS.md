@@ -13,7 +13,7 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
 ## Phase 1 — Classic baseline
 
 - [ ] Phase 1 — Classic baseline
-    - [ ] Milestone 1.1 — Classic rules
+    - [x] Milestone 1.1 — Classic rules
         - [x] T-001 — Implement board geometry and legal piece transitions
             Verified: `python tools/check.py -q` - 1 passed in 0.36s. Observed RED: valid empty-board T placement returned false; geometry implementation makes collision/bounds/translation scenarios pass. Pinned local pytest and source-extraction Node VM harness verified.
             Scope: index.html rule definitions; tests/test_rules.py. Depends on: accepted/reviewed preparation and eligible phase-1 activation.
@@ -23,7 +23,8 @@ No milestone has four delivery tasks, so each milestone's last delivery task fol
             Verified: `python tools/check.py -q` - 2 passed in 0.59s. Observed RED for missing game scoring result; four-line clear, prior-level scoring, gravity failed-down lock and once-only blocked-spawn game over now pass.
             Scope: index.html reducer/clock; tests/test_rules.py. Depends on: T-001.
             Contract/evidence: G1 failed-attempt locking, simultaneous clears, score/level progression and game-over once. Include relevant checks, fixes and changed usage documentation.
-        - [ ] T-003 — Verify baseline game lifecycle invariants
+        - [x] T-003 — Verify baseline game lifecycle invariants
+            Verified: `python tools/check.py -q` - 3 passed in 0.66s. Observed RED: a paused clock advanced five rows; pause/resume now freezes elapsed time and restart resets score lines level and pose.
             Scope: index.html rule integration; tests/test_rules.py. Depends on: T-002.
             Contract/evidence: G1 injected random/clock seams, start/pause/resume/restart and stale-generation protection. Include relevant checks, fixes and changed usage documentation.
             Milestone exit: depends on all 1.1 delivery tasks; whole-capability code review, focused/regression checks, blocker repair, committed report docs/dev/reports/phases/1/1.1.md and HANDOFF with this task's initial completion.
